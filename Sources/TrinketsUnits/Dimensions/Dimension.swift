@@ -13,6 +13,7 @@ public protocol Dimension: Domain {
     typealias Measure = Measurement<Self, Value>
 
     static var baseUnit: Unit { get }
+    static var dimensionality: Dimensionality { get }
 
     static func baseValue(of value: Value, _ unit: Unit) -> Value
     static func convert(_ baseValue: Value, to unit: Unit) -> Value
@@ -20,6 +21,8 @@ public protocol Dimension: Domain {
 
 // MARK: Default Implementation
 public extension Dimension {
+    static var dimensionality: Dimensionality { [Self.self: 1] }
+
     static func of(_ value: Value, _ unit: Unit) -> Measurement<Self, Value> {
         .init(value: value, unit: unit)
     }
