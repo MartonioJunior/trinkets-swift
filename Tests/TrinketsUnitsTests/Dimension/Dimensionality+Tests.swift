@@ -14,7 +14,7 @@ struct DimensionalityTests {
         (Dimensionality([(RefreshRate.self, -1)]), false),
         (Dimensionality([(Gil.self, 0)]), true),
         (Dimensionality(), true),
-        (Dimensionality.none, true)
+        (Dimensionality.dimensionless, true)
     ])
     func isNone(_ sut: Dimensionality, expected: Bool) {
         #expect(sut.isNone == expected)
@@ -50,7 +50,7 @@ struct DimensionalityTests {
     @Test("Returns an empty dimension")
     func none() {
         let expected = Dimensionality()
-        #expect(Dimensionality.none == expected)
+        #expect(Dimensionality.dimensionless == expected)
     }
 
     // MARK: Operators
@@ -72,7 +72,7 @@ struct DimensionalityTests {
         ),
         (
             Dimensionality([(Gil.self, 2)]),
-            Dimensionality.none,
+            Dimensionality.dimensionless,
             Dimensionality([(Gil.self, 2)])
         )
     ])
@@ -99,7 +99,7 @@ struct DimensionalityTests {
         ),
         (
             Dimensionality([(Gil.self, 2)]),
-            Dimensionality.none,
+            Dimensionality.dimensionless,
             Dimensionality([(Gil.self, 2)])
         )
     ])
@@ -127,7 +127,7 @@ struct DimensionalityTests {
         (
             Dimensionality([(Gil.self, 2)]),
             0,
-            Dimensionality.none
+            Dimensionality.dimensionless
         )
     ])
     func multiply(lhs: Dimensionality, rhs: Int, expected: Dimensionality) {

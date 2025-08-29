@@ -54,7 +54,7 @@ public struct Dimensionality {
 
 // MARK: DotSyntax
 public extension Dimensionality {
-    static let none: Self = [:]
+    static let dimensionless: Self = [:]
 }
 
 // MARK: Operators
@@ -72,7 +72,7 @@ public extension Dimensionality {
     }
 
     static func * (lhs: Self, rhs: Int) -> Self {
-        if rhs == 0 { return .none }
+        if rhs == 0 { return .dimensionless }
 
         return .init(dict: lhs.domains.mapValues { $0 * rhs })
     }
