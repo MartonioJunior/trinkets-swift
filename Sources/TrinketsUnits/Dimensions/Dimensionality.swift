@@ -12,7 +12,7 @@ public struct Dimensionality {
     var isNone: Bool { domains.isEmpty }
 
     // MARK: Subscripts
-    subscript<D: Dimension>(domainType: D.Type) -> Int? {
+    subscript<D: Dimension>(domainType: D.Type) -> Int {
         let key = ObjectIdentifier(domainType)
 
         return domains[key] ?? 0
@@ -72,7 +72,9 @@ public extension Dimensionality {
     }
 
     static func * (lhs: Self, rhs: Int) -> Self {
-        .init(dict: lhs.domains.mapValues { $0 * rhs })
+        if rhs == 0 { return .none }
+
+        return .init(dict: lhs.domains.mapValues { $0 * rhs })
     }
 }
 
