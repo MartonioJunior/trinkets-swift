@@ -50,24 +50,6 @@ extension Unit: Hashable where D.Features: Hashable, D.Symbol: Hashable {}
 // MARK: Self: Sendable
 extension Unit: Sendable where D.Features: Sendable, D.Symbol: Sendable {}
 
-// MARK: D: Dimension
-public extension Unit where D: Dimension {
-    @inlinable
-    func x(_ value: D.Value) -> Measurement<D, D.Value> {
-        value * self
-    }
-
-    @inlinable
-    static func * (lhs: Self, rhs: D.Value) -> D.Measure {
-        rhs * lhs
-    }
-
-    @inlinable
-    static func * (lhs: D.Value, rhs: Self) -> D.Measure {
-        .init(value: lhs, unit: rhs)
-    }
-}
-
 // MARK: D.Features == Void
 public extension Unit where D.Features == Void {
     init(_ symbol: D.Symbol) {

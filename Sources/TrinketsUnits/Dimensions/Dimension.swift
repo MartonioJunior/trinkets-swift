@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol Dimension: Domain {
+public protocol Dimension: Domain, Measurable {
     associatedtype Value: Comparable = Double
 
     typealias Measure = Measurement<Self, Value>
@@ -23,7 +23,7 @@ public protocol Dimension: Domain {
 public extension Dimension {
     static var dimensionality: Dimensionality { [Self.self: 1] }
 
-    static func of(_ value: Value, _ unit: Unit) -> Measurement<Self, Value> {
+    static func of(_ value: Value, _ unit: Unit) -> Measure {
         .init(value: value, unit: unit)
     }
 
