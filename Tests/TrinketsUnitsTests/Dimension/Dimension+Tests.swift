@@ -30,6 +30,6 @@ struct DimensionTests {
     // MARK: Unit (EX)
     @Test("Returns base unit")
     func `default`() {
-        #expect(Mock.Unit.default == Mock.baseUnit)
+        #expect(Mock.Unit.base == Mock.baseUnit)
     }
 }

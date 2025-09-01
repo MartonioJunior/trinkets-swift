@@ -7,22 +7,24 @@
 
 public protocol Measurable {
     associatedtype Value
+
+    typealias Measure = Measurement<Self>
 }
 
-// MARK: Unit (EX)
-public extension Unit where D: Dimension & Measurable {
+// MARK: Default Implementation
+public extension Measurable {
     @inlinable
-    func x(_ value: D.Value) -> D.Measure {
+    func x(_ value: Value) -> Measure {
         .init(value: value, unit: self)
     }
 
     @inlinable
-    static func * (lhs: Self, rhs: D.Value) -> D.Measure {
+    static func * (lhs: Self, rhs: Value) -> Measure {
         lhs.x(rhs)
     }
 
     @inlinable
-    static func * (lhs: D.Value, rhs: Self) -> D.Measure {
+    static func * (lhs: Value, rhs: Self) -> Measure {
         rhs.x(lhs)
     }
 }

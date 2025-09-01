@@ -12,6 +12,5 @@ public protocol Domain {
 
 // MARK: Default Implementation
 public extension Domain {
-    typealias Axis<T> = Measurement<Self, T>
     typealias Unit = TrinketsUnits.Unit<Self>
 }

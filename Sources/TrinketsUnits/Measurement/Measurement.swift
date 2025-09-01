@@ -5,71 +5,32 @@
 //  Created by Martônio Júnior on 09/02/25.
 //
 
-public struct Measurement<D: Domain, V> {
+public struct Measurement<UnitType: Measurable> {
+    public typealias Value = UnitType.Value
+
     // MARK: Variables
-    public var value: V
-    public let unit: Unit<D>
+    public var value: Value
+    public let unit: UnitType
 
     // MARK: Initializers
-    public init(value: V, unit: Unit<D>) {
+    public init(value: Value, unit: UnitType) {
         self.value = value
         self.unit = unit
     }
 }
 
 // MARK: Self: AdditiveArithmetic
-extension Measurement: AdditiveArithmetic where D: Dimension, D.Features: Equatable, D.Symbol: Equatable, V == D.Value, V: AdditiveArithmetic {}
+extension Measurement: AdditiveArithmetic where UnitType: Convertible & Equatable, Value: AdditiveArithmetic {
+    public static var zero: Self { .init(value: .zero, unit: .base) }
 
-// MARK: Self: Comparable
-extension Measurement: Comparable where D: Dimension, D.Features: Equatable, D.Symbol: Equatable, V == D.Value, V: Comparable {}
-
-// MARK: Self: Equatable
-extension Measurement: Equatable where D.Features: Equatable, V: Equatable {}
-
-// MARK: Self: Sendable
-extension Measurement: Sendable where D.Features: Sendable, V: Sendable {}
-
-// MARK: Self: Strideable
-extension Measurement: Strideable where Self: Comparable, V: SignedNumeric {
-    public func distance(to other: Measurement<D, V>) -> V {
-        other.rawValue(in: unit) - value
-    }
-
-    public func advanced(by n: V) -> Measurement<D, V> {
-        .init(value: value + n, unit: unit)
-    }
-}
-
-// MARK: D: Dimension, V == D.Value
-public extension Measurement where D: Dimension, V == D.Value {
-    var baseValue: V { D.baseValue(of: value, unit) }
-    var inBaseUnit: Self { .init(value: baseValue, unit: .default) }
-
-    mutating func convert(to otherUnit: Unit<D>) {
-        self = converted(to: otherUnit)
-    }
-
-    func converted(to otherUnit: Unit<D>) -> Self {
-        let valueInOtherUnit = D.convert(baseValue, to: otherUnit)
-        return .init(value: valueInOtherUnit, unit: otherUnit)
-    }
-
-    func rawValue(in otherUnit: Unit<D>) -> V {
-        converted(to: otherUnit).value
-    }
-}
-
-public extension Measurement where D: Dimension, V == D.Value, V: AdditiveArithmetic {
-    static var zero: Measurement<D, V> { .init(value: .zero, unit: .default) }
-
-    static func + (lhs: Self, rhs: Self) -> Self {
+    public static func + (lhs: Self, rhs: Self) -> Self {
         let baseUnit = lhs.unit
         let rhsValue = rhs.rawValue(in: baseUnit)
 
         return .init(value: lhs.value + rhsValue, unit: baseUnit)
     }
 
-    static func - (lhs: Self, rhs: Self) -> Self {
+    public static func - (lhs: Self, rhs: Self) -> Self {
         let baseUnit = lhs.unit
         let rhsValue = rhs.rawValue(in: baseUnit)
 
@@ -77,26 +38,76 @@ public extension Measurement where D: Dimension, V == D.Value, V: AdditiveArithm
     }
 }
 
-public extension Measurement where D: Dimension, V == D.Value, V: Comparable {
-    static func < (lhs: Measurement<D, V>, rhs: Measurement<D, V>) -> Bool {
+// MARK: Self: Comparable
+extension Measurement: Comparable where UnitType: Convertible & Equatable, Value: Comparable {
+    public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.baseValue < rhs.baseValue
     }
 }
 
-// MARK: V: AdditiveArithmetic
-public extension Measurement where V: AdditiveArithmetic {
-    static func + (lhs: Self, rhs: V) -> Self {
+// MARK: Self: Equatable
+extension Measurement: Equatable where UnitType: Equatable, Value: Equatable {}
+
+// MARK: Self: Sendable
+extension Measurement: Sendable where UnitType: Sendable, Value: Sendable {}
+
+// MARK: Self: Strideable
+extension Measurement: Strideable where Self: Comparable, Value: SignedNumeric {
+    public func distance(to other: Self) -> Value {
+        other.rawValue(in: unit) - value
+    }
+
+    public func advanced(by n: Value) -> Self {
+        .init(value: value + n, unit: unit)
+    }
+}
+
+// MARK: UnitType: Convertible
+public extension Measurement where UnitType: Convertible {
+    var baseValue: Value { UnitType.baseValue(of: value, unit) }
+
+    mutating func convert(to otherUnit: UnitType) {
+        self = converted(to: otherUnit)
+    }
+
+    func converted(to otherUnit: UnitType) -> Self {
+        let valueInOtherUnit = UnitType.convert(baseValue, to: otherUnit)
+        return .init(value: valueInOtherUnit, unit: otherUnit)
+    }
+
+    func rawValue(in otherUnit: UnitType) -> Value {
+        converted(to: otherUnit).value
+    }
+}
+
+// MARK: UnitType: Dimension
+public extension Measurement {
+    func inBaseUnit<D: Dimension>() -> Self where UnitType == Unit<D> {
+        .init(value: D.baseValue(of: value, unit), unit: D.baseUnit)
+    }
+}
+
+// MARK: Value: AdditiveArithmetic
+public extension Measurement where Value: AdditiveArithmetic {
+    static func + (lhs: Self, rhs: Value) -> Self {
         .init(value: lhs.value + rhs, unit: lhs.unit)
     }
 
-    static func - (lhs: Self, rhs: V) -> Self {
+    static func - (lhs: Self, rhs: Value) -> Self {
         .init(value: lhs.value - rhs, unit: lhs.unit)
     }
 }
 
-// MARK: V: Numeric
-public extension Measurement where V: Numeric {
-    static func * (lhs: Self, rhs: V) -> Self {
+// MARK: Value: FloatingPoint
+public extension Measurement where Value: FloatingPoint {
+    static func / (lhs: Self, rhs: Value) -> Self {
+        .init(value: lhs.value / rhs, unit: lhs.unit)
+    }
+}
+
+// MARK: Value: Numeric
+public extension Measurement where Value: Numeric {
+    static func * (lhs: Self, rhs: Value) -> Self {
         .init(value: lhs.value * rhs, unit: lhs.unit)
     }
 }

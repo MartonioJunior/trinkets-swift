@@ -12,13 +12,14 @@ public struct Gil {}
 // MARK: Self: Dimension
 extension Gil: Dimension {
     public typealias Features = LinearConverter
+    public typealias Value = Double
 
     public static let baseUnit: Unit<Gil> = .gil
 }
 
 // MARK: Example Units
-public extension Unit where D == Gil {
-    static let gil: Self = .init("g", details: .base)
-    static let linen: Self = .init("ln", details: .linear(2, k: 7))
-    static let zeni: Self = .init("z", details: .linear(3))
+public extension Measurable where Self == Unit<Gil> {
+    static var gil: Self { .init("g", details: .base) }
+    static var linen: Self { .init("ln", details: .linear(2, k: 7)) }
+    static var zeni: Self { .init("z", details: .linear(3)) }
 }

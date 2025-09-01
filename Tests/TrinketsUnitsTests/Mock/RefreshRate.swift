@@ -12,12 +12,13 @@ public struct RefreshRate {}
 // MARK: Self: Dimension
 extension RefreshRate: Dimension {
     public typealias Features = LinearConverter
+    public typealias Value = Double
 
     public static let baseUnit: Unit = .fps
 }
 
 // MARK: Default Units
-public extension Unit where D == RefreshRate {
-    static let fps: Self = .init("fps", details: .base)
-    static let cinema: Self = .init("24fps", details: .linear(24))
+public extension Measurable where Self == Unit<RefreshRate> {
+    static var fps: Self { .init("fps", details: .base) }
+    static var cinema: Self { .init("24fps", details: .linear(24)) }
 }
