@@ -7,7 +7,6 @@
 
 import Foundation
 
-@available(macOS, introduced: 13, deprecated: 26.0, message: "Use PolynomialFunction<1, Double> instead.")
 public struct LinearConverter {
     // MARK: Variables
     public var constant: Double
@@ -77,8 +76,11 @@ extension LinearConverter: Converter {
         coefficient * value + constant
     }
 
-    public func convert(_ baseValue: Double) -> Double? {
-        (baseValue - constant) / coefficient
+    public func convert(_ baseValue: Value) -> Value? {
+        guard coefficient != 0 else { return nil }
+
+        let numerator = baseValue - constant
+        return numerator / coefficient
     }
 }
 
