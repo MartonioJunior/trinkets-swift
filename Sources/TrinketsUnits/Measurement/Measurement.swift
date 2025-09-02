@@ -5,6 +5,9 @@
 //  Created by Martônio Júnior on 09/02/25.
 //
 
+// MARK: Aliases
+public typealias UnitMeasure<D: Dimension> = Measurement<Unit<D>>
+
 public struct Measurement<UnitType: Measurable> {
     public typealias Value = UnitType.Value
 
@@ -47,6 +50,23 @@ extension Measurement: Comparable where UnitType: Convertible & Equatable, Value
 
 // MARK: Self: Equatable
 extension Measurement: Equatable where UnitType: Equatable, Value: Equatable {}
+
+// MARK: Self: ExpressibleByFloatLiteral
+extension Measurement: ExpressibleByFloatLiteral where UnitType: Convertible, Value: ExpressibleByFloatLiteral {
+    public init(floatLiteral value: Value.FloatLiteralType) {
+        self.init(value: Value(floatLiteral: value), unit: .base)
+    }
+}
+
+// MARK: Self: ExpressibleByIntegerLiteral
+extension Measurement: ExpressibleByIntegerLiteral where UnitType: Convertible, Value: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: Value.IntegerLiteralType) {
+        self.init(value: Value(integerLiteral: value), unit: .base)
+    }
+}
+
+// MARK: Self: Hashable
+extension Measurement: Hashable where UnitType: Hashable, Value: Hashable {}
 
 // MARK: Self: Sendable
 extension Measurement: Sendable where UnitType: Sendable, Value: Sendable {}

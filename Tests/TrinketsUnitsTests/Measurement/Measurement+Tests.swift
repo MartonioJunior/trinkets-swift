@@ -21,8 +21,30 @@ struct MeasurementTests {
         #expect(result.unit == unit)
     }
 
+    // MARK: Self: ExpressibleByFloatLiteral
+    struct ConformsToExpressibleByFloatLiteral {
+        @Test("Creates new measurement from floating point", arguments: [
+            (35.2, Measurement(value: 35.2, unit: .gil))
+        ])
+        func initializer(floatLiteral value: Mock.Value.FloatLiteralType, expected: Mock) {
+            let result = Mock(floatLiteral: value)
+            #expect(result == expected)
+        }
+    }
+
+    // MARK: Self: ExpressibleByIntegerLiteral
+    struct ConformsToExpressibleByIntegerLiteral {
+        @Test("Creates new measurement from integer", arguments: [
+            (12, Measurement(value: 12, unit: .gil))
+        ])
+        func initializer(integerLiteral value: Mock.Value.IntegerLiteralType, expected: Mock) {
+            let result = Mock(integerLiteral: value)
+            #expect(result == expected)
+        }
+    }
+
     // MARK: Self: Strideable
-    struct Strideable {
+    struct ConformsToStrideable {
         @Test("Returns raw magnitude of distance to other value", arguments: [
             (Gil.of(15, .zeni), Gil.of(36, .gil), -3)
         ])
