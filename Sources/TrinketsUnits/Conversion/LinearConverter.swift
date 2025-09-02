@@ -87,15 +87,3 @@ extension LinearConverter: Equatable {}
 
 // MARK: Self: Sendable
 extension LinearConverter: Sendable {}
-
-// MARK: Dimension (EX)
-public extension Dimension where Features == LinearConverter, Value == Double {
-    static func baseValue(of value: Value, _ unit: Unit) -> Value {
-        unit.features.baseValue(of: value)
-    }
-
-    static func convert(_ baseValue: Value, to unit: Unit) -> Value {
-        unit.features.convert(baseValue)!
-    }
-}
-
