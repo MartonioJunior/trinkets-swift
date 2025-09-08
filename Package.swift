@@ -1,39 +1,73 @@
 // swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
+import Foundation
 import PackageDescription
 
+// MARK: Utilities
+public enum UpcomingFeatures: String, CaseIterable {
+    case existentialAny
+    case fullTypedThrows
+    case internalImportsByDefault
+    case memberImportVisibility
+    case nonescapableTypes
+    case nonisolatedNonsendingByDefault
+    case inferIsolatedConformances
+    case valueGenerics
+
+    var asSetting: SwiftSetting { .enableUpcomingFeature(rawValue.capitalized) }
+}
+
+public extension Array where Element == SwiftSetting {
+    static var upcomingFeatures: Self { UpcomingFeatures.allCases.map(\.asSetting) }
+}
+
+func dep(local: String) -> Package.Dependency {
+    .package(path: local)
+}
+
+func dep(url: String, _ version: Range<Version>, local: String = "") -> Package.Dependency {
+    if local.isEmpty {
+        .package(url: url, version)
+    } else {
+        dep(local: local)
+    }
+}
+
+func lib(_ name: String, targets: String...) -> Product {
+    .library(name: name, targets: targets)
+}
+
+func platformDeps(_ platforms: SupportedPlatform...) -> [SupportedPlatform] {
+    platforms
+}
+
+func targetDep(name: String, package: String) -> Target.Dependency {
+    .product(name: name, package: package)
+}
+
 // MARK: - Dependencies
-let numerics: Target.Dependency = .product(name: "Numerics", package: "swift-numerics")
+let numerics = targetDep(name: "Numerics", package: "swift-numerics")
 
-let dependencies: [Package.Dependency] = [
-    .package(url: "https://github.com/apple/swift-numerics", .upToNextMajor(from: "1.0.2"))
-]
-
-// MARK: - Swift Settings
-let settings: [SwiftSetting] = [
-    .enableUpcomingFeature("ExistentialAny"),
-    .enableUpcomingFeature("FullTypedThrows"),
-    .enableUpcomingFeature("InternalImportsByDefault"),
-    .enableUpcomingFeature("MemberImportVisibility"),
-    .enableUpcomingFeature("NonescapableTypes"),
-    .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-    .enableUpcomingFeature("InferIsolatedConformances"),
-    .enableUpcomingFeature("ValueGenerics")
+let dependencies = [
+    dep(url: "https://github.com/apple/swift-numerics", .upToNextMajor(from: "1.0.2"))
 ]
 
 // MARK: - Targets
 let targets: [Target] = [
     .target(
         name: "SI",
-        dependencies: ["TrinketsUnits"]
+        dependencies: ["TrinketsUnits"],
+        swiftSettings: .upcomingFeatures
     ),
     .target(
         name: "Trinkets",
-        dependencies: ["SI", "TrinketsUnits", numerics]
+        dependencies: ["SI", "TrinketsUnits", numerics],
+        swiftSettings: .upcomingFeatures
     ),
     .target(
-        name: "TrinketsUnits"
+        name: "TrinketsUnits",
+        swiftSettings: .upcomingFeatures
     )
 ]
 
@@ -64,5 +98,6 @@ let package = Package(
     platforms: supportedPlatforms,
     products: products,
     dependencies: dependencies,
-    targets: targets + testTargets
+    targets: targets + testTargets,
+    swiftLanguageModes: [.v6]
 )

@@ -36,6 +36,19 @@ extension Unit: Comparable where D.Features: Comparable {
     }
 }
 
+// MARK: Self: Convertible
+extension Unit: Convertible where D: Dimension {
+    public static var base: Unit<D> { D.baseUnit }
+
+    public static func baseValue(of value: D.Value, _ unit: Unit<D>) -> D.Value {
+        D.baseValue(of: value, unit)
+    }
+
+    public static func convert(_ baseValue: D.Value, to unit: Unit<D>) -> D.Value {
+        D.convert(baseValue, to: unit)
+    }
+}
+
 // MARK: Self: CustomStringConvertible
 extension Unit: CustomStringConvertible where D.Symbol: CustomStringConvertible {
     public var description: String { symbol.description }
@@ -46,6 +59,11 @@ extension Unit: Equatable where D.Features: Equatable, D.Symbol: Equatable {}
 
 // MARK: Self: Hashable
 extension Unit: Hashable where D.Features: Hashable, D.Symbol: Hashable {}
+
+// MARK: Self: Measurable
+extension Unit: Measurable where D: Dimension {
+    public typealias Value = D.Value
+}
 
 // MARK: Self: Sendable
 extension Unit: Sendable where D.Features: Sendable, D.Symbol: Sendable {}
