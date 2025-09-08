@@ -8,5 +8,6 @@
 import TrinketsUnits
 
 public extension MetricPrefix {
+    static let tubular: Self = .init(symbol: "hiHI", 4, e: 2)
     static let whoa: Self = .init(symbol: "ö", e: 11)
 }
