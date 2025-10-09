@@ -13,7 +13,7 @@ public struct MetricPrefix {
     // MARK: Initializers
     public init(symbol: String, _ base: Double = 10, e exponent: Int) {
         self.symbol = symbol
-        self.multiplier = loopPow(base, e: exponent)
+        self.multiplier = Double.pow(base, exponent)
     }
 }
 
