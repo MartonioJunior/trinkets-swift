@@ -156,4 +156,23 @@ struct LinearConverterTests {
             #expect(result == expected)
         }
     }
+
+    // MARK: OS 26
+    @available(macOS 26.0, *)
+    @Test("Transforms it into a PolynomialConverter", arguments: [
+        (LinearConverter(2, k: 8), PolynomialConverter<2, Double>([2, 8]))
+    ])
+    func polynomial(_ sut: LinearConverter, expected: PolynomialConverter<2, Double>) {
+        let result = sut.polynomial
+        #expect(result == expected)
+    }
+
+    @available(macOS 26.0, *)
+    @Test("Creates a LinearConverter from a polynomial function", arguments: [
+        (PolynomialConverter([2, 8]), LinearConverter(2, k: 8))
+    ])
+    func from(_ polynomial: PolynomialConverter<2, Double>, expected: LinearConverter) {
+        let result = LinearConverter.from(polynomial)
+        #expect(result == expected)
+    }
 }

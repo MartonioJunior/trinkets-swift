@@ -7,6 +7,7 @@
 
 import Foundation
 
+@available(macOS, introduced: 13, deprecated: 26.0, message: "Use PolynomialFunction<1, Double> instead on OS 26 and beyond.")
 public struct LinearConverter {
     // MARK: Variables
     public var constant: Double
@@ -89,3 +90,15 @@ extension LinearConverter: Equatable {}
 
 // MARK: Self: Sendable
 extension LinearConverter: Sendable {}
+
+// MARK: OS 26
+@available(macOS 26.0, *)
+public extension LinearConverter {
+    var polynomial: PolynomialConverter<2, Double> {
+        .linear(coefficient, k: constant)
+    }
+
+    static func from(_ polynomial: PolynomialConverter<2, Double>) -> Self {
+        .init(polynomial.coefficient, k: polynomial.constant)
+    }
+}
