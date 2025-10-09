@@ -131,3 +131,10 @@ public extension Measurement where Value: Numeric {
         .init(value: lhs.value * rhs, unit: lhs.unit)
     }
 }
+
+// MARK: Value: SignedNumeric
+extension Measurement where Value: SignedNumeric {
+    static prefix func - (rhs: Self) -> Self {
+        .init(value: -rhs.value, unit: rhs.unit)
+    }
+}

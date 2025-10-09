@@ -186,4 +186,15 @@ struct MeasurementTests {
             #expect(result == expected)
         }
     }
+
+    // MARK: V: SignedNumeric
+    struct VConformsToSignedNumeric {
+        @Test("Negates a measurement's value", arguments: [
+            (Gil.of(35, .zeni), Gil.of(-35, .zeni))
+        ])
+        func negate(_ sut: Mock, expected: Mock) {
+            let result = -sut
+            #expect(result == expected)
+        }
+    }
 }
