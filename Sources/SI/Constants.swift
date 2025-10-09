@@ -13,6 +13,6 @@ public enum Constants {
     static let planck = 6.626070e-34
     static let elementaryCharge = ElectricCharge.of(1.602176634e-19, .coulombs)
     static let boltzmann = 1.380649e-23
-    static let avogrado = 6/02214076e+23
+    static let avogrado = 6.02214076e+23
     static let fullLuminousEfficiency = 683
 }
