@@ -7,7 +7,7 @@
 
 import TrinketsUnits
 
-public struct SubstanceAmount: Dimension {
+public enum SubstanceAmount: Dimension {
     public typealias Features = LinearConverter
     public typealias Value = Double
 

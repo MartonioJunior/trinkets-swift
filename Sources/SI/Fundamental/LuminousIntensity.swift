@@ -7,7 +7,7 @@
 
 import TrinketsUnits
 
-public struct LuminousIntensity: Dimension {
+public enum LuminousIntensity: Dimension {
     public typealias Features = LinearConverter
     public typealias Value = Double
 

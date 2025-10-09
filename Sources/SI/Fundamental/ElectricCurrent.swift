@@ -7,7 +7,7 @@
 
 import TrinketsUnits
 
-public struct ElectricCurrent: Dimension {
+public enum ElectricCurrent: Dimension {
     public typealias Features = LinearConverter
     public typealias Value = Double
 

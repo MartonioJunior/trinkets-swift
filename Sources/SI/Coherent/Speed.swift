@@ -7,7 +7,7 @@
 
 import TrinketsUnits
 
-public struct Speed: Dimension {
+public enum Speed: Dimension {
     public typealias Features = LinearConverter
     public typealias Value = Double
 

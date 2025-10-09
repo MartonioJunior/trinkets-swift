@@ -7,7 +7,7 @@
 
 import TrinketsUnits
 
-public struct Force: Dimension {
+public enum Force: Dimension {
     public typealias Features = LinearConverter
     public typealias Value = Double
 

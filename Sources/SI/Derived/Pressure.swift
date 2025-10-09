@@ -9,7 +9,7 @@ import TrinketsUnits
 
 public typealias Stress = Pressure
 
-public struct Pressure: Dimension {
+public enum Pressure: Dimension {
     public typealias Features = LinearConverter
     public typealias Value = Double
 

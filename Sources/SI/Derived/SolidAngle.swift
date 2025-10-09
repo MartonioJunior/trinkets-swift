@@ -7,7 +7,7 @@
 
 import TrinketsUnits
 
-public struct SolidAngle: Dimension {
+public enum SolidAngle: Dimension {
     public typealias Features = LinearConverter
     public typealias Value = Double
 

@@ -9,7 +9,7 @@ import TrinketsUnits
 
 public typealias RadiantFlux = Power
 
-public struct Power: Dimension {
+public enum Power: Dimension {
     public typealias Features = LinearConverter
     public typealias Value = Double
 

@@ -10,7 +10,7 @@ import TrinketsUnits
 public typealias Work = Energy
 public typealias HeatAmount = Energy
 
-public struct Energy: Dimension {
+public enum Energy: Dimension {
     public typealias Features = LinearConverter
     public typealias Value = Double
 

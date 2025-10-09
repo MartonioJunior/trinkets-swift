@@ -7,7 +7,7 @@
 
 import TrinketsUnits
 
-public struct ElectricResistance: Dimension {
+public enum ElectricResistance: Dimension {
     public typealias Features = LinearConverter
     public typealias Value = Double
 
