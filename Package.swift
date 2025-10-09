@@ -54,7 +54,12 @@ let dependencies = [
 ]
 
 // MARK: - Targets
-let targets: [Target] = [
+var targets: [Target] = [
+    .target(
+        name: "Collectables",
+        dependencies: [.target(name: "TrinketsUnits")],
+        swiftSettings: .upcomingFeatures
+    ),
     .target(
         name: "SI",
         dependencies: ["TrinketsUnits"],
@@ -73,14 +78,22 @@ let targets: [Target] = [
 ]
 
 let testTargets: [Target] = targets.map {
-    .testTarget(name: "\($0.name)Tests", dependencies: [Target.Dependency(stringLiteral: $0.name)] + $0.dependencies)
+    .testTarget(name: "\($0.name)Tests", dependencies: [Target.Dependency(stringLiteral: $0.name)] + $0.dependencies + ["SM64Trinkets"])
 }
+
+targets.append(
+    .target(
+        name: "SM64Trinkets",
+        dependencies: ["Collectables"],
+        path: "Examples/SM64"
+    )
+)
 
 // MARK: - Products
 let products: [Product] = [
     .library(
         name: "Trinkets",
-        targets: ["Trinkets"]
+        targets: ["Collectables", "Trinkets"]
     ),
     .library(
         name: "UnitSI",
