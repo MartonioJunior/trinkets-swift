@@ -56,6 +56,11 @@ let dependencies = [
 // MARK: - Targets
 let targets: [Target] = [
     .target(
+        name: "Collectables",
+        dependencies: [.target(name: "TrinketsUnits")],
+        swiftSettings: .upcomingFeatures
+    ),
+    .target(
         name: "SI",
         dependencies: ["TrinketsUnits"],
         swiftSettings: .upcomingFeatures
@@ -80,7 +85,7 @@ let testTargets: [Target] = targets.map {
 let products: [Product] = [
     .library(
         name: "Trinkets",
-        targets: ["Trinkets"]
+        targets: ["Collectables", "Trinkets"]
     ),
     .library(
         name: "UnitSI",
