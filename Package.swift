@@ -67,6 +67,7 @@ let targets: [Target] = [
     ),
     .target(
         name: "TrinketsUnits",
+        dependencies: [numerics],
         swiftSettings: .upcomingFeatures
     )
 ]
