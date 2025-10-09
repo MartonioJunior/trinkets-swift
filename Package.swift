@@ -50,7 +50,7 @@ func targetDep(name: String, package: String) -> Target.Dependency {
 let numerics = targetDep(name: "Numerics", package: "swift-numerics")
 
 let dependencies = [
-    dep(url: "https://github.com/apple/swift-numerics", .upToNextMajor(from: "1.0.2"))
+    dep(url: "https://github.com/apple/swift-numerics", .upToNextMajor(from: "1.1.0")),
 ]
 
 // MARK: - Targets
