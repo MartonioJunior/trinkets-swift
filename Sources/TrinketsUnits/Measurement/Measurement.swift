@@ -118,6 +118,13 @@ public extension Measurement where Value: AdditiveArithmetic {
     }
 }
 
+// MARK: Value == Bool
+public extension Measurement where Value == Bool {
+    func negated() -> Self { .init(value: !value, unit: unit) }
+
+    static prefix func ! (rhs: Self) -> Self { rhs.negated() }
+}
+
 // MARK: Value: FloatingPoint
 public extension Measurement where Value: FloatingPoint {
     static func / (lhs: Self, rhs: Value) -> Self {
