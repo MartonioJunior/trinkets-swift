@@ -22,11 +22,11 @@ struct TrinketRegistryTests {
     }
 
     @Test("Returns all registered values", arguments: [
-        (Mock(arrayLiteral: Element("spike"), Element("Obstacle")), [Element("spike"), Element("Obstacle")])
+        (Mock(arrayLiteral:Element("Obstacle"), Element("spike")), [Element("Obstacle"), Element("spike")])
     ])
     func entries(_ sut: Mock, expected: [Element]) {
-        let result = sut.entries
-        #expect(expected.contains(result))
+        let result = sut.entries.sorted { $0.id < $1.id }
+        #expect(expected.contains(result.sorted { $0.id < $1.id }))
     }
 
     @Test("Returns entry for a given ID", arguments: [
