@@ -22,6 +22,11 @@ public struct Measured<M: Measurable & Convertible> {
         measurement = value.converted(to: unit)
         self.unit = unit
     }
+
+    public init(_ value: M.Value, _ unit: M = .base) {
+        measurement = .init(value: value, unit: unit)
+        self.unit = unit
+    }
 }
 
 // MARK: Self: Equatable
