@@ -4,7 +4,7 @@
 import Foundation
 import PackageDescription
 
-// MARK: Utilities
+// MARK: - Utilities
 public enum UpcomingFeatures: String, CaseIterable {
     case existentialAny
     case fullTypedThrows
@@ -57,7 +57,11 @@ let dependencies = [
 var targets: [Target] = [
     .target(
         name: "Collectables",
-        dependencies: [.target(name: "TrinketsUnits")],
+        dependencies: ["TrinketsUnits"],
+        swiftSettings: .upcomingFeatures
+    ),
+    .target(
+        name: "Custom",
         swiftSettings: .upcomingFeatures
     ),
     .target(
@@ -93,7 +97,7 @@ targets.append(
 let products: [Product] = [
     .library(
         name: "Trinkets",
-        targets: ["Collectables", "Trinkets"]
+        targets: ["Collectables", "Custom", "Trinkets"]
     ),
     .library(
         name: "UnitSI",
