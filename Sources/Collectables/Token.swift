@@ -32,6 +32,9 @@ extension Token: ExpressibleByStringLiteral where ID: ExpressibleByStringLiteral
     }
 }
 
+// MARK: Self: Hashable
+extension Token: Hashable {}
+
 // MARK: Self: Sendable
 extension Token: Sendable where ID: Sendable {}
 
