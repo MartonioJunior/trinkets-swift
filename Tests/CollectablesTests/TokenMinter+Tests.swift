@@ -1,5 +1,5 @@
 //
-//  Amount+Tests.swift
+//  TokenMinter+Tests.swift
 //  Trinkets
 //
 //  Created by Martônio Júnior on 08/10/2025.
@@ -8,8 +8,8 @@
 @testable import Collectables
 import Testing
 
-struct AmountTests {
-    typealias Mock = Amount<Double>
+struct TokenMinterTests {
+    typealias Mock = TokenMinter<Double>
 
     @Test("Creates a new Amount instance")
     func initializer() {
@@ -28,7 +28,7 @@ struct AmountTests {
         ("apple", Token<String, Double>("apple"))
     ])
     func of(_ tag: String, expected: Token<String, Double>) {
-        let result = Mock.of(tag)
+        let result = Mock.mint(tag)
         #expect(result == expected)
     }
 }
