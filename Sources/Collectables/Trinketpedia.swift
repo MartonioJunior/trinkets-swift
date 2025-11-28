@@ -5,11 +5,13 @@
 //  Created by Martônio Júnior on 22/09/2025.
 //
 
+import IdentifiedCollections
+
 /// Data structure that contains a collection of heterogenous trinket entries for a given context
 @dynamicMemberLookup
 public struct Trinketpedia {
     public typealias ID = String
-    public typealias Registry<T: Trinket> = TrinketRegistry<T>
+    public typealias Registry<T: Trinket> = IdentifiedArrayOf<T>
 
     // MARK: Variables
     var databases: [ID: Any] = [:]
@@ -42,7 +44,7 @@ public struct Trinketpedia {
         let key = T.trinketpediaID
 
         if databases.keys.contains(key), var registry = databases[key] as? Registry<T> {
-            database.entries.forEach { _ = registry.register($0) }
+            registry.append(contentsOf: database)
             databases[key] = registry
         } else {
             databases[key] = database

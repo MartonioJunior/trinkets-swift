@@ -5,6 +5,7 @@
 //  Created by Martônio Júnior on 08/10/2025.
 //
 
+@available(*, deprecated, message: "Replaced by `IdentifiedArrayOf<T>`. For dynamic member lookup, use Trinket.Key instead")
 @dynamicMemberLookup
 public struct TrinketRegistry<Entry: Trinket> {
     // MARK: Variables
@@ -57,9 +58,4 @@ extension TrinketRegistry: Sendable where Entry: Sendable, Entry.ID: Sendable {}
 // MARK: Self.Entry: CaseIterable
 extension TrinketRegistry where Entry: CaseIterable {
     static var allEntries: Self { .init(Entry.allCases.map(\.self)) }
-}
-
-// MARK: Trinket (EX)
-public extension Trinket {
-    typealias Registry = TrinketRegistry<Self>
 }
