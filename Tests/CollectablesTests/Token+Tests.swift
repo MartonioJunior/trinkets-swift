@@ -21,8 +21,8 @@ struct TokenTests {
 
     @Test("Creates a new Amount type")
     func emit() {
-        let result = Mock.emit(Double.self)
-        let expected = Amount<Double>()
+        let result = Mock.minting(Double.self)
+        let expected = TokenMinter<Double>()
         #expect(result == expected)
     }
 
@@ -40,14 +40,14 @@ struct TokenTests {
     @Test("Defines multiple ways to create a quantity")
     func syntax() {
         let quantityA: Token<String, Double> = "coin"
-        let quantityB: Token = .emit(Double.self).coin
-        let quantityC = Amount<Double>.of("coin")
+        let quantityB: Token = .minting(Double.self).coin
+        let quantityC = TokenMinter<Double>.mint("coin")
         let quantityD = Token<String, Double>("coin")
 
         typealias Material = Token<String, Int>
         let materialA: Material = "arnuCoat"
-        let materialB: Material = .emit().arnuCoat
-        let materialC = Amount<Int>.of("arnuCoat")
+        let materialB: Material = .minting().arnuCoat
+        let materialC = TokenMinter<Int>.mint("arnuCoat")
         let materialD = Material("arnuCoat")
     }
 }

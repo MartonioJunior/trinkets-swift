@@ -15,11 +15,6 @@ public struct Token<ID: Hashable, Value> {
     }
 }
 
-// MARK: DotSyntax
-public extension Token {
-    static func emit(_: Value.Type = Value.self) -> Amount<Value> { .init() }
-}
-
 // MARK: Self: Equatable
 extension Token: Equatable {}
 
@@ -40,3 +35,10 @@ extension Token: Sendable where ID: Sendable {}
 
 // MARK: Self: Trinket
 extension Token: Trinket {}
+
+// MARK: Self.ID: String
+public extension Token where ID == String {
+    static func auto(_ string: StaticString = #function) -> Self {
+        .init(string.description)
+    }
+}
