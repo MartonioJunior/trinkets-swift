@@ -17,20 +17,20 @@ public struct Trinketpedia {
     var databases: [ID: Any] = [:]
 
     // MARK: Subscripts
-    subscript<T: Trinket>(_: T.Type) -> Registry<T> {
+    public subscript<T: Trinket>(_: T.Type) -> Registry<T> {
         get { databases[T.trinketpediaID] as? Registry<T> ?? .init() }
         set { databases[T.trinketpediaID] = newValue }
     }
 
-    subscript<T: Trinket>(_: T.Type = T.self, id id: T.ID) -> T? {
+    public subscript<T: Trinket>(_: T.Type = T.self, id id: T.ID) -> T? {
         self[T.self][id: id]
     }
 
-    subscript<T: Trinket>(dynamicMember member: String) -> T? where T.ID == String {
+    public subscript<T: Trinket>(dynamicMember member: String) -> T? where T.ID == String {
         self[T.self, id: member]
     }
 
-    subscript<T: Trinket>(key: TrinketKey<T>) -> T? {
+    public subscript<T: Trinket>(key: TrinketKey<T>) -> T? {
         self[T.self, id: key.referenceID]
     }
 
@@ -38,9 +38,9 @@ public struct Trinketpedia {
     public init() {}
 
     // MARK: Methods
-    func fetch<T: Trinket>(id: T.ID) -> T? { self[T.self, id: id] }
+    public func fetch<T: Trinket>(id: T.ID) -> T? { self[T.self, id: id] }
 
-    mutating func register<T: Trinket>(_: T.Type = T.self, _ database: Registry<T>) {
+    public mutating func register<T: Trinket>(_: T.Type = T.self, _ database: Registry<T>) {
         let key = T.trinketpediaID
 
         if databases.keys.contains(key), var registry = databases[key] as? Registry<T> {
@@ -51,11 +51,11 @@ public struct Trinketpedia {
         }
     }
 
-    mutating func removeDatabase<T: Trinket>(_: T.Type) {
+    public mutating func removeDatabase<T: Trinket>(_: T.Type) {
         databases.removeValue(forKey: T.trinketpediaID)
     }
 
-    mutating func removeAll() {
+    public mutating func removeAll() {
         databases.removeAll()
     }
 }
