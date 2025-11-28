@@ -12,9 +12,9 @@ import Testing
 public extension Trinketpedia {
     static var example: Trinketpedia {
         var result = Trinketpedia()
-        result[MockMaterial.self] = .allEntries
+        result[MockMaterial.self] = .allCases
         result[MockItem.self] = []
-        result[MockCurrency.self] = .allEntries
+        result[MockCurrency.self] = .allCases
         result[MockAccessory.self] = []
         result[MockTicket.self] = []
         return result
@@ -76,9 +76,9 @@ struct TrinketpediaTests {
     }
 
     @Test("Adds new Trinkets to the data structure", arguments: [
-        (Trinketpedia(), MockCurrency.Registry.allEntries, MockCurrency.Registry.allEntries),
-        (Trinketpedia.example, MockCurrency.Registry.allEntries, MockCurrency.Registry.allEntries),
-        (Trinketpedia.example, MockCurrency.Registry(), MockCurrency.Registry.allEntries),
+        (Trinketpedia(), MockCurrency.Registry.allCases, MockCurrency.Registry.allCases),
+        (Trinketpedia.example, MockCurrency.Registry.allCases, MockCurrency.Registry.allCases),
+        (Trinketpedia.example, MockCurrency.Registry(), MockCurrency.Registry.allCases),
         (Trinketpedia(), MockCurrency.Registry(), MockCurrency.Registry())
     ])
     func register(_ sut: Trinketpedia, _ database: MockCurrency.Registry, expected: MockCurrency.Registry) {
@@ -90,8 +90,8 @@ struct TrinketpediaTests {
     @Test("Deletes a database from the data structure", arguments: [
         (Trinketpedia(), true, MockCurrency.Registry(), MockMaterial.Registry()),
         (Trinketpedia(), false, MockCurrency.Registry(), MockMaterial.Registry()),
-        (Trinketpedia.example, true, MockCurrency.Registry.allEntries, MockMaterial.Registry()),
-        (Trinketpedia.example, false, MockCurrency.Registry(), MockMaterial.Registry.allEntries)
+        (Trinketpedia.example, true, MockCurrency.Registry.allCases, MockMaterial.Registry()),
+        (Trinketpedia.example, false, MockCurrency.Registry(), MockMaterial.Registry.allCases)
     ])
     func removeDatabase(
         _ sut: Trinketpedia,
@@ -133,7 +133,6 @@ struct TrinketpediaTests {
         let materialB: MockMaterial? = trinketpedia[id: "wingFeather"]
         let materialC: MockMaterial? = trinketpedia.wingFeather
         let dynamicFromKey = trinketpedia[MockAccessory.Key.lostAnkle]
-        let dynamicFromRegistry = trinketpedia[MockMaterial.self].wing
         let location = trinketpedia[MockTicket.self, id: 10]
     }
 }
