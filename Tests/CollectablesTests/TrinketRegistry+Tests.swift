@@ -6,7 +6,6 @@
 //
 
 @testable import Collectables
-import SM64Trinkets
 import Testing
 
 struct TrinketRegistryTests {
@@ -102,8 +101,8 @@ struct TrinketRegistryTests {
     struct EntryIsCaseIterable {
         @Test("Returns a registry with all cases")
         func allEntries() {
-            let result = TrinketRegistry<SM64Cap>.allEntries
-            let expected = TrinketRegistry(SM64Cap.allCases)
+            let result = TrinketRegistry<MockMaterial>.allEntries
+            let expected = TrinketRegistry(MockMaterial.allCases)
             #expect(result == expected)
         }
     }

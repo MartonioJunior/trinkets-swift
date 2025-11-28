@@ -82,7 +82,7 @@ var targets: [Target] = [
 ]
 
 let testTargets: [Target] = targets.map {
-    .testTarget(name: "\($0.name)Tests", dependencies: [Target.Dependency(stringLiteral: $0.name)] + $0.dependencies + ["SM64Trinkets"])
+    .testTarget(name: "\($0.name)Tests", dependencies: [Target.Dependency(stringLiteral: $0.name)] + $0.dependencies)
 }
 
 targets.append(
