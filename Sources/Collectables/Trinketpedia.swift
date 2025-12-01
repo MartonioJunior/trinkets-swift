@@ -31,7 +31,7 @@ public struct Trinketpedia {
     }
 
     public subscript<T: Trinket>(key: TrinketKey<T>) -> T? {
-        self[T.self, id: key.referenceID]
+        self[T.self, id: key.id]
     }
 
     // MARK: Initializers

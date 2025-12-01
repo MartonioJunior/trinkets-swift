@@ -11,7 +11,7 @@ public typealias TrinketKey<T: Trinket> = IDKey<T.ID, T>
 @dynamicMemberLookup
 public struct IDKey<ID, Value> {
     // MARK: Variables
-    var referenceID: ID
+    let referenceID: ID
 
     var typeID: ObjectIdentifier { .init(Value.self) }
 
@@ -40,6 +40,11 @@ extension IDKey: ExpressibleByStringLiteral where ID: ExpressibleByStringLiteral
 
 // MARK: Self: Hashable
 extension IDKey: Hashable where ID: Hashable {}
+
+// MARK: Self: Identifiable
+extension IDKey: Identifiable where ID: Hashable {
+    public var id: ID { referenceID }
+}
 
 // MARK: Self: Sendable
 extension IDKey: Sendable where ID: Sendable {}
