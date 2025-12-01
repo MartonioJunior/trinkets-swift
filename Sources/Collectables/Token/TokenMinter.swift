@@ -5,8 +5,6 @@
 //  Created by Martônio Júnior on 27/08/2025.
 //
 
-import TrinketsUnits
-
 @dynamicMemberLookup
 public struct TokenMinter<Value> {
     @inlinable
