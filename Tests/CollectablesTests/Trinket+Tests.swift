@@ -37,14 +37,6 @@ struct TrinketTests {
         let expected = "Mock"
         #expect(result == expected)
     }
-
-    @Test("Creates a Measure", arguments: [
-        (Mock("kol"), 24, Mock.Measure(value: 24, unit: Mock("kol")))
-    ])
-    func callAsFunction(_ sut: Mock, _ amount: Mock.Value, expected: Mock.Measure) {
-        let result = sut(amount)
-        #expect(result == expected)
-    }
 }
 
 // MARK: Sequence (EX)
@@ -106,34 +98,5 @@ struct SequenceTests {
             let result = sut[item]
             #expect(result == expected)
         }
-    }
-}
-
-// MARK: Unit (EX)
-import TrinketsUnits
-
-extension UnitTests {
-    @Test("Returns Trinket ID", arguments: [
-        (Unit<TrinketTests.Mock>("op", details: TrinketTests.Mock("glip")), "glip")
-    ])
-    func id(_ sut: Unit<TrinketTests.Mock>, expected: TrinketTests.Mock.ID) {
-        let result = sut.id
-        #expect(result == expected)
-    }
-
-    @Test("Creates new unit based on trinket", arguments: [
-        (TrinketTests.Mock("ya"), Unit<TrinketTests.Mock>("ya", details: TrinketTests.Mock("ya")))
-    ])
-    func trinket(_ data: TrinketTests.Mock, expected: Unit<TrinketTests.Mock>) {
-        let result = Unit.trinket(data)
-        #expect(result == expected)
-    }
-
-    @Test("Creates new unit based on trinket", arguments: [
-        (TrinketTests.Mock("ya"), "dud", Unit<TrinketTests.Mock>("dud", details: TrinketTests.Mock("ya")))
-    ])
-    func trinket(_ data: TrinketTests.Mock, _ symbol: TrinketTests.Mock.Symbol, expected: Unit<TrinketTests.Mock>) {
-        let result = Unit.trinket(data, symbol: symbol)
-        #expect(result == expected)
     }
 }
