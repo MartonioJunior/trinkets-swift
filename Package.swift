@@ -59,7 +59,7 @@ let dependencies = [
 var targets: [Target] = [
     .target(
         name: "Collectables",
-        dependencies: ["TrinketsUnits", identifiedCollections],
+        dependencies: [identifiedCollections],
         swiftSettings: .upcomingFeatures
     ),
     .target(

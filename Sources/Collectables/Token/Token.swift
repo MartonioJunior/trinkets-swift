@@ -5,8 +5,6 @@
 //  Created by Martônio Júnior on 22/09/2025.
 //
 
-import TrinketsUnits
-
 public struct Token<ID: Hashable, Value> {
     // MARK: Variables
     public let id: ID
@@ -31,9 +29,6 @@ extension Token: ExpressibleByStringLiteral where ID: ExpressibleByStringLiteral
 
 // MARK: Self: Hashable
 extension Token: Hashable {}
-
-// MARK: Self: Measurable
-extension Token: Measurable {}
 
 // MARK: Self: Sendable
 extension Token: Sendable where ID: Sendable {}
