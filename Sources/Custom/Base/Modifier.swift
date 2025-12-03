@@ -12,6 +12,20 @@ public protocol Modifier<Target, Output> {
     func apply(to target: inout Target) -> Output
 }
 
+// MARK: Modifier.Target: Optional
+public extension Modifier {
+    func apply<T>(toWrapped target: inout T) -> Output? where Target == T? {
+        let result = preview(on: target)
+
+        if let newTarget = result.target {
+            target = newTarget
+            return result.output
+        }
+
+        return nil
+    }
+}
+
 // MARK: Sequence (EX)
 extension Sequence where Element: Modifier, Element.Output == Void {
     func apply(to target: inout Element.Target) {
