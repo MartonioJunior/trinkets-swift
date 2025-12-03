@@ -9,8 +9,8 @@ public typealias PreviewFor<M: Modifier> = Preview<M.Target, M.Output>
 
 public struct Preview<Target, Output> {
     // MARK: Variables
-    var target: Target
-    var output: Output
+    public var target: Target
+    public var output: Output
 
     // MARK: Initializer
     public init(_ target: Target, output: Output) {
@@ -25,8 +25,17 @@ extension Preview: Equatable where Target: Equatable, Output: Equatable {}
 // MARK: Self: Sendable
 extension Preview: Sendable where Target: Sendable, Output: Sendable {}
 
+// MARK: Self.Output: ExpressibleByNilLiteral
+extension Preview where Output: ExpressibleByNilLiteral {
+    public init(_ target: Target) {
+        self.init(target, output: nil)
+    }
+}
+
 // MARK: Modifier (EX)
 public extension Modifier {
+    typealias Previewed = PreviewFor<Self>
+
     func apply(
         to target: inout Target,
         predicate: (PreviewFor<Self>) -> Bool
