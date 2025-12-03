@@ -1,0 +1,61 @@
+name: DocC Publishing
+
+on:
+  release:
+    types: [published]
+  push:
+    branches: ["main"]
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+  
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: SwiftyLab/setup-swift@latest
+        with:
+          swift-version: "6.2.0"
+      - name: Generate Documentation
+        run: |
+          # Pretty print DocC JSON output so that it can be consistently diffed between commits
+          export DOCC_JSON_PRETTYPRINT="YES"
+
+          # Create docs directory
+          mkdir -p ./docs
+
+          # Generate documentation
+          swift package \
+            --allow-writing-to-directory ./docs \
+            generate-documentation \
+            --target Trinkets \
+            --disable-indexing \
+            --output-path ./docs \
+            --transform-for-static-hosting \
+            --hosting-base-path swift-trinkets
+      
+            # Redirect to the home for the package
+            echo "<script>window.location.href += \"/documentation/swift-trinkets\"</script>" > docs/index.html;
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'docs'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
