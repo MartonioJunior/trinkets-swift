@@ -26,6 +26,19 @@ public extension Appendable {
     }
 }
 
+// MARK: Self.Append == Void
+public extension Appendable where Self.Append == Void {
+    var upgraded: Appended { appending(()) }
+}
+
+public extension Appendable where Self.Append == Void, Appended == Self {
+    mutating func upgrade() { append(()) }
+
+    mutating func upgrade(by step: UInt) {
+        for _ in 0..<step { upgrade() }
+    }
+}
+
 // MARK: Self.Appended == Self
 public extension Appendable where Appended == Self {
     mutating func append(_ value: Append) {
