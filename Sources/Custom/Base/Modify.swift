@@ -83,4 +83,12 @@ public extension Modifier {
             return result
         }
     }
+
+    static func noop<T>() -> Self where Self == Modify<T, Void> {
+        Modify { _ in }
+    }
+
+    static func noop<T, O>() -> Self where Self == Modify<T, O?> {
+        Modify { _ in nil }
+    }
 }
