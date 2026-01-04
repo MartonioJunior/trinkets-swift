@@ -22,6 +22,19 @@ public extension Removable {
     }
 }
 
+// MARK: Self.Remove == Void
+public extension Removable where Self.Remove == Void {
+    var downgraded: Removed { removing(()) }
+}
+
+public extension Removable where Self.Remove == Void, Removed == Self {
+    mutating func downgrade() { remove(()) }
+
+    mutating func downgrade(by step: UInt) {
+        for _ in 0..<step { downgrade() }
+    }
+}
+
 // MARK: Self.Removed == Self
 public extension Removable where Removed == Self {
     mutating func remove(_ value: Remove) {
