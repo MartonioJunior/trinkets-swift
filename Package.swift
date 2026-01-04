@@ -67,6 +67,11 @@ var targets: [Target] = [
         swiftSettings: .upcomingFeatures
     ),
     .target(
+        name: "Inventory",
+        dependencies: ["TrinketsUnits"],
+        swiftSettings: .upcomingFeatures
+    ),
+    .target(
         name: "SI",
         dependencies: ["TrinketsUnits"],
         swiftSettings: .upcomingFeatures
@@ -99,7 +104,7 @@ targets.append(
 let products: [Product] = [
     .library(
         name: "Trinkets",
-        targets: ["Collectables", "Custom", "Trinkets"]
+        targets: ["Collectables", "Custom", "Inventory", "Trinkets"]
     ),
     .library(
         name: "UnitSI",
