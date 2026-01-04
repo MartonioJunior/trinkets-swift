@@ -5,9 +5,7 @@
 //  Created by Martônio Júnior on 27/09/2025.
 //
 
-public typealias Slot<Value> = Stat<Modify<Value?, Void>>
 public typealias StatOf<Value> = Stat<Modify<Value, Void>>
-
 
 @propertyWrapper
 public struct Stat<Mod: Modifier> where Mod.Output == Void {

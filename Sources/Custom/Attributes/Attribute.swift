@@ -5,7 +5,6 @@
 //  Created by Martônio Júnior on 27/09/2025.
 //
 
-public typealias AttributeSlot<Value> = Attribute<Modify<Value?, Void>>
 public typealias AttributeOf<Value> = Attribute<Modify<Value, Void>>
 
 @propertyWrapper
