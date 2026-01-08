@@ -95,7 +95,7 @@ let testTargets: [Target] = targets.map {
 targets.append(
     .target(
         name: "SM64Trinkets",
-        dependencies: ["Collectables"],
+        dependencies: ["Collectables", "Custom", "Trinkets"],
         path: "Examples/SM64"
     )
 )
