@@ -78,7 +78,7 @@ var targets: [Target] = [
     ),
     .target(
         name: "Trinkets",
-        dependencies: ["SI", "TrinketsUnits", numerics],
+        dependencies: ["Collectables", "Custom", "Inventory", "SI", "TrinketsUnits", numerics],
         swiftSettings: .upcomingFeatures
     ),
     .target(
