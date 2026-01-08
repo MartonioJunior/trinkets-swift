@@ -30,6 +30,20 @@ struct MeasuredTests {
         #expect(result.unit == unit)
     }
 
+    @Test("Creates instance with measurement", arguments: [
+        (32, Gil.in(.linen), Gil.of(32, .linen), Gil.in(.linen))
+    ])
+    func initializer(
+        _ value: Gil.Value,
+        _ unit: Unit<Gil>,
+        expectedMeasurement: Gil.Measure,
+        expectedUnit: Unit<Gil>
+    ) {
+        let result = Measured<G>(value, unit)
+        #expect(result.measurement == expectedMeasurement)
+        #expect(result.unit == expectedUnit)
+    }
+
     @Test("Returns value of Measurement", arguments: [
         (Measured(wrappedValue: Gil.of(13, .gil), in: .gil), Gil.of(13, .gil)),
         (Measured(wrappedValue: Gil.of(13, .zeni), in: .linen), Gil.of(16, .linen))
