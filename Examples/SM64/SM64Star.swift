@@ -9,7 +9,6 @@ import Collectables
 
 public enum SM64Star {
     case bowser(SM64Location.Bowser)
-    case cap(SM64Cap)
     case course(SM64Location.Course, Mission)
     case mips(Mips)
     case special(Special)
@@ -47,21 +46,23 @@ extension SM64Star.Mission: Identifiable {
 
 // MARK: Self.Special
 public extension SM64Star {
-    enum Special {
+    enum Special: CaseIterable, Equatable, Hashable {
         case secret(SM64Location.Secret)
         case princessPeachSlideTimed
+
+        public static var allCases: [SM64Star.Special] {
+            SM64Location.Secret.allCases.map { .secret($0) } + [.princessPeachSlideTimed]
+        }
     }
 }
-
-extension SM64Star.Special: Hashable {}
 
 extension SM64Star.Special: Identifiable {
     public var id: String {
         switch self {
             case let .secret(secret):
-                "\(secret.rawValue)"
+                "\(secret.id)"
             case .princessPeachSlideTimed:
-                "\(SM64Location.Secret.princessSecretSlide.rawValue))Timed"
+                "\(SM64Location.Secret.princessSecretSlide.id))Timed"
         }
     }
 }
@@ -75,16 +76,20 @@ public extension SM64Star {
     }
 }
 
-// MARK: Self: Collectable
-extension SM64Star: Collectable {
+// MARK: Self: Equatable
+extension SM64Star: Equatable {}
+
+// MARK: Self: Hashable
+extension SM64Star: Hashable {}
+
+// MARK: Self: Trinket
+extension SM64Star: Trinket {
     public var id: String {
         switch self {
             case let .bowser(bowser):
-                "bowser\(bowser.rawValue)"
+                "bowser\(bowser.id)"
             case let .course(course, mission):
-                "\(course.rawValue)-\(mission.id)"
-            case let .cap(cap):
-                "\(cap.id)cap"
+                "\(course.id)-\(mission.id)"
             case let .mips(mips):
                 "mips\(mips.rawValue)"
             case let .special(secret):
@@ -95,19 +100,21 @@ extension SM64Star: Collectable {
     }
 }
 
-// MARK: Self: Hashable
-extension SM64Star: Hashable {}
-
 // MARK: Expanding the Domain
 var canTheEelComeOutToPlay: SM64Star { .course(.jollyRogerBay, .second) }
 var bowserInTheSkyStar: SM64Star { .bowser(.sky) }
 var princessPeachSlideIn21Seconds: SM64Star { .special(.princessPeachSlideTimed) }
 
 public extension SM64Star {
+    static var castleSecretStars: [SM64Star] {
+        SM64Star.Toad.allCases.map { .toad($0) }
+        + SM64Star.Mips.allCases.map { .mips($0) }
+        + SM64Star.Special.allCases.map { .special($0) }
+    }
+
     var location: SM64Location {
         switch self {
             case let .bowser(bowser): .bowser(bowser)
-            case let .cap(cap): cap.location
             case let .course(course, _): .course(course)
             case let .mips(mips): mips.location
             case let .special(special): special.location
@@ -133,7 +140,8 @@ public extension SM64Star.Toad {
     var location: SM64Location {
         switch self {
             case .first: .castle(.basement)
-            case .second, .third: .castle(.secondFloor)
+            case .second: .castle(.secondFloor)
+            case .third: .castle(.thirdFloor)
         }
     }
 }

@@ -25,6 +25,9 @@ extension SM64KeyItem.Key: Identifiable {
     public var id: String { "key\(rawValue.uppercased())" }
 }
 
+// MARK: Self: Equatable
+extension SM64KeyItem: Equatable {}
+
 // MARK: Self: Hashable
 extension SM64KeyItem: Hashable {}
 
