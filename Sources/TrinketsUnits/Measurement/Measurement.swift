@@ -20,6 +20,11 @@ public struct Measurement<UnitType: Measurable> {
         self.value = value
         self.unit = unit
     }
+
+    // MARK: Methods
+    public func map(_ transform: (Value) -> Value) -> Self {
+        unit.x(transform(value))
+    }
 }
 
 // MARK: Self: AdditiveArithmetic
@@ -97,6 +102,14 @@ public extension Measurement where UnitType: Convertible {
 
     func rawValue(in otherUnit: UnitType) -> Value {
         converted(to: otherUnit).value
+    }
+}
+
+public extension Measurement where UnitType: Convertible, UnitType.Value: SignedNumeric & Comparable {
+    func clamped(by measurement: Self) -> Self {
+        let magnitude = min(abs(baseValue), abs(measurement.baseValue))
+        let value = (baseValue > .zero) ? magnitude : -magnitude
+        return .init(value, .base)
     }
 }
 

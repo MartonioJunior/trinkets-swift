@@ -21,6 +21,15 @@ struct MeasurementTests {
         #expect(result.unit == unit)
     }
 
+    // MARK: Methods
+    @Test("Maps the value to a new amount", arguments: [
+        (Gil.of(23, .zeni), Gil.of(46, .zeni))
+    ])
+    func map(_ sut: Mock, expected: Mock) {
+        let result = sut.map { $0 * 2 }
+        #expect(result == expected)
+    }
+
     // MARK: Self: ExpressibleByFloatLiteral
     struct ConformsToExpressibleByFloatLiteral {
         @Test("Creates new measurement from floating point", arguments: [
@@ -68,6 +77,7 @@ struct MeasurementTests {
             (Gil.of(15, .zeni), 45),
             (Gil.of(9, .gil), 9),
             (Gil.of(4, .linen), 15),
+            (Gil.of(50, .zero), 0),
         ])
         func baseValue(_ sut: Mock, expected: Mock.Value) {
             #expect(sut.baseValue == expected)
@@ -84,6 +94,7 @@ struct MeasurementTests {
 
         @Test("Converts a measurement to another unit", arguments: [
             (Gil.of(10, .linen), Gil.in(.zeni), Measurement(9, .zeni)),
+            (Gil.of(9, .zeni), Gil.in(.linen), Measurement(10, .linen))
         ])
         func convert(_ sut: Mock, to otherUnit: Unit<Gil>, expected: Mock) {
             var methodA = sut
@@ -163,6 +174,29 @@ struct MeasurementTests {
         }
     }
 
+    // MARK: V == Bool
+    struct VIsBool {
+        typealias Mock = Toggle.Measure
+        struct Toggle: Measurable, Equatable {
+            typealias Value = Bool
+        }
+
+        @Test("Toggles the value of the measurement", arguments: [
+            (Toggle().x(true), Toggle().x(false)),
+            (Toggle().x(false), Toggle().x(true))
+        ])
+        func negated(
+            _ sut: Mock,
+            expected: Mock
+        ) {
+            let resultA = sut.negated()
+            let resultB = !sut
+
+            #expect(resultA == expected)
+            #expect(resultB == expected)
+        }
+    }
+
     // MARK: V: FloatingPoint
     struct VConformsToFloatingPoint {
         @Test("Divides measurement by value", arguments: [
@@ -193,6 +227,21 @@ struct MeasurementTests {
         ])
         func negate(_ sut: Mock, expected: Mock) {
             let result = -sut
+            #expect(result == expected)
+        }
+
+        @Test("Clamps a measurement's value", arguments: [
+            (Gil.of(35, .zeni), Gil.of(20, .zeni), Gil.of(60, .gil)),
+            (Gil.of(35, .zeni), Gil.of(2, .linen), Gil.of(11, .gil)),
+            (Gil.of(35, .zeni), Gil.of(50, .linen), Gil.of(105, .gil)),
+            (Gil.of(35, .zeni), Gil.of(-20, .zeni), Gil.of(60, .gil)),
+            (Gil.of(-35, .zeni), Gil.of(20, .zeni), Gil.of(-60, .gil)),
+            (Gil.of(-35, .zeni), Gil.of(2, .linen), Gil.of(-11, .gil)),
+            (Gil.of(-35, .zeni), Gil.of(50, .linen), Gil.of(-105, .gil)),
+            (Gil.of(-35, .zeni), Gil.of(-20, .zeni), Gil.of(-60, .gil))
+        ])
+        func clamped(_ sut: Mock, by measurement: Mock, expected: Mock) {
+            let result = sut.clamped(by: measurement)
             #expect(result == expected)
         }
     }
