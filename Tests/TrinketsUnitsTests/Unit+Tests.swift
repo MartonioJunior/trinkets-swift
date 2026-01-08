@@ -48,9 +48,9 @@ struct UnitTests {
     // MARK: D: Dimension
     struct DConformsToDimension {
         @Test("Creates new measurement by combining unit with value", arguments: [
-            (Gil.in(.zeni) * 80, Measurement(value: 80, unit: .zeni)),
-            (80 * Gil.in(.zeni), Measurement(value: 80, unit: .zeni)),
-            (Gil.in(.zeni).x(80), Measurement(value: 80, unit: .zeni)),
+            (Gil.in(.zeni) * 80, Measurement(80, .zeni)),
+            (80 * Gil.in(.zeni), Measurement(80, .zeni)),
+            (Gil.in(.zeni).x(80), Measurement(80, .zeni)),
         ])
         func multiply(_ sut: Gil.Measure, expected: Gil.Measure) {
             #expect(sut == expected)

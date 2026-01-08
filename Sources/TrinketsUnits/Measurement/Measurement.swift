@@ -16,7 +16,7 @@ public struct Measurement<UnitType: Measurable> {
     public let unit: UnitType
 
     // MARK: Initializers
-    public init(value: Value, unit: UnitType) {
+    public init(_ value: Value, _ unit: UnitType) {
         self.value = value
         self.unit = unit
     }
@@ -24,20 +24,20 @@ public struct Measurement<UnitType: Measurable> {
 
 // MARK: Self: AdditiveArithmetic
 extension Measurement: AdditiveArithmetic where UnitType: Convertible & Equatable, Value: AdditiveArithmetic {
-    public static var zero: Self { .init(value: .zero, unit: .base) }
+    public static var zero: Self { .init(.zero, .base) }
 
     public static func + (lhs: Self, rhs: Self) -> Self {
         let baseUnit = lhs.unit
         let rhsValue = rhs.rawValue(in: baseUnit)
 
-        return .init(value: lhs.value + rhsValue, unit: baseUnit)
+        return .init(lhs.value + rhsValue, baseUnit)
     }
 
     public static func - (lhs: Self, rhs: Self) -> Self {
         let baseUnit = lhs.unit
         let rhsValue = rhs.rawValue(in: baseUnit)
 
-        return .init(value: lhs.value - rhsValue, unit: baseUnit)
+        return .init(lhs.value - rhsValue, baseUnit)
     }
 }
 
@@ -54,14 +54,14 @@ extension Measurement: Equatable where UnitType: Equatable, Value: Equatable {}
 // MARK: Self: ExpressibleByFloatLiteral
 extension Measurement: ExpressibleByFloatLiteral where UnitType: Convertible, Value: ExpressibleByFloatLiteral {
     public init(floatLiteral value: Value.FloatLiteralType) {
-        self.init(value: Value(floatLiteral: value), unit: .base)
+        self.init(Value(floatLiteral: value), .base)
     }
 }
 
 // MARK: Self: ExpressibleByIntegerLiteral
 extension Measurement: ExpressibleByIntegerLiteral where UnitType: Convertible, Value: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: Value.IntegerLiteralType) {
-        self.init(value: Value(integerLiteral: value), unit: .base)
+        self.init(Value(integerLiteral: value), .base)
     }
 }
 
@@ -78,7 +78,7 @@ extension Measurement: Strideable where Self: Comparable, Value: SignedNumeric {
     }
 
     public func advanced(by n: Value) -> Self {
-        .init(value: value + n, unit: unit)
+        .init(value + n, unit)
     }
 }
 
@@ -92,7 +92,7 @@ public extension Measurement where UnitType: Convertible {
 
     func converted(to otherUnit: UnitType) -> Self {
         let valueInOtherUnit = UnitType.convert(baseValue, to: otherUnit)
-        return .init(value: valueInOtherUnit, unit: otherUnit)
+        return .init(valueInOtherUnit, otherUnit)
     }
 
     func rawValue(in otherUnit: UnitType) -> Value {
@@ -103,24 +103,24 @@ public extension Measurement where UnitType: Convertible {
 // MARK: UnitType: Dimension
 public extension Measurement {
     func inBaseUnit<D: Dimension>() -> Self where UnitType == Unit<D> {
-        .init(value: D.baseValue(of: value, unit), unit: D.baseUnit)
+        .init(D.baseValue(of: value, unit), D.baseUnit)
     }
 }
 
 // MARK: Value: AdditiveArithmetic
 public extension Measurement where Value: AdditiveArithmetic {
     static func + (lhs: Self, rhs: Value) -> Self {
-        .init(value: lhs.value + rhs, unit: lhs.unit)
+        .init(lhs.value + rhs, lhs.unit)
     }
 
     static func - (lhs: Self, rhs: Value) -> Self {
-        .init(value: lhs.value - rhs, unit: lhs.unit)
+        .init(lhs.value - rhs, lhs.unit)
     }
 }
 
 // MARK: Value == Bool
 public extension Measurement where Value == Bool {
-    func negated() -> Self { .init(value: !value, unit: unit) }
+    func negated() -> Self { .init(!value, unit) }
 
     static prefix func ! (rhs: Self) -> Self { rhs.negated() }
 }
@@ -128,20 +128,20 @@ public extension Measurement where Value == Bool {
 // MARK: Value: FloatingPoint
 public extension Measurement where Value: FloatingPoint {
     static func / (lhs: Self, rhs: Value) -> Self {
-        .init(value: lhs.value / rhs, unit: lhs.unit)
+        .init(lhs.value / rhs, lhs.unit)
     }
 }
 
 // MARK: Value: Numeric
 public extension Measurement where Value: Numeric {
     static func * (lhs: Self, rhs: Value) -> Self {
-        .init(value: lhs.value * rhs, unit: lhs.unit)
+        .init(lhs.value * rhs, lhs.unit)
     }
 }
 
 // MARK: Value: SignedNumeric
 extension Measurement where Value: SignedNumeric {
     static prefix func - (rhs: Self) -> Self {
-        .init(value: -rhs.value, unit: rhs.unit)
+        .init(-rhs.value, rhs.unit)
     }
 }

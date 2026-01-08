@@ -24,7 +24,7 @@ public extension Dimension {
     static var dimensionality: Dimensionality { [Self.self: 1] }
 
     static func of(_ value: Unit.Value, _ unit: Unit) -> Measurement<Unit> {
-        .init(value: value, unit: unit)
+        .init(value, unit)
     }
 
     static func `in`(_ unit: Unit) -> Unit { unit }
