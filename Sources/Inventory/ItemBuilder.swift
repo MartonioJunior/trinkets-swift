@@ -75,7 +75,7 @@ public enum ItemBuilder<Item: Measurable> {
 
 // MARK: Self.Supply
 public extension ItemBuilder {
-    public struct Supply {
+    struct Supply {
         var items: [Stock]
 
         public init(_ items: [Stock]) { self.items = items }

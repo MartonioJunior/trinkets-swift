@@ -10,7 +10,6 @@ import TrinketsUnits
 public protocol Inventory: ItemCollection {
     // MARK: Aliases
     associatedtype Contents: Collection where Contents.Element == Item.Measure
-    associatedtype Item: Measurable where Item.Value == Tally
     // MARK: Variables
     /// List of contents that the inventory has
     /// 
