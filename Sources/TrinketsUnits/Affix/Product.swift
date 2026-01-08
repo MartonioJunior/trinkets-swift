@@ -35,7 +35,7 @@ extension Product: Domain {
 }
 
 // MARK: Self: Dimension
-extension Product: Dimension & Measurable where A: Dimension, B: Dimension, A.Value == B.Value, A.Value: Numeric {
+extension Product: Dimension, Measurable where A: Dimension, B: Dimension, A.Value == B.Value, A.Value: Numeric {
     public typealias Value = A.Value
 
     public static var baseUnit: Self.Unit { A.baseUnit * B.baseUnit }
