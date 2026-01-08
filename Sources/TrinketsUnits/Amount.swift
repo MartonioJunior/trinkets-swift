@@ -38,4 +38,8 @@ extension Amount: Sendable {}
 // MARK: Unit (EX)
 public extension Unit where D == Amount {
     static func auto(_ string: StaticString = #function) -> Self { Amount.of(string.description) }
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.symbol == rhs.symbol
+    }
 }
