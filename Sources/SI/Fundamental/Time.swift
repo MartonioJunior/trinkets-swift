@@ -28,7 +28,7 @@ public extension Measurement where UnitType == Unit<Time> {
         let v = duration.components
         let fractional = Double(v.attoseconds) * 10e-19
         let durationAsDouble = Double(v.seconds) + fractional
-        self.init(value: durationAsDouble, unit: .seconds)
+        self.init(durationAsDouble, .seconds)
     }
 
     var asDuration: Duration { .seconds(baseValue) }
