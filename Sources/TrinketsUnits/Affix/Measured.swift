@@ -24,7 +24,7 @@ public struct Measured<M: Measurable & Convertible> {
     }
 
     public init(_ value: M.Value, _ unit: M = .base) {
-        measurement = .init(value: value, unit: unit)
+        measurement = .init(value, unit)
         self.unit = unit
     }
 }

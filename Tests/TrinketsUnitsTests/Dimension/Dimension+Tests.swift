@@ -12,7 +12,7 @@ struct DimensionTests {
     public typealias Mock = Gil
 
     @Test("Creates measurement from Domain", arguments: [
-        (24, Mock.Unit.zeni, Measurement(value: 24, unit: .zeni))
+        (24, Mock.Unit.zeni, Measurement(24, .zeni))
     ])
     func of(_ value: Mock.Value, _ unit: Mock.Unit, expected: Mock.Measure) {
         let result = Mock.of(value, unit)

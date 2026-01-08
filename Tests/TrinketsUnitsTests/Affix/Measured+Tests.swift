@@ -14,10 +14,10 @@ struct MeasuredTests {
     @Test("Allows using it using the following syntax")
     func propertyWrapper() {
         @Measured(in: .zeni) var money = 30
-        #expect(money == UnitMeasure(value: 10, unit: .zeni))
+        #expect(money == UnitMeasure(10, .zeni))
 
         money += Gil.of(4, .linen)
-        #expect(money == UnitMeasure(value: 15, unit: .zeni))
+        #expect(money == UnitMeasure(15, .zeni))
     }
 
     @Test("Initializes with wrapped value in unit", arguments: [

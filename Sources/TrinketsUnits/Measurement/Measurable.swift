@@ -15,7 +15,7 @@ public protocol Measurable {
 public extension Measurable {
     @inlinable
     func x(_ value: Value) -> Measure {
-        .init(value: value, unit: self)
+        .init(value, self)
     }
 
     @inlinable

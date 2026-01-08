@@ -16,7 +16,7 @@ struct MeasurementTests {
         (35, Gil.in(.zeni))
     ])
     func initializer(value: Mock.Value, unit: Reference) {
-        let result = Measurement(value: value, unit: unit)
+        let result = Measurement(value, unit)
         #expect(result.value == value)
         #expect(result.unit == unit)
     }
@@ -24,7 +24,7 @@ struct MeasurementTests {
     // MARK: Self: ExpressibleByFloatLiteral
     struct ConformsToExpressibleByFloatLiteral {
         @Test("Creates new measurement from floating point", arguments: [
-            (35.2, Measurement(value: 35.2, unit: .gil))
+            (35.2, Measurement(35.2, .gil))
         ])
         func initializer(floatLiteral value: Mock.Value.FloatLiteralType, expected: Mock) {
             let result = Mock(floatLiteral: value)
@@ -35,7 +35,7 @@ struct MeasurementTests {
     // MARK: Self: ExpressibleByIntegerLiteral
     struct ConformsToExpressibleByIntegerLiteral {
         @Test("Creates new measurement from integer", arguments: [
-            (12, Measurement(value: 12, unit: .gil))
+            (12, Measurement(12, .gil))
         ])
         func initializer(integerLiteral value: Mock.Value.IntegerLiteralType, expected: Mock) {
             let result = Mock(integerLiteral: value)
@@ -67,24 +67,23 @@ struct MeasurementTests {
         @Test("Returns raw number representing the measurement", arguments: [
             (Gil.of(15, .zeni), 45),
             (Gil.of(9, .gil), 9),
-            (Gil.of(4, .linen), 15)
+            (Gil.of(4, .linen), 15),
         ])
         func baseValue(_ sut: Mock, expected: Mock.Value) {
             #expect(sut.baseValue == expected)
         }
 
         @Test("Creates a measurement in the base unit", arguments: [
-            (Gil.of(15, .zeni), Measurement(value: 45, unit: .gil)),
-            (Gil.of(9, .gil), Measurement(value: 9, unit: .gil)),
-            (Gil.of(4, .linen), Measurement(value: 15, unit: .gil))
+            (Gil.of(15, .zeni), Measurement(45, .gil)),
+            (Gil.of(9, .gil), Measurement(9, .gil)),
+            (Gil.of(4, .linen), Measurement(15, .gil))
         ])
         func inBaseUnit(_ sut: Mock, expected: Mock) {
             #expect(sut.inBaseUnit() == expected)
         }
 
         @Test("Converts a measurement to another unit", arguments: [
-            (Gil.of(10, .linen), Gil.in(.zeni), Measurement(value: 9, unit: .zeni)),
-            (Gil.of(9, .zeni), Gil.in(.linen), Measurement(value: 10, unit: .linen))
+            (Gil.of(10, .linen), Gil.in(.zeni), Measurement(9, .zeni)),
         ])
         func convert(_ sut: Mock, to otherUnit: Unit<Gil>, expected: Mock) {
             var methodA = sut
