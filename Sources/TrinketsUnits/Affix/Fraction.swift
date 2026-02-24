@@ -52,13 +52,13 @@ extension Fraction: Dimension & Measurable where A: Dimension, B: Dimension, A.V
 }
 
 // MARK: Self: Equatable
-extension Fraction: Equatable where A.Features: Equatable, B.Features: Equatable {}
+extension Fraction: Equatable where A.Features: Equatable, A.Symbol: Equatable, B.Features: Equatable, B.Symbol: Equatable {}
 
 // MARK: Self: Hashable
-extension Fraction: Hashable where A.Features: Hashable, B.Features: Hashable {}
+extension Fraction: Hashable where A.Features: Hashable, A.Symbol: Hashable, B.Features: Hashable, B.Symbol: Hashable {}
 
 // MARK: Self: Sendable
-extension Fraction: Sendable where A.Features: Sendable, B.Features: Sendable {}
+extension Fraction: Sendable where A.Features: Sendable, A.Symbol: Sendable, B.Features: Sendable, B.Symbol: Sendable {}
 
 // MARK: Unit (EX)
 public extension Unit {

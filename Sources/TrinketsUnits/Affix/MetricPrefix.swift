@@ -37,14 +37,14 @@ extension MetricPrefix: Hashable {}
 extension MetricPrefix: Sendable {}
 
 // MARK: Dimension (EX)
-public extension Dimension where Features == LinearConverter {
+public extension Dimension where Features == LinearConverter, Symbol == String {
     static func `in`(_ scale: MetricPrefix, _ unit: Unit) -> Unit {
         .init(scale, unit)
     }
 }
 
 // MARK: Unit (EX)
-public extension Unit where D.Features == LinearConverter {
+public extension Unit where D.Features == LinearConverter, D.Symbol == String {
     init(_ scale: MetricPrefix, _ unit: Self) {
         self.init("\(scale.symbol)\(unit.symbol)", details: unit.features * scale.multiplier)
     }
