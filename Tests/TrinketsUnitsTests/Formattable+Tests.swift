@@ -31,7 +31,7 @@ struct FormattableTests {
     }
 
     @Test("Allows outputting the type into a new format", arguments: [
-        (Gil.of(30, .zeni), MockMeasurementFormatStyle(), "30z")
+        (Gil.of(30, .zeni), MockMeasurementFormatStyle(), "30.0z")
     ])
     func formatted(_ sut: Gil.Measure, _ format: MockMeasurementFormatStyle, expected: String) {
         let result = sut.formatted(format)
