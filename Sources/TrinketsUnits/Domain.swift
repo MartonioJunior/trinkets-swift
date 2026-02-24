@@ -7,7 +7,7 @@
 
 public protocol Domain {
     associatedtype Features
-    typealias Symbol = String
+    associatedtype Symbol = String
 }
 
 // MARK: Default Implementation
