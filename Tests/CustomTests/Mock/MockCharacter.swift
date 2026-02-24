@@ -8,10 +8,10 @@
 import Custom
 
 public struct MockCharacter {
-    @Slot var head = "a"
-    @AttributeOf var body: String = "b"
-    @StatOf var pants: String = "c"
-    @AttributeSlot var shoes = "d"
+    @AttributeOf var head = "a"
+    @AttributeOf var body: String? = "b"
+    @StatOf var pants: String? = "c"
+    @StatOf var shoes = "d"
 
     public private(set) var hp: Int = 50
     @Stat<MockModifier> var attack: Int = 28
