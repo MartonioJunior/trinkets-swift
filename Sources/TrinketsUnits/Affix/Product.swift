@@ -51,13 +51,13 @@ extension Product: Dimension, Measurable where A: Dimension, B: Dimension, A.Val
 }
 
 // MARK: Self: Equatable
-extension Product: Equatable where A.Features: Equatable, B.Features: Equatable {}
+extension Product: Equatable where A.Features: Equatable, A.Symbol: Equatable, B.Features: Equatable, B.Symbol: Equatable {}
 
 // MARK: Self: Hashable
-extension Product: Hashable where A.Features: Hashable, B.Features: Hashable {}
+extension Product: Hashable where A.Features: Hashable, A.Symbol: Hashable, B.Features: Hashable, B.Symbol: Hashable {}
 
 // MARK: Self: Sendable
-extension Product: Sendable where A.Features: Sendable, B.Features: Sendable {}
+extension Product: Sendable where A.Features: Sendable, A.Symbol: Sendable, B.Features: Sendable, B.Symbol: Sendable {}
 
 // MARK: Unit (EX)
 public extension Unit {
