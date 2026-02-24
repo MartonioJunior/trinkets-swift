@@ -70,6 +70,9 @@ extension Measurement: ExpressibleByIntegerLiteral where UnitType: Convertible, 
     }
 }
 
+// MARK: Self: Formattable
+extension Measurement: Formattable {}
+
 // MARK: Self: Hashable
 extension Measurement: Hashable where UnitType: Hashable, Value: Hashable {}
 

@@ -57,6 +57,9 @@ extension Unit: CustomStringConvertible where D.Symbol: CustomStringConvertible 
 // MARK: Self: Equatable
 extension Unit: Equatable where D.Features: Equatable, D.Symbol: Equatable {}
 
+// MARK: Self: Formattable
+extension Unit: Formattable {}
+
 // MARK: Self: Hashable
 extension Unit: Hashable where D.Features: Hashable, D.Symbol: Hashable {}
 
