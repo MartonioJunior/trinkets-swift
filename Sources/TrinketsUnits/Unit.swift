@@ -30,7 +30,7 @@ public struct Unit<D: Domain> {
 extension Unit: Codable where D.Features: Codable, D.Symbol: Codable {}
 
 // MARK: Self: Comparable
-extension Unit: Comparable where D.Features: Comparable {
+extension Unit: Comparable where D.Features: Comparable, D.Symbol: Equatable {
     public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.features < rhs.features
     }
