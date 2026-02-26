@@ -47,16 +47,26 @@ func targetDep(name: String, package: String) -> Target.Dependency {
 }
 
 // MARK: - Dependencies
+let casePaths = targetDep(name: "CasePaths", package: "swift-case-paths")
 let identifiedCollections = targetDep(name: "IdentifiedCollections", package: "swift-identified-collections")
+let mathe = targetDep(name: "Mathe", package: "Mathe")
+let minimal = targetDep(name: "Minimal", package: "Minimal")
 let numerics = targetDep(name: "Numerics", package: "swift-numerics")
 
 let dependencies = [
+    dep(url: "https://github.com/pointfreeco/swift-case-paths", .upToNextMajor(from: "1.7.0")),
     dep(url: "https://github.com/pointfreeco/swift-identified-collections", .upToNextMajor(from: "1.1.1")),
     dep(url: "https://github.com/apple/swift-numerics", .upToNextMajor(from: "1.1.0")),
+    dep(local: "../Mathe"),
+    dep(local: "../Minimal")
 ]
 
 // MARK: - Targets
 var targets: [Target] = [
+    .target(
+        name: "Activities",
+        swiftSettings: .upcomingFeatures
+    ),
     .target(
         name: "Collectables",
         dependencies: [identifiedCollections],
