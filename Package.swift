@@ -99,6 +99,10 @@ var targets: [Target] = [
         swiftSettings: .upcomingFeatures
     ),
     .target(
+        name: "Progression",
+        swiftSettings: .upcomingFeatures
+    ),
+    .target(
         name: "SI",
         dependencies: ["TrinketsUnits"],
         swiftSettings: .upcomingFeatures
