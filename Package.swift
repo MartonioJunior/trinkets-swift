@@ -112,6 +112,10 @@ var targets: [Target] = [
         swiftSettings: .upcomingFeatures
     ),
     .target(
+        name: "Tabletop",
+        swiftSettings: .upcomingFeatures
+    ),
+    .target(
         name: "Trinkets",
         dependencies: ["Collectables", "Custom", "Exchanges", "Inventory", "SI", "TrinketsUnits"],
         swiftSettings: .upcomingFeatures
