@@ -147,7 +147,7 @@ targets.append(
 let products: [Product] = [
     .library(
         name: "Trinkets",
-        targets: ["Collectables", "Custom", "Inventory", "Trinkets"]
+        targets: targets.map(\.name)
     ),
     .library(
         name: "UnitSI",
