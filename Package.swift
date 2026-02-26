@@ -78,7 +78,7 @@ var targets: [Target] = [
     ),
     .target(
         name: "Exchanges",
-        dependencies: ["Inventory"],
+        dependencies: ["Custom", "Inventory"],
         swiftSettings: .upcomingFeatures
     ),
     .target(
