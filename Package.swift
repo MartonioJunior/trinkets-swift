@@ -91,13 +91,17 @@ var targets: [Target] = [
         swiftSettings: .upcomingFeatures
     ),
     .target(
+        name: "Matches",
+        swiftSettings: .upcomingFeatures
+    ),
+    .target(
         name: "SI",
         dependencies: ["TrinketsUnits"],
         swiftSettings: .upcomingFeatures
     ),
     .target(
         name: "Trinkets",
-        dependencies: ["Collectables", "Custom", "Inventory", "SI", "TrinketsUnits", numerics],
+        dependencies: ["Collectables", "Custom", "Exchanges", "Inventory", "SI", "TrinketsUnits"],
         swiftSettings: .upcomingFeatures
     ),
     .target(
