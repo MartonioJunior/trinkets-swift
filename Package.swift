@@ -57,8 +57,8 @@ let dependencies = [
     dep(url: "https://github.com/pointfreeco/swift-case-paths", .upToNextMajor(from: "1.7.0")),
     dep(url: "https://github.com/pointfreeco/swift-identified-collections", .upToNextMajor(from: "1.1.1")),
     dep(url: "https://github.com/apple/swift-numerics", .upToNextMajor(from: "1.1.0")),
-    dep(local: "../Mathe"),
-    dep(local: "../Minimal")
+    .package(url: "https://github.com/MartonioJunior/Mathe", branch: "main"),
+    .package(url: "https://github.com/MartonioJunior/Minimal", branch: "main")
 ]
 
 // MARK: - Targets
