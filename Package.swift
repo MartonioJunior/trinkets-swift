@@ -103,6 +103,10 @@ var targets: [Target] = [
         swiftSettings: .upcomingFeatures
     ),
     .target(
+        name: "Quests",
+        swiftSettings: .upcomingFeatures
+    ),
+    .target(
         name: "SI",
         dependencies: ["TrinketsUnits"],
         swiftSettings: .upcomingFeatures
