@@ -81,6 +81,7 @@ var targets: [Target] = [
     ),
     .target(
         name: "Flow",
+        dependencies: [mathe, variety],
         swiftSettings: .upcomingFeatures
     ),
     .target(
