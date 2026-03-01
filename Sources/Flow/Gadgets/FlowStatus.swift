@@ -1,11 +1,11 @@
 //
-//  UpdateStatus.swift
+//  FlowStatus.swift
 //  Trinkets
 //
 //  Created by Martônio Júnior on 28/10/2025.
 //
 
-public enum UpdateStatus {
+public enum FlowStatus {
     /// Ready for updates, but not currently updating.
     case idle
     /// It is currently updating it's state.
@@ -15,7 +15,7 @@ public enum UpdateStatus {
 }
 
 // MARK: Self: Equatable
-extension UpdateStatus: Equatable {}
+extension FlowStatus: Equatable {}
 
 // MARK: Self: Sendable
-extension UpdateStatus: Sendable {}
+extension FlowStatus: Sendable {}
