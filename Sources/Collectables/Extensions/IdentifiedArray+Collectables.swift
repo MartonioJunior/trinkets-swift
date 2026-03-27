@@ -14,4 +14,6 @@ public extension IdentifiedArray where Element: Identifiable, Element: CaseItera
 // MARK: Trinket (EX)
 public extension Trinket {
     typealias Registry = IdentifiedArrayOf<Self>
+
+    static var registryKey: IDKey<String, Registry> { .init(trinketpediaID) }
 }
