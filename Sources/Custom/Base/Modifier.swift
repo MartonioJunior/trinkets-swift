@@ -14,7 +14,7 @@ public protocol Modifier<Target, Output> {
 
 // MARK: Modifier.Target: Optional
 public extension Modifier {
-    func apply<T>(toWrapped target: inout T) -> Output? where Target == T? {
+    func apply<T>(unwrapped target: inout T) -> Output? where Target == T? {
         let result = preview(on: target)
 
         if let newTarget = result.target {
