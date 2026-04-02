@@ -84,7 +84,11 @@ struct ExchangeTests {
         (mockTransaction(6), mockDrain(12), mockExchange(12, for: 6))
     ])
     func buy(_ purchase: Transaction<Int, Int>, for price: Transaction<Int?, Int>, expected: Exchange<Int, Int, Int>) {
-        let result = Exchange.buy(purchase, price: price)
+        let result = Exchange.buy {
+            purchase
+        } for: {
+            price
+        }
         #expect(result == expected)
     }
 

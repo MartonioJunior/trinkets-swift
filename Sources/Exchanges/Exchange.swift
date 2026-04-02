@@ -47,8 +47,8 @@ public struct Exchange<Target, Buy, Sell> {
 // MARK: DotSyntax
 public extension Exchange {
     static func buy(
-        _ purchase: @autoclosure () -> Tap<Target, Buy>,
-        price: @autoclosure () -> Drain<Target, Sell>
+        _ purchase: () -> Tap<Target, Buy>,
+        for price: () -> Drain<Target, Sell>
     ) -> Self {
         .init(drain: price(), tap: purchase())
     }
