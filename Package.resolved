@@ -1,5 +1,5 @@
 {
-  "originHash" : "61836b7aab932b7edc58ef8fdf8bd48b9b05547d7ac7e6816c5754a5c8b2b7b0",
+  "originHash" : "cfb2769e02f17193147b428713275010f371f11ee80fab43576eeeff6dfbeb1e",
   "pins" : [
     {
       "identity" : "mathe",
@@ -98,6 +98,15 @@
       "state" : {
         "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
         "version" : "602.0.0"
+      }
+    },
+    {
+      "identity" : "swift-variety",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MartonioJunior/swift-variety",
+      "state" : {
+        "branch" : "main",
+        "revision" : "4729c3bc41a45890ca771f612b58ae7f17266ba2"
       }
     },
     {
