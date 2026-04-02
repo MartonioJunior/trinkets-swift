@@ -71,7 +71,7 @@ var targets: [Target] = [
     ),
     .target(
         name: "Collectables",
-        dependencies: [identifiedCollections],
+        dependencies: [identifiedCollections, variety],
         swiftSettings: .upcomingFeatures
     ),
     .target(
