@@ -19,6 +19,13 @@ public extension Trinket {
     static var trinketpediaID: Trinketpedia.ID { "\(Self.self)" }
 }
 
+// MARK: Self.Key
+public extension Trinket {
+    public typealias Key = TrinketKey<Self>
+
+    var key: TrinketKey<Self> { .init(id) }
+}
+
 // MARK: Sequence (EX)
 public extension Sequence where Element == any Trinket {
     subscript<T: Trinket>(_: T.Type = T.self) -> [T] {
@@ -28,7 +35,7 @@ public extension Sequence where Element == any Trinket {
 
 public extension Sequence where Element: Trinket {
     subscript(_ key: TrinketKey<Element>) -> [Element] {
-        filter { $0.id == key.referenceID }
+        filter { $0.id == key.id }
     }
 
     subscript(id id: Element.ID) -> [Element] {
