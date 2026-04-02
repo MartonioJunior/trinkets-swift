@@ -122,16 +122,19 @@ var targets: [Target] = [
         swiftSettings: .upcomingFeatures
     ),
     .target(
-        name: "Trinkets",
-        dependencies: ["Collectables", "Custom", "Exchanges", "Inventory", "SI", "TrinketsUnits"],
-        swiftSettings: .upcomingFeatures
-    ),
-    .target(
         name: "TrinketsUnits",
         dependencies: [numerics],
         swiftSettings: .upcomingFeatures
     )
 ]
+
+targets.append(
+    .target(
+        name: "Trinkets",
+        dependencies: targets.map { Target.Dependency(stringLiteral: $0.name) },
+        swiftSettings: .upcomingFeatures
+    )
+)
 
 let testTargets: [Target] = targets.map {
     .testTarget(name: "\($0.name)Tests", dependencies: [Target.Dependency(stringLiteral: $0.name)] + $0.dependencies)
