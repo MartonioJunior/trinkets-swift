@@ -6,6 +6,7 @@
 //
 
 import IdentifiedCollections
+import SwiftVariety
 
 public extension IdentifiedArray where Element: Identifiable, Element: CaseIterable, ID == Element.ID {
     static var allCases: Self { .init(Element.allCases) { a, _ in a } }
@@ -15,5 +16,5 @@ public extension IdentifiedArray where Element: Identifiable, Element: CaseItera
 public extension Trinket {
     typealias Registry = IdentifiedArrayOf<Self>
 
-    static var registryKey: IDKey<String, Registry> { .init(trinketpediaID) }
+    static var registryKey: HeterogeneousKey<String, Registry> { .init(trinketpediaID) }
 }
