@@ -27,4 +27,12 @@ public extension Measurable {
     static func * (lhs: Value, rhs: Self) -> Measure {
         rhs.x(lhs)
     }
+
+    static func measure<T>(
+        _: T.Type = T.self,
+        in unit: Self,
+        _ value: @escaping (T) -> Value
+    ) -> (T) -> Measure {
+        { .init(value($0), unit) }
+    }
 }
