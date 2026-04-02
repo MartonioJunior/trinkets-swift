@@ -35,3 +35,14 @@ public extension Trader where Buy == Never {
 public extension Trader where Sell == Never {
     mutating func sell(_: Sell) -> Sell? {}
 }
+
+// MARK: Exchange (EX)
+public extension Exchange where Target: Trader & SendableMetatype, Target.Buy == Buy, Target.Sell == Sell {
+    static func buy(_ purchase: Buy, for price: Sell) -> Self {
+        .buy {
+            Tap(purchase) { $0.buy($1) }
+        } for: {
+            Drain(price) { $0?.sell($1) }
+        }
+    }
+}
