@@ -31,6 +31,18 @@ public struct Transaction<Target, Contents> {
 
 // MARK: DotSyntax
 public extension Transaction {
+    var optional: Transaction<Target?, Contents> {
+        let operation = apply
+
+        return .init(contents) {
+            guard var target = $0 else { return nil }
+
+            let result = operation(&target, $1)
+            $0 = target
+            return result
+        }
+    }
+    
     static func noop(_ contents: Contents) -> Self {
         .init(contents) { _, contents in contents }
     }
