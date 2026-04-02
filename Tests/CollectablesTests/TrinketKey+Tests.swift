@@ -16,7 +16,7 @@ struct TrinketKeyTests {
     ])
     func initializer(_ id: TrinketTests.Mock.ID) {
         let result = TrinketKey<TrinketTests.Mock>(id)
-        #expect(result.referenceID == id)
+        #expect(result.id == id)
     }
 
     @Test("Returns the identifier for a key", arguments: [
@@ -40,6 +40,8 @@ struct TrinketKeyTests {
 }
 
 // MARK: Trinket (EX)
+import IdentifiedCollections
+
 extension TrinketTests {
     @Test("Instances key for Trinket", arguments: [
         (Mock("sportila"), TrinketKey("sportila", Mock.self))

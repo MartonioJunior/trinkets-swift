@@ -6,14 +6,15 @@
 //
 
 import IdentifiedCollections
+import SwiftVariety
 
 public extension _IdentifiedCollection {
-    subscript(key: IDKey<ID, Element>) -> Element? { self[id: key.referenceID] }
+    subscript(key: HeterogeneousKey<ID, Element>) -> Element? { self[id: key.id] }
 }
 
 public extension _MutableIdentifiedCollection {
-    subscript(key: IDKey<ID, Element>) -> Element? {
-        get { self[id: key.referenceID] }
-        set { self[id: key.referenceID] = newValue }
+    subscript(key: HeterogeneousKey<ID, Element>) -> Element? {
+        get { self[id: key.id] }
+        set { self[id: key.id] = newValue }
     }
 }

@@ -6,9 +6,10 @@
 //
 
 import IdentifiedCollections
+import SwiftVariety
 
 public extension Identified {
-    var key: IDKey<ID, Value> { .init(id) }
+    var key: HeterogeneousKey<ID, Value> { .init(id) }
 }
 
 // MARK: Value: Trinket

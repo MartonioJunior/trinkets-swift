@@ -5,6 +5,11 @@
 //  Created by Martônio Júnior on 19/09/2025.
 //
 
+import SwiftVariety
+
+/// Identifier that uniquely references a Trinket within the scope of a game
+public typealias TrinketKey<T: Trinket> = HeterogeneousKey<T.ID, T>
+
 public protocol Trinket<ID>: Identifiable {
     static var trinketpediaID: Trinketpedia.ID { get }
 }

@@ -5,9 +5,6 @@
 //  Created by Martônio Júnior on 20/09/2025.
 //
 
-/// Identifier that uniquely references a Trinket within the scope of a game
-public typealias TrinketKey<T: Trinket> = IDKey<T.ID, T>
-
 @dynamicMemberLookup
 public struct IDKey<ID, Value> {
     // MARK: Variables
