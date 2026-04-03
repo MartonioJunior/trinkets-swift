@@ -6,6 +6,7 @@
 //
 
 @testable import Collectables
+import SwiftVariety
 import Testing
 
 // MARK: Mock
@@ -25,7 +26,7 @@ struct TrinketpediaTests {
     @Test("Creates a new Trinketpedia instance")
     func initializer() {
         let result = Trinketpedia()
-        let expectedDatabases: [String: Any] = [:]
+        let expectedDatabases: HeterogeneousDictionary<String> = [:]
         #expect(result.databases.keys == expectedDatabases.keys)
     }
 

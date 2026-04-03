@@ -6,6 +6,7 @@
 //
 
 import IdentifiedCollections
+import SwiftVariety
 
 /// Data structure that contains a collection of heterogenous trinket entries for a given context
 @dynamicMemberLookup
@@ -14,12 +15,12 @@ public struct Trinketpedia {
     public typealias Registry<T: Trinket> = IdentifiedArrayOf<T>
 
     // MARK: Variables
-    var databases: [ID: Any] = [:]
+    var databases: HeterogeneousDictionary<ID>
 
     // MARK: Subscripts
     public subscript<T: Trinket>(_: T.Type) -> Registry<T> {
-        get { databases[T.trinketpediaID] as? Registry<T> ?? .init() }
-        set { databases[T.trinketpediaID] = newValue }
+        get { (try? databases.fetch(T.registryKey)) ?? .init() }
+        set { databases.registerOrUpdate(newValue, for: T.registryKey) }
     }
 
     public subscript<T: Trinket>(_: T.Type = T.self, id id: T.ID) -> T? {
@@ -35,24 +36,32 @@ public struct Trinketpedia {
     }
 
     // MARK: Initializers
-    public init() {}
+    public init(_ databases: HeterogeneousDictionary<ID> = [:]) {
+        self.databases = databases
+    }
 
     // MARK: Methods
     public func fetch<T: Trinket>(id: T.ID) -> T? { self[T.self, id: id] }
 
     public mutating func register<T: Trinket>(_: T.Type = T.self, _ database: Registry<T>) {
-        let key = T.trinketpediaID
+        let key = T.registryKey
 
-        if databases.keys.contains(key), var registry = databases[key] as? Registry<T> {
+        do {
+            var registry = try databases.fetch(key)
             registry.append(contentsOf: database)
-            databases[key] = registry
-        } else {
-            databases[key] = database
+            databases.registerOrUpdate(registry, for: key)
+        } catch let error {
+            switch error {
+                case .invalidKey:
+                    databases.registerOrUpdate(database, for: key)
+                case .typeMismatch:
+                    return
+            }
         }
     }
 
     public mutating func removeDatabase<T: Trinket>(_: T.Type) {
-        databases.removeValue(forKey: T.trinketpediaID)
+        databases.remove(T.registryKey)
     }
 
     public mutating func removeAll() {
