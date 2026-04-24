@@ -52,11 +52,13 @@ let identifiedCollections = targetDep(name: "IdentifiedCollections", package: "s
 let mathe = targetDep(name: "Mathe", package: "Mathe")
 let minimal = targetDep(name: "Minimal", package: "Minimal")
 let numerics = targetDep(name: "Numerics", package: "swift-numerics")
+let tagged = targetDep(name: "Tagged", package: "swift-tagged")
 let variety = targetDep(name: "SwiftVariety", package: "swift-variety")
 
 let dependencies = [
     dep(url: "https://github.com/pointfreeco/swift-case-paths", .upToNextMajor(from: "1.7.0")),
     dep(url: "https://github.com/pointfreeco/swift-identified-collections", .upToNextMajor(from: "1.1.1")),
+    .package(url: "https://github.com/pointfreeco/swift-tagged", .upToNextMajor(from: "0.10.0")),
     dep(url: "https://github.com/apple/swift-numerics", .upToNextMajor(from: "1.1.0")),
     .package(url: "https://github.com/MartonioJunior/Mathe", branch: "main"),
     .package(url: "https://github.com/MartonioJunior/Minimal", branch: "main"),
