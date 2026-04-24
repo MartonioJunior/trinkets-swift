@@ -170,6 +170,7 @@ let supportedPlatforms: [SupportedPlatform] = [
 // MARK: PackageDescription
 let package = Package(
     name: "Trinkets",
+    defaultLocalization: "en",
     platforms: supportedPlatforms,
     products: products,
     dependencies: dependencies,
