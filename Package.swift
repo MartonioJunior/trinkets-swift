@@ -103,6 +103,10 @@ var targets: [Target] = [
         swiftSettings: .upcomingFeatures
     ),
     .target(
+        name: "Notation",
+        swiftSettings: .upcomingFeatures
+    ),
+    .target(
         name: "Progression",
         swiftSettings: .upcomingFeatures
     ),
@@ -125,7 +129,7 @@ var targets: [Target] = [
     ),
     .target(
         name: "TrinketsUnits",
-        dependencies: [numerics],
+        dependencies: ["Notation", numerics],
         swiftSettings: .upcomingFeatures
     )
 ]
