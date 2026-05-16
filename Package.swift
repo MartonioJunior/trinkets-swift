@@ -129,7 +129,7 @@ var targets: [Target] = [
     ),
     .target(
         name: "TrinketsUnits",
-        dependencies: ["Notation", numerics],
+        dependencies: ["Notation", numerics, tagged],
         swiftSettings: .upcomingFeatures
     )
 ]
