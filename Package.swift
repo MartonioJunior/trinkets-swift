@@ -116,7 +116,7 @@ var targets: [Target] = [
     ),
     .target(
         name: "SI",
-        dependencies: ["TrinketsUnits"],
+        dependencies: ["TrinketsUnits", tagged],
         swiftSettings: .upcomingFeatures
     ),
     .target(
