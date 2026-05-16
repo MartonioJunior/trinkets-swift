@@ -1,0 +1,142 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "KILOMETERS_PER_HOUR_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf kilometer per hour"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf kilometers per hour"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "KILOMETERS_PER_HOUR_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "km/h"
+          }
+        }
+      }
+    },
+    "KNOTS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf knot"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf knots"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "KNOTS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kn"
+          }
+        }
+      }
+    },
+    "METERS_PER_SECOND_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf meter per second"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf meters per second"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "METERS_PER_SECOND_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m/s"
+          }
+        }
+      }
+    },
+    "MILES_PER_HOUR_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf mile per hour"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf miles per hour"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "MILES_PER_HOUR_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mph"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.2"
+}

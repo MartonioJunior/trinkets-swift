@@ -1,0 +1,160 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "ARC_MINUTES_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "arc minutes"
+          }
+        }
+      }
+    },
+    "ARC_MINUTES_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ʹ"
+          }
+        }
+      }
+    },
+    "ARC_SECONDS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "arc seconds"
+          }
+        }
+      }
+    },
+    "ARC_SECONDS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ʺ"
+          }
+        }
+      }
+    },
+    "DEGREES_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "degrees"
+          }
+        }
+      }
+    },
+    "DEGREES_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "°"
+          }
+        }
+      }
+    },
+    "GRADIANS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gradians"
+          }
+        }
+      }
+    },
+    "GRADIANS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "grad"
+          }
+        }
+      }
+    },
+    "PI_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pi"
+          }
+        }
+      }
+    },
+    "PI_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "π"
+          }
+        }
+      }
+    },
+    "RADIANS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "radians"
+          }
+        }
+      }
+    },
+    "RADIANS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "rad"
+          }
+        }
+      }
+    },
+    "REVOLUTIONS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "revolutions"
+          }
+        }
+      }
+    },
+    "REVOLUTIONS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "rev"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.2"
+}

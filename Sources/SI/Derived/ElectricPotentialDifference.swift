@@ -8,14 +8,35 @@
 import TrinketsUnits
 
 public enum ElectricPotentialDifference: Dimension {
-    public typealias Features = LinearConverter
-    public typealias Value = Double
+    public typealias BaseUnit = Volts
 
-    public static let baseUnit: Unit = .volts
     public static let dimensionality: Dimensionality = [Mass.self: 1, Length.self: 2, Time.self: -3, ElectricCurrent.self: -1]
 }
 
-// MARK: Default Units
-public extension Unit where D == ElectricPotentialDifference {
-    static let volts: Self = .init("V", details: .base)
+// MARK: Self.Volts
+public extension ElectricPotentialDifference {
+    enum Volts: StaticUnit {
+        public typealias Base = ElectricPotentialDifference
+    }
+}
+
+public extension ElectricPotentialDifference.Volts {
+    static var symbol: UnitRepresentation {
+        .nonPluralized(symbol: .ElectricPotentialDifference.voltsSymbol, name: .ElectricPotentialDifference.voltsName)
+    }
+}
+
+public extension StaticConverter where Origin == ElectricPotentialDifference.Volts, Target == ElectricPotentialDifference, Value: Numeric {
+    static var to: Self { .init { $0 } }
+}
+
+public extension StaticConverter where Origin == ElectricPotentialDifference, Target == ElectricPotentialDifference.Volts, Value: Numeric {
+    static var volts: Self { .init { $0 } }
+}
+
+// MARK: Tagged (EX)
+import Tagged
+
+public extension Tagged where Tag == ElectricPotentialDifference, RawValue == ElectricPotentialDifference.Volts.Type {
+    static var volts: Self { .init(ElectricPotentialDifference.Volts.self) }
 }

@@ -5,50 +5,123 @@
 //  Created by Martônio Júnior on 09/02/25.
 //
 
+import Notation
 import TrinketsUnits
 
 public enum Area: Dimension {
-    public typealias Features = LinearConverter
-    public typealias Value = Double
+    public typealias BaseUnit = SquareMeters
 
-    public static let baseUnit: Unit<Area> = .square(.meters)
     public static let dimensionality: Dimensionality = [Length.self: 2]
 }
 
-// MARK: Default Units
-public extension Unit where D == Area {
-    static let acres: Self = .init("ac", details: .linear(4046.86))
-    static let ares: Self = .init("ar", details: .linear(100))
-    static let hectares: Self = .init("ha", details: .linear(10000))
-}
-
-// MARK: Conversions
+// MARK: Self.SquareMeters
 public extension Area {
-    @available(macOS 26.0, *)
-    static func `in`(_ exponential: Unit<Exponential<Length, 2>>) -> Unit<Self> {
-        let f = exponential.features.unit.features.polynomial
-        return .init(exponential.symbol, details: .linear((f * f)[e: 1]))
-    }
-
-    static func `in`(_ product: Unit<Product<Length, Length>>) -> Unit<Self> {
-        let base = product.features
-        let symbol: String = if base.lhs == base.rhs {
-            "\(base.lhs.symbol)2"
-        } else {
-            base.description
-        }
-
-        if #available(macOS 26, *) {
-            let f = base.lhs.features.polynomial * base.rhs.features.polynomial
-            return .init(symbol, details: .linear(f[e: 1]))
-        } else {
-            return .init(symbol, details: .init(base.lhs.features.coefficient * base.lhs.features.coefficient))
-        }
+    enum SquareMeters: StaticUnit {
+        public typealias Base = Area
     }
 }
 
-public extension Unit where D == Area {
-    static func square(_ length: Unit<Length>) -> Self {
-        D.in(length * length)
+public extension StaticConverter where Origin == Area.SquareMeters, Target == Area, Value: Numeric {
+    static var to: Self { .init { $0 } }
+}
+
+public extension StaticConverter where Origin == Area, Target == Area.SquareMeters, Value: Numeric {
+    static var squareMeters: Self { .init { $0 } }
+}
+
+// MARK: Self.Acres
+public extension Area {
+    enum Acres: StaticUnit {
+        public typealias Base = Area
     }
+}
+
+public extension Area.Acres {
+    static var symbol: UnitRepresentation {
+        .init(symbol: .Area.acresSymbol, name: SyntaxFunction {
+            .Area.acresName(amount: $0)
+        })
+    }
+}
+
+public extension StaticConverter where Origin == Area.Acres, Target == Area, Value: Numeric & ExpressibleByFloatLiteral {
+    static var to: Self { .init { $0 * 4046.86 } }
+}
+
+public extension StaticConverter where Origin == Area, Target == Area.Acres, Value: FloatingPoint & ExpressibleByFloatLiteral {
+    static var acres: Self { .init { $0 / 4046.86 } }
+}
+
+// MARK: Self.Ares
+public extension Area {
+    enum Ares: StaticUnit {
+        public typealias Base = Area
+    }
+}
+
+public extension Area.Ares {
+    static var symbol: UnitRepresentation {
+        .init(symbol: .Area.aresSymbol, name: SyntaxFunction {
+            .Area.aresName(amount: $0)
+        })
+    }
+}
+
+public extension StaticConverter where Origin == Area.Ares, Target == Area, Value: Numeric {
+    static var to: Self { .init { $0 * 100 } }
+}
+
+public extension StaticConverter where Origin == Area, Target == Area.Ares, Value: FloatingPoint {
+    static var ares: Self { .init { $0 / 100 } }
+}
+
+// MARK: Self.Hectares
+public extension Area {
+    typealias Hectares = PrefixedUnit<Hecto, Ares>
+}
+
+public extension Area.Hectares {
+    // 10.000 m2
+    static var symbol: UnitRepresentation {
+        .init(symbol: .Area.hectaresSymbol, name: SyntaxFunction {
+            .Area.hectaresName(amount: $0)
+        })
+    }
+}
+
+// MARK: Tagged (EX)
+import Tagged
+
+public extension Tagged where Tag == Area, RawValue == Area.SquareMeters.Type {
+    static var squareMeters: Self { .init(Area.SquareMeters.self) }
+}
+
+public extension Tagged where Tag == Area, RawValue == Area.Acres.Type {
+    static var acres: Self { .init(Area.Acres.self) }
+}
+
+public extension Tagged where Tag == Area, RawValue == Area.Ares.Type {
+    static var ares: Self { .init(Area.Ares.self) }
+}
+
+public extension Tagged where Tag == Area, RawValue == Area.Hectares.Type {
+    static var hectares: Self { .init(Area.Hectares.self) }
+}
+
+@available(macOS 26.0, *)
+public extension Tagged where Tag == Exponential<Length, 2> {
+    var asArea: Tagged<Area, RawValue> { .init(rawValue) }
+}
+
+public extension Tagged where Tag == Fraction<Volume, Length> {
+    var asArea: Tagged<Area, RawValue> { .init(rawValue) }
+}
+
+public extension Tagged where Tag == Product<Length, Length> {
+    var asArea: Tagged<Area, RawValue> { .init(rawValue) }
+}
+
+@available(macOS 26.0, *)
+public extension Tagged where Tag == Square<Length.Meters> {
+    var asArea: Tagged<Area.SquareMeters, RawValue> { .init(rawValue) }
 }

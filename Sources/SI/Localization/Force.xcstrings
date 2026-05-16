@@ -1,0 +1,40 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NEWTONS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf newton"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf newtons"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "NEWTONS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "N"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.2"
+}

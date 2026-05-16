@@ -8,14 +8,35 @@
 import TrinketsUnits
 
 public enum Illuminance: Dimension {
-    public typealias Features = LinearConverter
-    public typealias Value = Double
+    public typealias BaseUnit = Lux
 
-    public static let baseUnit: Unit<Illuminance> = .lux
     public static let dimensionality: Dimensionality = [LuminousIntensity.self: 1, SolidAngle.self: 1, Length.self: -2]
 }
 
-// MARK: Default Units
-public extension Unit where D == Illuminance {
-    static let lux: Self = .init("lx", details: .base) // 1lm / 1m2
+// MARK: Self.Lux
+public extension Illuminance {
+    enum Lux: StaticUnit { // 1lm / 1m2
+        public typealias Base = Illuminance
+    }
+}
+
+public extension Illuminance.Lux {
+    static var symbol: UnitRepresentation {
+        .nonPluralized(symbol: .Illuminance.luxSymbol, name: .Illuminance.luxName)
+    }
+}
+
+public extension StaticConverter where Origin == Illuminance.Lux, Target == Illuminance, Value: Numeric {
+    static var to: Self { .init { $0 } }
+}
+
+public extension StaticConverter where Origin == Illuminance, Target == Illuminance.Lux, Value: Numeric {
+    static var lux: Self { .init { $0 } }
+}
+
+// MARK: Tagged (EX)
+import Tagged
+
+public extension Tagged where Tag == Illuminance, RawValue == Illuminance.Lux.Type {
+    static var lux: Self { .init(Illuminance.Lux.self) }
 }

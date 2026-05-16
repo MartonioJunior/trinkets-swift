@@ -1,0 +1,96 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CELSIUS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf degree Celsius"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf degrees Celsius"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "CELSIUS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "°C"
+          }
+        }
+      }
+    },
+    "FAHRENHEIT_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf degree Fahrenheit"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf degrees Fahrenheit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "FAHRENHEIT_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "°F"
+          }
+        }
+      }
+    },
+    "KELVIN_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kelvin"
+          }
+        }
+      }
+    },
+    "KELVIN_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "K"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.2"
+}

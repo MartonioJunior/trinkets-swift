@@ -1,0 +1,28 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CANDELA_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "candela"
+          }
+        }
+      }
+    },
+    "CANDELA_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "cd"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.2"
+}

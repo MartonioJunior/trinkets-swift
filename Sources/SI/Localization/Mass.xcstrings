@@ -1,0 +1,132 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CARATS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "CARATS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ct"
+          }
+        }
+      }
+    },
+    "GRAMS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "GRAMS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "g"
+          }
+        }
+      }
+    },
+    "METRIC_TONS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "METRIC_TONS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "t"
+          }
+        }
+      }
+    },
+    "OUNCES_NAME" : {
+      "extractionState" : "manual"
+    },
+    "OUNCES_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "oz"
+          }
+        }
+      }
+    },
+    "OUNCES_TRAY_NAME" : {
+      "extractionState" : "manual"
+    },
+    "OUNCES_TRAY_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "oz t"
+          }
+        }
+      }
+    },
+    "POUNDS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "POUNDS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "lb"
+          }
+        }
+      }
+    },
+    "SHORT_TONS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "SHORT_TONS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ton"
+          }
+        }
+      }
+    },
+    "SLUGS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "SLUGS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "slug"
+          }
+        }
+      }
+    },
+    "STONES_NAME" : {
+      "extractionState" : "manual"
+    },
+    "STONES_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "st"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.2"
+}

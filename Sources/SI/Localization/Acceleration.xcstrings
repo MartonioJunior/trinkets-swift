@@ -1,0 +1,63 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "GRAVITY_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "g-force"
+          }
+        }
+      }
+    },
+    "GRAVITY_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "G"
+          }
+        }
+      }
+    },
+    "METERS_PER_SECOND_SQUARED_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lfmetre per second squared"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lfmetres per second squared"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "METERS_PER_SECOND_SQUARED_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m/s²"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    }
+  },
+  "version" : "1.2"
+}

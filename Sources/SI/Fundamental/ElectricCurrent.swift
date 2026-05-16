@@ -5,15 +5,39 @@
 //  Created by Martônio Júnior on 27/08/2025.
 //
 
+import Notation
 import TrinketsUnits
 
 public enum ElectricCurrent: Dimension {
-    public typealias Features = LinearConverter
-    public typealias Value = Double
-
-    public static let baseUnit: Unit = .amperes
+    public typealias BaseUnit = Amperes
 }
 
-public extension Unit where D == ElectricCurrent {
-    static let amperes: Self = .init("A", details: .base)
+// MARK: Self.Amperes
+public extension ElectricCurrent {
+    enum Amperes: StaticUnit {
+        public typealias Base = ElectricCurrent
+    }
+}
+
+public extension ElectricCurrent.Amperes {
+    static var symbol: UnitRepresentation {
+        .init(symbol: .ElectricCurrent.amperesSymbol, name: SyntaxFunction {
+            .ElectricCurrent.amperesName(amount: $0)
+        })
+    }
+}
+
+public extension StaticConverter where Origin == ElectricCurrent.Amperes, Target == ElectricCurrent, Value: Numeric {
+    static var to: Self { .init { $0 } }
+}
+
+public extension StaticConverter where Origin == ElectricCurrent, Target == ElectricCurrent.Amperes, Value: Numeric {
+    static var amperes: Self { .init { $0 } }
+}
+
+// MARK: Tagged (EX)
+import Tagged
+
+public extension Tagged where Tag == ElectricCurrent, RawValue == ElectricCurrent.Amperes.Type {
+    static var amperes: Self { .init(ElectricCurrent.Amperes.self) }
 }

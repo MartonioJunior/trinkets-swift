@@ -1,0 +1,606 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "ACRE_FEET_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "acre feet"
+          }
+        }
+      }
+    },
+    "ACRE_FEET_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "af"
+          }
+        }
+      }
+    },
+    "BUSHELS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf bushel"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf bushels"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "BUSHELS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bsh"
+          }
+        }
+      }
+    },
+    "CUBIC_METERS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf cubic meter"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf cubic meters"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "CUBIC_METERS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m³"
+          }
+        }
+      }
+    },
+    "CUPS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf cup"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf cups"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "CUPS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "cup"
+          }
+        }
+      }
+    },
+    "FLUID_OUNCES_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf fluid ounce"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf fluid ounces"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "FLUID_OUNCES_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "fl oz"
+          }
+        }
+      }
+    },
+    "GALLONS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf gallon"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf gallons"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "GALLONS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gal"
+          }
+        }
+      }
+    },
+    "IMPERIAL_FLUID_OUNCES_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf imperial fluid ounce"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf imperial fluid ounces"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "IMPERIAL_FLUID_OUNCES_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "fl oz"
+          }
+        }
+      }
+    },
+    "IMPERIAL_GALLONS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf imperial gallon"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf imperial gallons"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "IMPERIAL_GALLONS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gal"
+          }
+        }
+      }
+    },
+    "IMPERIAL_PINTS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf imperial pint"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf imperial pints"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "IMPERIAL_PINTS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pt"
+          }
+        }
+      }
+    },
+    "IMPERIAL_QUARTS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf imperial quart"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf imperial quarts"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "IMPERIAL_QUARTS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "qt"
+          }
+        }
+      }
+    },
+    "IMPERIAL_TABLE_SPOONS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf imperial table spoon"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf imperial table spoons"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "IMPERIAL_TABLE_SPOONS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tbsp"
+          }
+        }
+      }
+    },
+    "IMPERIAL_TEA_SPOONS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf imperial teaspoon"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf imperial teaspoons"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "IMPERIAL_TEA_SPOONS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tsp"
+          }
+        }
+      }
+    },
+    "LITERS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf liter"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf liters"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "LITERS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L"
+          }
+        }
+      }
+    },
+    "METRIC_CUPS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf metric cup"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf metric cups"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "METRIC_CUPS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "cup"
+          }
+        }
+      }
+    },
+    "PINTS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf pint"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf pints"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "PINTS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pt"
+          }
+        }
+      }
+    },
+    "QUARTS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf quart"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf quarts"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "QUARTS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "qt"
+          }
+        }
+      }
+    },
+    "TABLE_SPOONS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf table spoon"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf table spoons"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "TABLE_SPOONS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tbsp"
+          }
+        }
+      }
+    },
+    "TEA_SPOONS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf teaspoon"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf teaspoons"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "TEA_SPOONS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tsp"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.2"
+}

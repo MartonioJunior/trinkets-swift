@@ -1,0 +1,40 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "MOLES_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf mole"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(amount)lf moles"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "MOLES_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mol"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.2"
+}
