@@ -5,70 +5,50 @@
 //  Created by Martônio Júnior on 09/02/25.
 //
 
-// MARK: Aliases
-public typealias UnitMeasure<D: Dimension> = Measurement<Unit<D>>
-
-public struct Measurement<UnitType: Measurable> {
-    public typealias Value = UnitType.Value
-
+/// Data structure representing a quantified measure.
+/// 
+/// 
+/// - UnitType: Domain where this measure exists.
+/// - Value: Type representing the quantity associated with the measure.
+public struct Measurement<UnitType, Value> {
     // MARK: Variables
+    /// Quantity measured.
     public var value: Value
+    /// Unit for this measure.
     public let unit: UnitType
 
     // MARK: Initializers
-    public init(_ value: Value, _ unit: UnitType) {
+    private init(value: Value, unit: UnitType) {
         self.value = value
         self.unit = unit
     }
-
+    /// Creates a new measurement for a dynamic unit.
+    /// - Parameters:
+    ///   - value: Quantity associated with the unit.
+    ///   - unit: Unit that defines the measure.
+    ///
+    public init(_ value: Value, _ unit: UnitType) where UnitType: Measurable {
+        self.init(value: value, unit: unit)
+    }
+    /// Creates a new measurement for a static unit.
+    /// - Parameters:
+    ///   - value: Quantity associated with the unit.
+    ///   - type: Unit that defines the measure.
+    ///
+    public init<S: StaticUnit>(_ value: Value, _ type: S.Type = S.self) where UnitType == S.Type {
+        self.init(value: value, unit: type)
+    }
     // MARK: Methods
-    public func map(_ transform: (Value) -> Value) -> Self {
-        unit.x(transform(value))
-    }
-}
-
-// MARK: Self: AdditiveArithmetic
-extension Measurement: AdditiveArithmetic where UnitType: Convertible & Equatable, Value: AdditiveArithmetic {
-    public static var zero: Self { .init(.zero, .base) }
-
-    public static func + (lhs: Self, rhs: Self) -> Self {
-        let baseUnit = lhs.unit
-        let rhsValue = rhs.rawValue(in: baseUnit)
-
-        return .init(lhs.value + rhsValue, baseUnit)
-    }
-
-    public static func - (lhs: Self, rhs: Self) -> Self {
-        let baseUnit = lhs.unit
-        let rhsValue = rhs.rawValue(in: baseUnit)
-
-        return .init(lhs.value - rhsValue, baseUnit)
-    }
-}
-
-// MARK: Self: Comparable
-extension Measurement: Comparable where UnitType: Convertible & Equatable, Value: Comparable {
-    public static func < (lhs: Self, rhs: Self) -> Bool {
-        lhs.baseValue < rhs.baseValue
+    /// Maps a measurement by it's value.
+    /// - Parameter transform: Transformation function for the value.
+    /// - Returns: A new measurement with the transformed value in the same unit.
+    public func mapValue(_ transform: (Value) -> Value) -> Self {
+        .init(value: transform(value), unit: unit)
     }
 }
 
 // MARK: Self: Equatable
 extension Measurement: Equatable where UnitType: Equatable, Value: Equatable {}
-
-// MARK: Self: ExpressibleByFloatLiteral
-extension Measurement: ExpressibleByFloatLiteral where UnitType: Convertible, Value: ExpressibleByFloatLiteral {
-    public init(floatLiteral value: Value.FloatLiteralType) {
-        self.init(Value(floatLiteral: value), .base)
-    }
-}
-
-// MARK: Self: ExpressibleByIntegerLiteral
-extension Measurement: ExpressibleByIntegerLiteral where UnitType: Convertible, Value: ExpressibleByIntegerLiteral {
-    public init(integerLiteral value: Value.IntegerLiteralType) {
-        self.init(Value(integerLiteral: value), .base)
-    }
-}
 
 // MARK: Self: Formattable
 extension Measurement: Formattable {}
@@ -79,85 +59,137 @@ extension Measurement: Hashable where UnitType: Hashable, Value: Hashable {}
 // MARK: Self: Sendable
 extension Measurement: Sendable where UnitType: Sendable, Value: Sendable {}
 
-// MARK: Self: Strideable
-extension Measurement: Strideable where Self: Comparable, Value: SignedNumeric {
-    public func distance(to other: Self) -> Value {
-        other.rawValue(in: unit) - value
-    }
-
-    public func advanced(by n: Value) -> Self {
-        .init(value + n, unit)
-    }
-}
-
-// MARK: UnitType: Convertible
-public extension Measurement where UnitType: Convertible {
-    var baseValue: Value { UnitType.baseValue(of: value, unit) }
-
-    mutating func convert(to otherUnit: UnitType) {
-        self = converted(to: otherUnit)
-    }
-
-    func converted(to otherUnit: UnitType) -> Self {
-        let valueInOtherUnit = UnitType.convert(baseValue, to: otherUnit)
-        return .init(valueInOtherUnit, otherUnit)
-    }
-
-    func rawValue(in otherUnit: UnitType) -> Value {
-        converted(to: otherUnit).value
-    }
-}
-
-public extension Measurement where UnitType: Convertible, UnitType.Value: SignedNumeric & Comparable {
-    func clamped(by measurement: Self) -> Self {
-        let magnitude = min(abs(baseValue), abs(measurement.baseValue))
-        let value = (baseValue > .zero) ? magnitude : -magnitude
-        return .init(value, .base)
-    }
-}
-
-// MARK: UnitType: Dimension
-public extension Measurement {
-    func inBaseUnit<D: Dimension>() -> Self where UnitType == Unit<D> {
-        .init(D.baseValue(of: value, unit), D.baseUnit)
-    }
-}
-
-// MARK: Value: AdditiveArithmetic
+// MARK: Self.Value: AdditiveArithmetic
 public extension Measurement where Value: AdditiveArithmetic {
+    /// Creates a new zero measurement in a given unit.
+    /// - Parameters:
+    ///   - unit: Unit associated with the measure.
+    ///
+    /// - Returns: A new measurement.
+    static func zero(
+        _ unit: UnitType,
+        valueType _: Value.Type = Value.self
+    ) -> Self where UnitType: Measurable {
+        .init(.zero, unit)
+    }
+    /// Adds a value to the measure.
+    /// 
+    /// Assumes that the value is in the same unit as the measure itself.
+    /// - Parameters:
+    ///   - lhs: A measurement.
+    ///   - rhs: Quantity to add.
+    ///
+    /// - Returns: A new measurement with the sum of quantities.
     static func + (lhs: Self, rhs: Value) -> Self {
-        .init(lhs.value + rhs, lhs.unit)
+        .init(value: lhs.value + rhs, unit: lhs.unit)
     }
-
+    /// Adds a measure to another.
+    /// 
+    /// - Parameters:
+    ///   - lhs: A measurement.
+    ///   - rhs: Another measurement.
+    ///
+    /// - Returns: A new measurement with the sum of quantities.
+    static func + <S: StaticUnit>(lhs: Self, rhs: Self) -> Self where UnitType == S.Type {
+        .init(lhs.value + rhs.value, lhs.unit)
+    }
+    /// Subtracts a value from the measure.
+    /// 
+    /// Assumes that the value is in the same unit as the measure itself.
+    /// - Parameters:
+    ///   - lhs: A measurement.
+    ///   - rhs: Quantity to subtract.
+    ///
+    /// - Returns: A new measurement with the difference of quantities.
     static func - (lhs: Self, rhs: Value) -> Self {
-        .init(lhs.value - rhs, lhs.unit)
+        .init(value: lhs.value - rhs, unit: lhs.unit)
+    }
+    /// Subtracts a measure from another.
+    /// 
+    /// - Parameters:
+    ///   - lhs: A measurement.
+    ///   - rhs: Another measurement.
+    ///
+    /// - Returns: A new measurement with the difference of quantities.
+    static func - <S: StaticUnit>(lhs: Self, rhs: Self) -> Self where UnitType == S.Type {
+        .init(lhs.value - rhs.value, lhs.unit)
     }
 }
 
-// MARK: Value == Bool
+// MARK: Self.Value == Bool
 public extension Measurement where Value == Bool {
-    func negated() -> Self { .init(!value, unit) }
-
-    static prefix func ! (rhs: Self) -> Self { rhs.negated() }
+    /// Inverts the registered value for the unit.
+    /// - Returns: A measurement with a toggled value.
+    func toggled() -> Self { .init(value: !value, unit: unit) }
+    /// Inverts the registered value for the unit.
+    /// - Parameter rhs: A measurement.
+    /// - Returns: A measurement with a toggled value.
+    static prefix func ! (rhs: Self) -> Self { rhs.toggled() }
 }
 
-// MARK: Value: FloatingPoint
+// MARK: Self.Value: Comparable
+public extension Measurement where Value: Comparable {
+    /// Compares two measurements against each other
+    /// - Parameters:
+    ///   - lhs: A measurement.
+    ///   - rhs: Another measurement
+    ///
+    /// - Returns: `true` when the quantity in the left-side is lesser than on the right-side, `false` otherwise.
+    static func < <S: StaticUnit>(lhs: Self, rhs: Self) -> Bool where UnitType == S.Type {
+        lhs.value < rhs.value
+    }
+}
+
+// MARK: Self.Value: FloatingPoint
 public extension Measurement where Value: FloatingPoint {
+    /// Divides a measure by another.
+    /// - Parameters:
+    ///   - lhs: A measurement.
+    ///   - rhs: Another measurement.
+    ///
+    /// - Returns: A new measurement that divides the numerator value by the denominator.
+    static func / <S: StaticUnit>(lhs: Self, rhs: Self) -> Self where UnitType == S.Type {
+        .init(lhs.value / rhs.value, lhs.unit)
+    }
+    /// Divides a measure by a quantity.
+    /// - Parameters:
+    ///   - lhs: A measurement.
+    ///   - rhs: Quantity to use.
+    ///
+    /// - Returns: A new measurement where the value is divided by the quantity.
     static func / (lhs: Self, rhs: Value) -> Self {
-        .init(lhs.value / rhs, lhs.unit)
+        .init(value: lhs.value / rhs, unit: lhs.unit)
     }
 }
 
-// MARK: Value: Numeric
+// MARK: Self.Value: Numeric
 public extension Measurement where Value: Numeric {
+    /// Multiplies a measure by another.
+    /// - Parameters:
+    ///   - lhs: A measurement.
+    ///   - rhs: Another measurement.
+    ///
+    /// - Returns: A new measurement that multiplies the values of both measurements together.
+    static func * <S: StaticUnit>(lhs: Self, rhs: Self) -> Self where UnitType == S.Type {
+        .init(lhs.value * rhs.value, lhs.unit)
+    }
+    /// Multiplies a measure by a quantity.
+    /// - Parameters:
+    ///   - lhs: A measurement.
+    ///   - rhs: Quantity.
+    ///
+    /// - Returns: A new measurement where the value is divided by the quantity.
     static func * (lhs: Self, rhs: Value) -> Self {
-        .init(lhs.value * rhs, lhs.unit)
+        .init(value: lhs.value * rhs, unit: lhs.unit)
     }
 }
 
-// MARK: Value: SignedNumeric
+// MARK: Self.Value: SignedNumeric
 extension Measurement where Value: SignedNumeric {
+    /// Negates the value in the measurement.
+    /// - Parameter rhs: A measurement
+    /// - Returns: A new measurement with the negated value.
     static prefix func - (rhs: Self) -> Self {
-        .init(-rhs.value, rhs.unit)
+        .init(value: -rhs.value, unit: rhs.unit)
     }
 }
