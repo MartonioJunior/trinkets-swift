@@ -5,108 +5,94 @@
 //  Created by Martônio Júnior on 27/06/2025.
 //
 
+/// Modifier that negates a unit's dimensionality.
 @available(macOS 26.0, *)
-public struct Exponential<D: Domain, let N: Int> {
-    // MARK: Variables
-    public var unit: Unit<D>
-    public var exponent: Int { N }
+public typealias Unitless<T> = Exponential<T, 0>
+/// Modifier that keeps an unit as is.
+@available(macOS 26.0, *)
+public typealias Linear<T> = Exponential<T, 1>
+/// Modifier that elevates a unit to it's second power.
+@available(macOS 26.0, *)
+public typealias Square<T> = Exponential<T, 2>
+/// Modifier that elevates a unit to it's third power.
+@available(macOS 26.0, *)
+public typealias Cubic<T> = Exponential<T, 3>
 
+/// Modifier that applies a power to a given unit.
+/// - T: Type representing the unit.
+/// - N: Exponent it is raised to.
+@available(macOS 26.0, *)
+public struct Exponential<T, let N: Int> {
+    // MARK: Variables
+    /// Unit used as the base.
+    public var base: T
+    /// Power it was raised to.
+    public var exponent: Int { N }
     // MARK: Initializers
-    public init(_ unit: Unit<D>) {
-        self.unit = unit
+    /// Creates a new exponential instance with a base unit.
+    /// - Parameter base: Dynamic unit.
+    public init(_ base: T) where T: Measurable {
+        self.base = base
     }
 }
 
-// MARK: N == 0
+// MARK: Self: Convertible
 @available(macOS 26.0, *)
-public typealias Unitless<D: Domain> = Exponential<D, 0>
-
-// MARK: N == 1
-@available(macOS 26.0, *)
-public typealias Linear<D: Domain> = Exponential<D, 1>
-
-@available(macOS 26.0, *)
-public extension Exponential where N == 1 {}
-
-// MARK: N == 2
-@available(macOS 26.0, *)
-public typealias Square<D: Domain> = Exponential<D, 2>
-
-@available(macOS 26.0, *)
-public extension Exponential where N == 2 {
-    static var symbol: String { "²" }
-}
-
-// MARK: N == 3
-@available(macOS 26.0, *)
-public typealias Cubic<D: Domain> = Exponential<D, 3>
-
-@available(macOS 26.0, *)
-public extension Exponential where N == 3 {
-    static var symbol: String { "³" }
+extension Exponential: Convertible where T: Convertible {
+    // swiftlint:disable:next missing_docs
+    public typealias Base = Exponential<T.Base, N>
 }
 
 // MARK: Self: CustomStringConvertible
 @available(macOS 26.0, *)
 extension Exponential: CustomStringConvertible {
-    public var description: String {
-        "\(unit)^\(N)"
-    }
+    // swiftlint:disable:next missing_docs
+    public var description: String { "\(base)^\(N)" }
 }
 
 // MARK: Self: Domain
 @available(macOS 26.0, *)
-extension Exponential: Domain {
-    public typealias Features = Self
+extension Exponential: Domain where T: Domain {
+    // swiftlint:disable:next missing_docs
+    public typealias Symbol = String
 }
 
 // MARK: Self: Dimension
 @available(macOS 26.0, *)
-extension Exponential: Dimension, Measurable where D: Dimension, D.Value == Double {
-    public typealias Value = D.Value
-
-    public static var baseUnit: Self.Unit { D.baseUnit.pow() }
-    public static var dimensionality: Dimensionality { D.dimensionality * N }
-
-    public static func baseValue(of value: Value, _ unit: Self.Unit) -> Value {
-        Value.pow(D.baseValue(of: value, unit.features.unit), N)
-    }
-
-    public static func convert(_ baseValue: Value, to unit: Self.Unit) -> Value {
-        D.convert(Value.root(baseValue, N), to: unit.features.unit)
-    }
+extension Exponential: Dimension where T: Dimension {
+    // swiftlint:disable:next missing_docs
+    public typealias BaseUnit = Exponential<T.BaseUnit, N>
+    // swiftlint:disable:next missing_docs
+    public static var dimensionality: Dimensionality { T.dimensionality * N }
 }
 
 // MARK: Self: Equatable
 @available(macOS 26.0, *)
-extension Exponential: Equatable where D.Features: Equatable, D.Symbol: Equatable {}
+extension Exponential: Equatable where T: Equatable {}
+
+// MARK: Self: Measurable
+@available(macOS 26.0, *)
+extension Exponential: Measurable where T: Measurable {}
 
 // MARK: Self: Sendable
 @available(macOS 26.0, *)
-extension Exponential: Sendable where D.Features: Sendable, D.Symbol: Sendable {}
+extension Exponential: Sendable where T: Sendable {}
 
+// MARK: Self: SendableMetatype
 @available(macOS 26.0, *)
-public extension Domain {
+extension Exponential: SendableMetatype {}
+
+// MARK: Self: StaticUnit
+@available(macOS 26.0, *)
+extension Exponential: StaticUnit where T: StaticUnit {}
+
+// MARK: Measurable (EX)
+@available(macOS 26.0, *)
+public extension Measurable {
+    /// Short alias for an exponential unit.
     typealias E<let N: Int> = Exponential<Self, N>
-}
-
-// MARK: Unit (EX)
-@available(macOS 26.0, *)
-public extension Unit {
-    var squared: Unit<Square<D>> { .square(self) }
-
-    init<E: Domain, let N: Int>(e exponential: D) where D == Exponential<E, N> {
-        self.init(exponential.description, details: exponential)
-    }
-
-    static func square<E: Domain>(_ unit: Unit<E>) -> Self where D == Square<E> {
-        .init("\(unit.symbol)\(D.symbol)", details: .init(unit))
-    }
-
-    static func cubic<E: Domain>(_ unit: Unit<E>) -> Self where D == Cubic<E> {
-        .init("\(unit.symbol)\(D.symbol)", details: .init(unit))
-    }
-
-    func pow<let N: Int>() -> Unit<Exponential<D, N>> { .init(e: .init(self)) }
-    func inlined<E: Domain>() -> Unit<E> where D == Linear<E> { features.unit }
+    /// Squared version of the unit.
+    var squared: Exponential<Self, 2> { .init(self) }
+    /// Cubic version of the unit.
+    var cubic: Exponential<Self, 3> { .init(self) }
 }
