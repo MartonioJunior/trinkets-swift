@@ -8,13 +8,35 @@
 import TrinketsUnits
 
 public enum ElectricResistance: Dimension {
-    public typealias Features = LinearConverter
-    public typealias Value = Double
+    public typealias BaseUnit = Ohms
 
-    public static let baseUnit: Unit = .ohms
     public static let dimensionality: Dimensionality = [Mass.self: 1, Length.self: 2, Time.self: -3, ElectricCurrent.self: -2]
 }
 
-public extension Unit where D == ElectricResistance {
-    static let ohms: Self = .init("Ω", details: .base)
+// MARK: Self.Ohms
+public extension ElectricResistance {
+    enum Ohms: StaticUnit {
+        public typealias Base = ElectricResistance
+    }
+}
+
+public extension ElectricResistance.Ohms {
+    static var symbol: UnitRepresentation {
+        .nonPluralized(symbol: .ElectricResistance.ohmsSymbol, name: .ElectricResistance.ohmsName)
+    }
+}
+
+public extension StaticConverter where Origin == ElectricResistance.Ohms, Target == ElectricResistance, Value: Numeric {
+    static var to: Self { .init { $0 } }
+}
+
+public extension StaticConverter where Origin == ElectricResistance, Target == ElectricResistance.Ohms, Value: Numeric {
+    static var ohms: Self { .init { $0 } }
+}
+
+// MARK: Tagged (EX)
+import Tagged
+
+public extension Tagged where Tag == ElectricResistance, RawValue == ElectricResistance.Ohms.Type {
+    static var ohms: Self { .init(ElectricResistance.Ohms.self) }
 }

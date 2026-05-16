@@ -1,0 +1,174 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "ASTRONOMICAL_UNITS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "ASTRONOMICAL_UNITS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "au"
+          }
+        }
+      }
+    },
+    "FATHOMS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "FATHOMS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "fim"
+          }
+        }
+      }
+    },
+    "FEET_NAME" : {
+      "extractionState" : "manual"
+    },
+    "FEET_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ft"
+          }
+        }
+      }
+    },
+    "FURLONGS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "FURLONGS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "fur"
+          }
+        }
+      }
+    },
+    "INCHES_NAME" : {
+      "extractionState" : "manual"
+    },
+    "INCHES_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "in"
+          }
+        }
+      }
+    },
+    "LIGHT_YEARS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "LIGHT_YEARS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ly"
+          }
+        }
+      }
+    },
+    "METERS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "METERS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m"
+          }
+        }
+      }
+    },
+    "MILES_NAME" : {
+      "extractionState" : "manual"
+    },
+    "MILES_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mi"
+          }
+        }
+      }
+    },
+    "NAUTICAL_MILES_NAME" : {
+      "extractionState" : "manual"
+    },
+    "NAUTICAL_MILES_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NM"
+          }
+        }
+      }
+    },
+    "PARSECS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "PARSECS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pc"
+          }
+        }
+      }
+    },
+    "SCANDINAVIAN_MILES_NAME" : {
+      "extractionState" : "manual"
+    },
+    "SCANDINAVIAN_MILES_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smi"
+          }
+        }
+      }
+    },
+    "YARDS_NAME" : {
+      "extractionState" : "manual"
+    },
+    "YARDS_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yd"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.2"
+}

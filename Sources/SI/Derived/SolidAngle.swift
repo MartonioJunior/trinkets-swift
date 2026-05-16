@@ -5,17 +5,41 @@
 //  Created by Martônio Júnior on 27/08/2025.
 //
 
+import Notation
 import TrinketsUnits
 
 public enum SolidAngle: Dimension {
-    public typealias Features = LinearConverter
-    public typealias Value = Double
+    public typealias BaseUnit = Steradians
 
-    public static let baseUnit: Unit = .steradians
     public static let dimensionality: Dimensionality = .dimensionless
 }
 
-// MARK: Default Units
-public extension Unit where D == SolidAngle {
-    static let steradians: Self = .init("sr", details: .base)
+// MARK: Self.Candela
+public extension SolidAngle {
+    enum Steradians: StaticUnit {
+        public typealias Base = SolidAngle
+    }
+}
+
+public extension SolidAngle.Steradians {
+    static var symbol: UnitRepresentation {
+        .init(symbol: .SolidAngle.steradiansSymbol, name: SyntaxFunction {
+            .SolidAngle.steradiansName(amount: $0)
+        })
+    }
+}
+
+public extension StaticConverter where Origin == SolidAngle.Steradians, Target == SolidAngle, Value: Numeric {
+    static var to: Self { .init { $0 } }
+}
+
+public extension StaticConverter where Origin == SolidAngle, Target == SolidAngle.Steradians, Value: Numeric {
+    static var steradians: Self { .init { $0 } }
+}
+
+// MARK: Tagged (EX)
+import Tagged
+
+public extension Tagged where Tag == SolidAngle, RawValue == SolidAngle.Steradians.Type {
+    static var steradians: Self { .init(SolidAngle.Steradians.self) }
 }

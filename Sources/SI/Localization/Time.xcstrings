@@ -1,0 +1,62 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "DAYS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "d"
+          }
+        }
+      }
+    },
+    "DAYS_SYMBOL" : {
+      "extractionState" : "manual"
+    },
+    "HOURS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hr"
+          }
+        }
+      }
+    },
+    "HOURS_SYMBOL" : {
+      "extractionState" : "manual"
+    },
+    "MINUTES_NAME" : {
+      "extractionState" : "manual"
+    },
+    "MINUTES_SYMBOL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "min"
+          }
+        }
+      }
+    },
+    "SECONDS_NAME" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sec"
+          }
+        }
+      }
+    },
+    "SECONDS_SYMBOL" : {
+      "extractionState" : "manual"
+    }
+  },
+  "version" : "1.2"
+}
