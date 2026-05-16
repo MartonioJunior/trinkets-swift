@@ -5,191 +5,121 @@
 //  Created by Martônio Júnior on 22/07/2025.
 //
 
+import Tagged
 import Testing
 @testable import TrinketsUnits
 
 struct MeasurementTests {
-    public typealias Mock = Measurement<Reference>
-    public typealias Reference = Unit<Gil>
-
-    @Test("Creates new measurement with unit and value", arguments: [
-        (35, Gil.in(.zeni))
+    // MARK: Initializers
+    @Test("Creates new measurement with dynamic unit and value", arguments: [
+        (35, RPGMoney.Constant(value: 8))
     ])
-    func initializer(value: Mock.Value, unit: Reference) {
+    func initializer(_ value: Double, _ unit: RPGMoney.Constant) {
         let result = Measurement(value, unit)
         #expect(result.value == value)
         #expect(result.unit == unit)
     }
 
+    @Test("Creates new measurement with unit and value", arguments: [
+        (35)
+    ])
+    func initializerStatic(_ value: Double) {
+        let staticMeasure = Tagged<RPGMoney.Zeni, Double>(value)
+        let result = Measurement(staticMeasure)
+        #expect(result.value == value)
+        #expect(result.unit == RPGMoney.Zeni.self)
+    }
+
     // MARK: Methods
     @Test("Maps the value to a new amount", arguments: [
-        (Gil.of(23, .zeni), Gil.of(46, .zeni))
+        (Measurement(23, RPGMoney.Zeni.self), Measurement(46, RPGMoney.Zeni.self))
     ])
-    func map(_ sut: Mock, expected: Mock) {
-        let result = sut.map { $0 * 2 }
-        #expect(result == expected)
+    func mapValue(_ sut: Measurement<RPGMoney.Zeni.Type, Double>, expected: Measurement<RPGMoney.Zeni.Type, Double>) {
+        let result = sut.mapValue { $0 * 2 }
+        #expect(result.unit == expected.unit)
+        #expect(result.value == expected.value)
     }
 
-    // MARK: Self: ExpressibleByFloatLiteral
-    struct ConformsToExpressibleByFloatLiteral {
-        @Test("Creates new measurement from floating point", arguments: [
-            (35.2, Measurement(35.2, .gil))
+    // MARK: Self.Value: AdditiveArithmetic
+    struct ValueConformsToAdditiveArithmetic {
+        @Test("Returns measurement with 0 value", arguments: [
+            (RefreshRate.FPS(refreshRate: 22), Measurement(0, RefreshRate.FPS(refreshRate: 22)))
         ])
-        func initializer(floatLiteral value: Mock.Value.FloatLiteralType, expected: Mock) {
-            let result = Mock(floatLiteral: value)
-            #expect(result == expected)
-        }
-    }
-
-    // MARK: Self: ExpressibleByIntegerLiteral
-    struct ConformsToExpressibleByIntegerLiteral {
-        @Test("Creates new measurement from integer", arguments: [
-            (12, Measurement(12, .gil))
-        ])
-        func initializer(integerLiteral value: Mock.Value.IntegerLiteralType, expected: Mock) {
-            let result = Mock(integerLiteral: value)
-            #expect(result == expected)
-        }
-    }
-
-    // MARK: Self: Strideable
-    struct ConformsToStrideable {
-        @Test("Returns raw magnitude of distance to other value", arguments: [
-            (Gil.of(15, .zeni), Gil.of(36, .gil), -3)
-        ])
-        func distance(_ sut: Mock, to other: Mock, expected: Mock.Value) {
-            let result = sut.distance(to: other)
+        func zero(_ unit: RefreshRate.FPS, expected: Measurement<RefreshRate.FPS, Double>) {
+            let result = Measurement.zero(unit, valueType: Double.self)
             #expect(result == expected)
         }
 
-        @Test("Adjusts measurement by a set amount", arguments: [
-            (Gil.of(32, .linen), 10, Gil.of(42, .linen))
+        @Test("Sums measurement with value", arguments: [
+            (
+                Measurement(15, RPGMoney.Constant(value: 4)), 8,
+                Measurement(23, RPGMoney.Constant(value: 4))
+            )
         ])
-        func advanced(_ sut: Mock, by n: Mock.Value, expected: Mock) {
-            let result = sut.advanced(by: n)
-            #expect(result == expected)
-        }
-    }
-
-    // MARK: D: Dimension, V: Dimension.Value
-    struct DConformsToDimensionVIsDValue {
-        @Test("Returns raw number representing the measurement", arguments: [
-            (Gil.of(15, .zeni), 45),
-            (Gil.of(9, .gil), 9),
-            (Gil.of(4, .linen), 15),
-            (Gil.of(50, .zero), 0),
-        ])
-        func baseValue(_ sut: Mock, expected: Mock.Value) {
-            #expect(sut.baseValue == expected)
-        }
-
-        @Test("Creates a measurement in the base unit", arguments: [
-            (Gil.of(15, .zeni), Measurement(45, .gil)),
-            (Gil.of(9, .gil), Measurement(9, .gil)),
-            (Gil.of(4, .linen), Measurement(15, .gil))
-        ])
-        func inBaseUnit(_ sut: Mock, expected: Mock) {
-            #expect(sut.inBaseUnit() == expected)
-        }
-
-        @Test("Converts a measurement to another unit", arguments: [
-            (Gil.of(10, .linen), Gil.in(.zeni), Measurement(9, .zeni)),
-            (Gil.of(9, .zeni), Gil.in(.linen), Measurement(10, .linen))
-        ])
-        func convert(_ sut: Mock, to otherUnit: Unit<Gil>, expected: Mock) {
-            var methodA = sut
-            methodA.convert(to: otherUnit)
-            let methodB = sut.converted(to: otherUnit)
-
-            #expect(methodA == expected)
-            #expect(methodB == expected)
-        }
-
-        @Test("Returns value representation in another unit", arguments: [
-            (Gil.of(21, .zeni), Gil.in(.linen), 28),
-            (Gil.of(0, .linen), Gil.in(.gil), 7)
-        ])
-        func rawValue(_ sut: Mock, in otherUnit: Unit<Gil>, expected: Mock.Value) {
-            let result = sut.rawValue(in: otherUnit)
-            #expect(result == expected)
-        }
-
-        struct VConformsToAdditiveArithmetic {
-            @Test("Returns a measure with value equal to zero")
-            func zero() {
-                let result = Mock.zero
-                #expect(result.unit == Gil.baseUnit)
-                #expect(result.value == 0)
-            }
-
-            @Test("Adds two measurements together", arguments: [
-                (Gil.of(14, .zeni), Gil.of(1, .linen), Gil.of(17, .zeni)),
-                (Gil.of(20, .gil), Gil.of(8, .zeni), Gil.of(44, .gil))
-            ])
-            func plus(lhs: Mock, rhs: Mock, expected: Mock) {
-                let result = lhs + rhs
-                #expect(result == expected)
-            }
-
-            @Test("Removes a measurement from another", arguments: [
-                (Gil.of(14, .zeni), Gil.of(1, .linen), Gil.of(11, .zeni)),
-                (Gil.of(20, .gil), Gil.of(5, .zeni), Gil.of(5, .gil))
-            ])
-            func minus(lhs: Mock, rhs: Mock, expected: Mock) {
-                let result = lhs - rhs
-                #expect(result == expected)
-            }
-        }
-
-        struct VConformsToComparable {
-            @Test("Compares two measurements using their base value", arguments: [
-                (Gil.of(10, .zeni), Gil.of(7, .gil), false),
-                (Gil.of(15, .linen), Gil.of(13, .zeni), true),
-                (Gil.of(9, .gil), Gil.of(3, .zeni), false),
-                (Gil.of(10, .gil), Gil.of(2, .linen), true)
-            ])
-            func lesserThan(lhs: Mock, rhs: Mock, expected: Bool) {
-                let result = lhs < rhs
-                #expect(result == expected)
-            }
-        }
-    }
-
-    // MARK: V: AdditiveArithmetic
-    struct VConformsToAdditiveArithmetic {
-        @Test("Adds value in the current unit", arguments: [
-            (Gil.of(23, .linen), 7, Gil.of(30, .linen))
-        ])
-        func plus(lhs: Mock, rhs: Mock.Value, expected: Mock) {
+        func plusDynamic(
+            lhs: Measurement<RPGMoney.Constant, Double>,
+            rhs: Double, 
+            expected: Measurement<RPGMoney.Constant, Double>
+        ) {
             let result = lhs + rhs
             #expect(result == expected)
         }
 
-        @Test("Removes value in the current unit", arguments: [
-            (Gil.of(12, .zeni), 3, Gil.of(9, .zeni))
+        @Test("Sums measurements that are guaranteed to be in the same unit", arguments: [
+            (Measurement(10, RPGMoney.Gil.self), Measurement(20, RPGMoney.Gil.self), Measurement(30, RPGMoney.Gil.self))
         ])
-        func minus(lhs: Mock, rhs: Mock.Value, expected: Mock) {
+        func plusStatic(
+            lhs: Measurement<RPGMoney.Gil.Type, Double>,
+            rhs: Measurement<RPGMoney.Gil.Type, Double>,
+            expected: Measurement<RPGMoney.Gil.Type, Double>
+        ) {
+            let result = lhs + rhs
+            #expect(result.value == expected.value)
+        }
+
+        @Test("Subtracts value from measurements", arguments: [
+            (
+                Measurement(15, RPGMoney.Constant(value: 4)), 8,
+                Measurement(7, RPGMoney.Constant(value: 4))
+            )
+        ])
+        func minusDynamic(lhs: Measurement<RPGMoney.Constant, Double>, rhs: Double, expected: Measurement<RPGMoney.Constant, Double>) {
             let result = lhs - rhs
             #expect(result == expected)
         }
-    }
 
-    // MARK: V == Bool
-    struct VIsBool {
-        typealias Mock = Toggle.Measure
-        struct Toggle: Measurable, Equatable {
-            typealias Value = Bool
+        @Test("Subtracts measurements that are guaranteed to be in the same unit", arguments: [
+            (Measurement(10, RPGMoney.Gil.self), Measurement(20, RPGMoney.Gil.self), Measurement(-10, RPGMoney.Gil.self))
+        ])
+        func minusStatic(
+            lhs: Measurement<RPGMoney.Gil.Type, Double>,
+            rhs: Measurement<RPGMoney.Gil.Type, Double>,
+            expected: Measurement<RPGMoney.Gil.Type, Double>
+        ) {
+            let result = lhs - rhs
+            #expect(result.value == expected.value)
         }
+    }
+}
 
+extension MeasurementTests {
+    // MARK: Self.Value == Bool
+    struct ValueIsBool {
         @Test("Toggles the value of the measurement", arguments: [
-            (Toggle().x(true), Toggle().x(false)),
-            (Toggle().x(false), Toggle().x(true))
+            (
+                Measurement(true, RefreshRate.FPS(refreshRate: 12)),
+                Measurement(false, RefreshRate.FPS(refreshRate: 12))
+            ),
+            (
+                Measurement(false, RefreshRate.FPS(refreshRate: 23)),
+                Measurement(true, RefreshRate.FPS(refreshRate: 23))
+            )
         ])
         func negated(
-            _ sut: Mock,
-            expected: Mock
+            _ sut: Measurement<RefreshRate.FPS, Bool>,
+            expected: Measurement<RefreshRate.FPS, Bool>
         ) {
-            let resultA = sut.negated()
+            let resultA = sut.toggled()
             let resultB = !sut
 
             #expect(resultA == expected)
@@ -197,52 +127,103 @@ struct MeasurementTests {
         }
     }
 
-    // MARK: V: FloatingPoint
-    struct VConformsToFloatingPoint {
-        @Test("Divides measurement by value", arguments: [
-            (Gil.of(24, .gil), 3, Gil.of(8, .gil)),
-            (Gil.of(11, .zeni), 4, Gil.of(2.75, .zeni))
+    // MARK: Self.Value: Comparable
+    struct ValueConformsToComparable {
+        @Test("Allows comparing measures when guaranteed the units are the same", arguments: [
+            (Measurement(34, RPGMoney.Gil.self), Measurement(49, RPGMoney.Gil.self), true),
+            (Measurement(49, RPGMoney.Gil.self), Measurement(32, RPGMoney.Gil.self), false),
+            (Measurement(10, RPGMoney.Gil.self), Measurement(10, RPGMoney.Gil.self), false),
+
         ])
-        func multiply(lhs: Mock, rhs: Mock.Value, expected: Mock) {
+        func lesserThan(lhs: Measurement<RPGMoney.Gil.Type, Double>, rhs: Measurement<RPGMoney.Gil.Type, Double>, expected: Bool) {
+            let result = lhs < rhs
+            #expect(result == expected) 
+        }
+    }
+
+    // MARK: Value: FloatingPoint
+    struct ValueConformsToFloatingPoint {
+        @Test("Divides measurement by value", arguments: [
+            (Measurement(24, RPGMoney.Constant(value: 8)), 3, Measurement(8, RPGMoney.Constant(value: 8))),
+            (Measurement(11, RPGMoney.Constant(value: 12)), 4, Measurement(2.75, RPGMoney.Constant(value: 12)))
+        ])
+        func divideDynamic(
+            lhs: Measurement<RPGMoney.Constant, Double>,
+            rhs: Double,
+            expected: Measurement<RPGMoney.Constant, Double>
+        ) {
             let result = lhs / rhs
             #expect(result == expected)
         }
+
+        @Test("Divides measurements as they're guaranteed to be the same", arguments: [
+            (Measurement(24, RPGMoney.Gil.self), Measurement(3, RPGMoney.Gil.self), Measurement(8, RPGMoney.Gil.self)),
+            (Measurement(11, RPGMoney.Gil.self), Measurement(4, RPGMoney.Gil.self), Measurement(2.75, RPGMoney.Gil.self))
+        ])
+        func divideStatic(
+            lhs: Measurement<RPGMoney.Gil.Type, Double>,
+            rhs: Measurement<RPGMoney.Gil.Type, Double>,
+            expected: Measurement<RPGMoney.Gil.Type, Double>
+        ) {
+            let result = lhs / rhs
+            #expect(result.value == expected.value)
+        }
     }
 
-    // MARK: V: Numeric
-    struct VConformsToNumeric {
+    // MARK: Value: Numeric
+    struct ValueConformsToNumeric {
         @Test("Multiplies measurement by value", arguments: [
-            (Gil.of(23, .gil), 3, Gil.of(69, .gil))
+            (Measurement(24, RPGMoney.Constant(value: 8)), 3, Measurement(72, RPGMoney.Constant(value: 8))),
+            (Measurement(11, RPGMoney.Constant(value: 12)), 0.5, Measurement(5.5, RPGMoney.Constant(value: 12)))
         ])
-        func multiply(lhs: Mock, rhs: Mock.Value, expected: Mock) {
+        func multiplyDynamic(
+            lhs: Measurement<RPGMoney.Constant, Double>,
+            rhs: Double,
+            expected: Measurement<RPGMoney.Constant, Double>
+        ) {
             let result = lhs * rhs
             #expect(result == expected)
         }
+
+        @Test("Multiplies measurements as they're guaranteed to be the same", arguments: [
+            (Measurement(24, RPGMoney.Gil.self), Measurement(3, RPGMoney.Gil.self), Measurement(72, RPGMoney.Gil.self)),
+            (Measurement(11, RPGMoney.Gil.self), Measurement(0.5, RPGMoney.Gil.self), Measurement(5.5, RPGMoney.Gil.self))
+        ])
+        func multiplyStatic(
+            lhs: Measurement<RPGMoney.Gil.Type, Double>,
+            rhs: Measurement<RPGMoney.Gil.Type, Double>,
+            expected: Measurement<RPGMoney.Gil.Type, Double>
+        ) {
+            let result = lhs * rhs
+            #expect(result.value == expected.value)
+        }
     }
 
-    // MARK: V: SignedNumeric
-    struct VConformsToSignedNumeric {
+    // MARK: Value: SignedNumeric
+    struct ValueConformsToSignedNumeric {
         @Test("Negates a measurement's value", arguments: [
-            (Gil.of(35, .zeni), Gil.of(-35, .zeni))
+            (Measurement(24, RPGMoney.Constant(value: 8)), Measurement(-24, RPGMoney.Constant(value: 8)))
         ])
-        func negate(_ sut: Mock, expected: Mock) {
+        func negate(_ sut: Measurement<RPGMoney.Constant, Double>, expected: Measurement<RPGMoney.Constant, Double>) {
             let result = -sut
             #expect(result == expected)
         }
+    }
 
-        @Test("Clamps a measurement's value", arguments: [
-            (Gil.of(35, .zeni), Gil.of(20, .zeni), Gil.of(60, .gil)),
-            (Gil.of(35, .zeni), Gil.of(2, .linen), Gil.of(11, .gil)),
-            (Gil.of(35, .zeni), Gil.of(50, .linen), Gil.of(105, .gil)),
-            (Gil.of(35, .zeni), Gil.of(-20, .zeni), Gil.of(60, .gil)),
-            (Gil.of(-35, .zeni), Gil.of(20, .zeni), Gil.of(-60, .gil)),
-            (Gil.of(-35, .zeni), Gil.of(2, .linen), Gil.of(-11, .gil)),
-            (Gil.of(-35, .zeni), Gil.of(50, .linen), Gil.of(-105, .gil)),
-            (Gil.of(-35, .zeni), Gil.of(-20, .zeni), Gil.of(-60, .gil))
-        ])
-        func clamped(_ sut: Mock, by measurement: Mock, expected: Mock) {
-            let result = sut.clamped(by: measurement)
-            #expect(result == expected)
-        }
+    // MARK: Tagged (EX)
+    @Test("Creates new measurement with tagged structure", arguments: [
+        (35)
+    ])
+    func initializerTagged(_ value: Double) {
+        let staticMeasure = Tagged<RPGMoney.Zeni, Double>(value)
+        let result = Measurement(staticMeasure)
+        #expect(result.value == value)
+        #expect(result.unit == RPGMoney.Zeni.self)
+    }
+
+    @Test("Creates new tagged structure with typed measurement")
+    func tagged() {
+        let sut = Measurement(12, Material.Cloth.self)
+        #expect(sut.tagged() == Tagged<Material.Cloth, Int>(12))
     }
 }

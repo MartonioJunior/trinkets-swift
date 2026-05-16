@@ -5,69 +5,61 @@
 //  Created by Martônio Júnior on 02/09/25.
 //
 
+import Tagged
 import Testing
 @testable import TrinketsUnits
 
 struct MeasuredTests {
-    public typealias G = Unit<Gil>
-
+    // MARK: Syntax
     @Test("Allows using it using the following syntax")
-    func propertyWrapper() {
-        @Measured(in: .zeni) var money = 30
-        #expect(money == UnitMeasure(10, .zeni))
-
-        money += Gil.of(4, .linen)
-        #expect(money == UnitMeasure(15, .zeni))
+    func syntax() {
+        let dynamicUnit = RPGMoney.Constant(value: 6)
+        @Measured(in: dynamicUnit, .base, .converter) var money = 30
+        #expect(type(of: money) == Measurement<RPGMoney.Constant, Int>.self)
     }
 
+    // MARK: Initializers
     @Test("Initializes with wrapped value in unit", arguments: [
-        (Gil.of(32, .linen), Gil.in(.linen), Gil.of(32, .linen)),
-        (Gil.of(10, .zeni), Gil.in(.gil), Gil.of(30, .gil))
+        (32, RPGMoney.Constant(value: 4), Measurement(32, RPGMoney.Constant(value: 4))),
     ])
-    func initializer(wrappedValue value: G.Measure, in unit: G, expected: G.Measure) {
-        let result = Measured(wrappedValue: value, in: unit)
+    func initializer(wrappedValue value: Int, in unit: RPGMoney.Constant, expected: Measurement<RPGMoney.Constant, Int>) {
+        let result = Measured(wrappedValue: value, in: unit, .base, .converter)
         #expect(result.measurement == expected)
-        #expect(result.unit == unit)
-    }
-
-    @Test("Creates instance with measurement", arguments: [
-        (32, Gil.in(.linen), Gil.of(32, .linen), Gil.in(.linen))
-    ])
-    func initializer(
-        _ value: Gil.Value,
-        _ unit: Unit<Gil>,
-        expectedMeasurement: Gil.Measure,
-        expectedUnit: Unit<Gil>
-    ) {
-        let result = Measured<G>(value, unit)
-        #expect(result.measurement == expectedMeasurement)
-        #expect(result.unit == expectedUnit)
     }
 
     @Test("Returns value of Measurement", arguments: [
-        (Measured(wrappedValue: Gil.of(13, .gil), in: .gil), Gil.of(13, .gil)),
-        (Measured(wrappedValue: Gil.of(13, .zeni), in: .linen), Gil.of(16, .linen))
+        (
+            Measured(wrappedValue: 13, in: RPGMoney.Constant(value: 23), .base, .converter),
+            Measurement(13, RPGMoney.Constant(value: 23))
+        )
     ])
-    func wrappedValueGet(_ sut: Measured<G>, expected: G.Measure) {
+    func wrappedValueGet(_ sut: Measured<RPGMoney.Constant, Int>, expected: Measurement<RPGMoney.Constant, Int>) {
         let result = sut.wrappedValue
         #expect(result == expected)
     }
 
+    // MARK: Methods
     @Test("Converts given measure to the specified unit", arguments: [
         (
-            Measured(wrappedValue: Gil.of(13, .gil), in: .gil),
-            Gil.of(29, .gil),
-            Measured(wrappedValue: Gil.of(29, .gil), in: .gil)
-        ),
-        (
-            Measured(wrappedValue: Gil.of(2, .gil), in: .gil),
-            Gil.of(13, .zeni),
-            Measured(wrappedValue: Gil.of(39, .gil), in: .gil)
+            Measured(wrappedValue: 13, in: RPGMoney.Constant(value: 23), .base, .converter),
+            Measured(wrappedValue: -3, in: RPGMoney.Constant(value: 23), .base, .converter)
         )
     ])
-    func wrappedValueSet(_ sut: Measured<G>, newValue: G.Measure, expected: Measured<G>) {
-        var result = sut
-        result.wrappedValue = newValue
-        #expect(result == expected)
+    func setValue(_ sut:  Measured<RPGMoney.Constant, Int>, expected:  Measured<RPGMoney.Constant, Int>) {
+        var resultA = sut
+        resultA.wrappedValue = Measurement(12, .init(value: 8))
+        #expect(resultA == expected)
+
+        var resultB = sut
+        resultB.setValue(Measurement(12, .init(value: 8)))
+        #expect(resultB == expected)
+
+        var resultC = sut
+        resultC.setValue(Tagged<RPGMoney, Int>(20))
+        #expect(resultC == expected)
+
+        var resultD = sut
+        resultD.setValue(Tagged<RPGMoney.Gil, Int>(20), .to)
+        #expect(resultD == expected)
     }
 }

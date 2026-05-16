@@ -7,7 +7,7 @@
 
 import TrinketsUnits
 
-public struct Material {}
+public enum Material {}
 
 // MARK: Self: Domain
 extension Material: Domain {
@@ -15,6 +15,15 @@ extension Material: Domain {
 }
 
 // MARK: Default Units
-public extension Unit where D == Material {
-    static let cloth: Self = .init("cloth")
+public extension Material {
+    enum Cloth: StaticUnit {
+        public typealias Base = Material
+    }
+}
+
+// MARK: Tagged (EX)
+import Tagged
+
+public extension Tagged where Tag == Material, RawValue == Material.Cloth.Type {
+    static var cloth: Self { .init(Material.Cloth.self) }
 }
