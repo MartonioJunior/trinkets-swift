@@ -8,6 +8,9 @@
 import TrinketsUnits
 
 @available(macOS 26.0, *)
+public typealias DimensionlessSIVector = SIFundamentalVector<0, 0, 0, 0, 0, 0, 0>
+
+@available(macOS 26.0, *)
 public struct SIFundamentalVector<
     let M: Int,
     let S: Int,
