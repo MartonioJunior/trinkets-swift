@@ -5,41 +5,40 @@
 //  Created by Martônio Júnior on 11/11/2025.
 //
 
+/// Dynamic unit with no extra information.
 @dynamicMemberLookup
-public enum Amount {
+public struct Amount {
+    /// Symbol representing the unit.
+    var symbol: String
+    /// Creates a new amount category.
+    /// - Parameter member: Name of the category.
+    /// - Returns: A new `Amount` instance.
     @inlinable
-    public static subscript(dynamicMember member: String) -> Unit<Self> {
+    public static subscript(dynamicMember member: String) -> Self {
         Self.of(member)
     }
-
-    @inlinable
-    public static func of(_ symbol: Symbol) -> Unit<Self> {
+    /// Creates a new amount category.
+    /// - Parameter symbol: Symbol of the type.
+    public init(_ symbol: String) {
+        self.symbol = symbol
+    }
+    /// Creates a new amount category.
+    /// - Parameter string: Symbol, defined by a `StaticString`.
+    /// - Returns: A new `Amount` instance.
+    static func auto(_ string: StaticString = #function) -> Self { .of(string.description) }
+    /// Creates a new amount category.
+    /// - Parameter symbol: Name of the category.
+    /// - Returns: A new `Amount` instance.
+    public static func of(_ symbol: String) -> Self {
         .init(symbol)
     }
 }
 
-// MARK: Self: Domain
-extension Amount: Dimension {
-    public typealias Features = Void
-
-    public static var baseUnit: Unit<Self> { Unit("units") }
-    public static var dimensionality: Dimensionality { .dimensionless }
-
-    public static func baseValue(of value: Double, _: Unit<Self>) -> Double { value }
-    public static func convert(_: Double, to _: Unit<Self>) -> Double { .nan }
-}
+// MARK: Self: Measurable
+extension Amount: Measurable {}
 
 // MARK: Self: Equatable
 extension Amount: Equatable {}
 
 // MARK: Self: Sendable
 extension Amount: Sendable {}
-
-// MARK: Unit (EX)
-public extension Unit where D == Amount {
-    static func auto(_ string: StaticString = #function) -> Self { Amount.of(string.description) }
-
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.symbol == rhs.symbol
-    }
-}
