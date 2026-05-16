@@ -1,83 +1,124 @@
 //
 //  Fraction.swift
-//  JurassicRun
+//  Trinkets
 //
 //  Created by Martônio Júnior on 09/02/25.
 //
 
-public struct Fraction<A: Domain, B: Domain> {
-    // MARK: Aliases
+/// Division between two units.
+/// - A: Numerator unit.
+/// - B: Denominator unit.
+public struct Fraction<A, B> {
+    /// Fraction that swaps numerator and denominator types around.
     public typealias Flipped = Fraction<B, A>
-
     // MARK: Variables
-    public var numerator: Unit<A>
-    public var denominator: Unit<B>
-
-    public var asUnit: Unit<Self> { .init(self) }
-    public var flipped: Flipped { .init(denominator, per: numerator) }
-
+    /// Numerator unit.
+    public var numerator: A
+    /// Denominator unit.
+    public var denominator: B
     // MARK: Initializers
-    public init(_ numerator: Unit<A>, per denominator: Unit<B>) {
+    /// Creates a new unit fraction.
+    /// - Parameters:
+    ///   - numerator: Unit on top.
+    ///   - denominator: Unit on bottom.
+    ///
+    public init(_ numerator: A, per denominator: B) where A: Measurable, B: Measurable {
         self.numerator = numerator
         self.denominator = denominator
     }
 }
 
+public extension Fraction where A: Measurable, B: Measurable {
+    /// Fraction that swaps numerator and denominator around.
+    var flipped: Flipped { .init(denominator, per: numerator) }
+}
+
+// MARK: Self: Convertible
+extension Fraction: Convertible where A: Convertible, B: Convertible {
+    // swiftlint:disable:next missing_docs
+    public typealias Base = Fraction<A.Base, B.Base>
+}
+
 // MARK: Self: CustomStringConvertible
 extension Fraction: CustomStringConvertible {
-    public var description: String {
-        "\(numerator)/\(denominator)"
-    }
+    // swiftlint:disable:next missing_docs
+    public var description: String { "\(numerator)/\(denominator)" }
 }
 
 // MARK: Self: Domain
-extension Fraction: Domain {
-    public typealias Features = Self
+extension Fraction: Domain where A: Domain, B: Domain {
+    // swiftlint:disable:next missing_docs
+    public typealias Symbol = String
 }
 
 // MARK: Self: Dimension
-extension Fraction: Dimension & Measurable where A: Dimension, B: Dimension, A.Value == B.Value, A.Value: FloatingPoint {
-    public typealias Value = A.Value
-
-    public static var baseUnit: Self.Unit { A.baseUnit / B.baseUnit }
+extension Fraction: Dimension where A: Dimension, B: Dimension {
+    // swiftlint:disable:next missing_docs
+    public typealias BaseUnit = Fraction<A.BaseUnit, B.BaseUnit>
+    // swiftlint:disable:next missing_docs
     public static var dimensionality: Dimensionality { A.dimensionality - B.dimensionality }
-
-    public static func baseValue(of value: Value, _ unit: Self.Unit) -> Value {
-        A.baseValue(of: value, unit.features.numerator) / B.baseValue(of: 1, unit.features.denominator)
-    }
-
-    public static func convert(_ baseValue: Value, to unit: Self.Unit) -> Value {
-        A.convert(B.baseValue(of: baseValue, unit.features.denominator), to: unit.features.numerator)
-    }
 }
 
 // MARK: Self: Equatable
-extension Fraction: Equatable where A.Features: Equatable, A.Symbol: Equatable, B.Features: Equatable, B.Symbol: Equatable {}
+extension Fraction: Equatable where A: Equatable, B: Equatable {}
+
+// MARK: Self: Measurable
+extension Fraction: Measurable where A: Measurable, B: Measurable {}
 
 // MARK: Self: Hashable
-extension Fraction: Hashable where A.Features: Hashable, A.Symbol: Hashable, B.Features: Hashable, B.Symbol: Hashable {}
+extension Fraction: Hashable where A: Hashable, B: Hashable {}
 
 // MARK: Self: Sendable
-extension Fraction: Sendable where A.Features: Sendable, A.Symbol: Sendable, B.Features: Sendable, B.Symbol: Sendable {}
+extension Fraction: Sendable where A: Sendable, B: Sendable {}
 
-// MARK: Unit (EX)
-public extension Unit {
-    @inlinable
-    init<A: Domain, B: Domain>(_ numerator: Unit<A>, per denominator: Unit<B>) where D == Fraction<A, B> {
-        self.init(Fraction(numerator, per: denominator))
+// MARK: Self: Sendable
+extension Fraction: SendableMetatype {}
+
+// MARK: Self: StaticUnit
+extension Fraction: StaticUnit where A: StaticUnit, B: StaticUnit {}
+
+// MARK: Converter (EX)
+public extension StaticConverter {
+    /// Defines a conversion to another fraction, applying conversions from denominator, then numerator.
+    /// - Parameters:
+    ///   - lhs: A static converter, for the denominator.
+    ///   - rhs: Another static converter, for the numerator.
+    ///
+    /// - Returns: A new `StaticConverter`.
+    static func denominatorFirst<A, B, C, D>(
+        _ rhs: StaticConverter<B, D, Value>,
+        then lhs: StaticConverter<A, C, Value>
+    ) -> Self where Origin == Fraction<A, B>, Target == Fraction<C, D> {
+        .init { lhs.f(rhs.f($0)) }
     }
-
-    @inlinable
-    init<A: Domain, B: Domain>(_ fraction: Fraction<A, B>) where D == Fraction<A, B> {
-        self.init(fraction.description, details: fraction)
+    /// Defines a conversion to another fraction, applying conversions from numerator, then denominator.
+    /// - Parameters:
+    ///   - lhs: A static converter, for the numerator.
+    ///   - rhs: Another static converter, for the denominator.
+    ///
+    /// - Returns: A new `StaticConverter`.
+    static func numeratorFirst<A, B, C, D>(
+        _ lhs: StaticConverter<A, C, Value>,
+        then rhs: StaticConverter<B, D, Value>
+    ) -> Self where Origin == Fraction<A, B>, Target == Fraction<C, D> {
+        .init { rhs.f(lhs.f($0)) }
     }
+}
 
-    @inlinable
-    func per<E: Domain>(_ denominator: Unit<E>) -> Unit<Fraction<D, E>> {
-        self / denominator
+// MARK: Measurement (EX)
+public extension Measurement where UnitType: Measurable, Value: FloatingPoint {
+    /// Divides a measure by another.
+    /// - Parameter denominator: Divisor measurement.
+    /// - Returns: A new `Measurement` with the division of quantities associated to a `Fraction` of units.
+    func per<T: Measurable>(_ denominator: Measurement<T, Value>) -> Measurement<Fraction<UnitType, T>, Value> {
+        .init(value / denominator.value, .init(unit, per: denominator.unit))
     }
-
-    static func / <E: Domain>(lhs: Self, rhs: Unit<E>) -> Unit<Fraction<D, E>> {
-        .init("\(lhs.symbol)/\(rhs.symbol)", details: .init(lhs, per: rhs))
+    /// Divides a measure by another.
+    /// - Parameters:
+    ///   - lhs: A measurement.
+    ///   - rhs: Divisor measurement.
+    /// - Returns: A new `Measurement` with the division of quantities associated to a `Fraction` of units.
+    static func / <T: Measurable>(lhs: Self, rhs: Measurement<T, Value>) -> Measurement<Fraction<UnitType, T>, Value> {
+        lhs.per(rhs)
     }
 }
