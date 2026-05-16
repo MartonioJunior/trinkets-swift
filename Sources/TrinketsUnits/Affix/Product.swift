@@ -1,83 +1,126 @@
 //
-//  Combined.swift
-//  JurassicRun
+//  Product.swift
+//  Trinkets
 //
 //  Created by Martônio Júnior on 09/02/25.
 //
 
-public struct Product<A: Domain, B: Domain> {
+/// Product between two units.
+/// - A: Left-hand side unit.
+/// - B: Right-hand side unit.
+public struct Product<A, B> {
+    /// Product that has it's factors flipped around.
+    /// 
+    /// This does not change the overall result of the operation, just it's type definition.
     public typealias Flipped = Product<B, A>
-
     // MARK: Variables
-    public var lhs: Unit<A>
-    public var rhs: Unit<B>
-
-    public var asUnit: Unit<Self> { .init(self) }
-    public var flipped: Flipped { .init(rhs, lhs) }
-
+    /// Left-hand side unit.
+    public var lhs: A
+    /// Right-hand side unit.
+    public var rhs: B
     // MARK: Initializers
-    public init(_ lhs: Unit<A>, _ rhs: Unit<B>) {
+    /// Creates a new unit product.
+    /// - Parameters:
+    ///   - lhs: An unit.
+    ///   - rhs: Another unit.
+    ///
+    public init(_ lhs: A, _ rhs: B) where A: Measurable, B: Measurable {
         self.lhs = lhs
         self.rhs = rhs
     }
 }
 
+public extension Product where A: Measurable, B: Measurable {
+    /// Flips a product around. This does not change the overall result of the operation, just it's type definition.
+    var flipped: Flipped { .init(rhs, lhs) }
+}
+
+// MARK: Self: Convertible
+extension Product: Convertible where A: Convertible, B: Convertible {
+    // swiftlint:disable:next missing_docs
+    public typealias Base = Product<A.Base, B.Base>
+}
+
 // MARK: Self: CustomStringConvertible
 extension Product: CustomStringConvertible {
-    public var description: String {
-        "\(lhs)-\(rhs)"
-    }
+    // swiftlint:disable:next missing_docs
+    public var description: String { "\(lhs)-\(rhs)" }
 }
 
 // MARK: Self: Domain
 extension Product: Domain {
-    public typealias Features = Self
+    // swiftlint:disable:next missing_docs
+    public typealias Symbol = String
 }
 
 // MARK: Self: Dimension
-extension Product: Dimension, Measurable where A: Dimension, B: Dimension, A.Value == B.Value, A.Value: Numeric {
-    public typealias Value = A.Value
-
-    public static var baseUnit: Self.Unit { A.baseUnit * B.baseUnit }
+extension Product: Dimension where A: Dimension, B: Dimension {
+    // swiftlint:disable:next missing_docs
+    public typealias BaseUnit = Product<A.BaseUnit, B.BaseUnit>
+    // swiftlint:disable:next missing_docs
     public static var dimensionality: Dimensionality { A.dimensionality + B.dimensionality }
-
-    public static func baseValue(of value: Value, _ unit: Self.Unit) -> Value {
-        A.baseValue(of: value, unit.features.lhs) * B.baseValue(of: 1, unit.features.rhs)
-    }
-
-    public static func convert(_ baseValue: Value, to unit: Self.Unit) -> Value {
-        A.convert(B.convert(baseValue, to: unit.features.rhs), to: unit.features.lhs)
-    }
 }
 
 // MARK: Self: Equatable
-extension Product: Equatable where A.Features: Equatable, A.Symbol: Equatable, B.Features: Equatable, B.Symbol: Equatable {}
+extension Product: Equatable where A: Equatable, B: Equatable {}
 
 // MARK: Self: Hashable
-extension Product: Hashable where A.Features: Hashable, A.Symbol: Hashable, B.Features: Hashable, B.Symbol: Hashable {}
+extension Product: Hashable where A: Hashable, B: Hashable {}
+
+// MARK: Self: Measurable
+extension Product: Measurable where A: Measurable, B: Measurable {}
 
 // MARK: Self: Sendable
-extension Product: Sendable where A.Features: Sendable, A.Symbol: Sendable, B.Features: Sendable, B.Symbol: Sendable {}
+extension Product: Sendable where A: Sendable, B: Sendable {}
 
-// MARK: Unit (EX)
-public extension Unit {
-    @inlinable
-    init<A: Domain, B: Domain>(_ lhs: Unit<A>, _ rhs: Unit<B>) where D == Product<A, B> {
-        self.init(Product(lhs, rhs))
+// MARK: Self: SendableMetatype
+extension Product: SendableMetatype {}
+
+// MARK: Self: StaticUnit
+extension Product: StaticUnit where A: StaticUnit, B: StaticUnit {}
+
+// MARK: Converter (EX)
+public extension StaticConverter {
+    /// Defines a conversion to another product, applying conversions from left-to-right.
+    /// - Parameters:
+    ///   - lhs: A static converter.
+    ///   - rhs: Another static converter.
+    ///
+    /// - Returns: A new `StaticConverter`.
+    static func leftFirst<A, B, C, D>(
+        _ lhs: StaticConverter<A, C, Value>,
+        then rhs: StaticConverter<B, D, Value>
+    ) -> Self where Origin == Product<A, B>, Target == Product<C, D> {
+        .init { rhs.f(lhs.f($0)) }
     }
-
-    @inlinable
-    init<A: Domain, B: Domain>(_ product: Product<A, B>) where D == Product<A, B> {
-        self.init(product.description, details: product)
+    /// Defines a conversion to another product, applying conversions from right-to-left.
+    /// - Parameters:
+    ///   - lhs: A static converter.
+    ///   - rhs: Another static converter.
+    ///
+    /// - Returns: A new `StaticConverter`.
+    static func rightFirst<A, B, C, D>(
+        _ rhs: StaticConverter<B, D, Value>,
+        then lhs: StaticConverter<A, C, Value>
+    ) -> Self where Origin == Product<A, B>, Target == Product<C, D> {
+        .init { lhs.f(rhs.f($0)) }
     }
+}
 
-    @inlinable
-    func callAsFunction<E: Domain>(_ rhs: Unit<E>) -> Unit<Product<D, E>> {
-        self * rhs
+// MARK: Measurement (EX)
+public extension Measurement where UnitType: Measurable, Value: Numeric {
+    /// Multiplies the measure with another.
+    /// - Parameter other: A measurement.
+    /// - Returns: A new `Measurement` with the product of quantities associated to a `Product` of units.
+    func multiply<T: Measurable>(by other: Measurement<T, Value>) -> Measurement<Product<UnitType, T>, Value> {
+        .init(value * other.value, .init(unit, other.unit))
     }
-
-    @inlinable
-    static func * <E: Domain>(lhs: Self, rhs: Unit<E>) -> Unit<Product<D, E>> {
-        .init("\(lhs.symbol)-\(rhs.symbol)", details: .init(lhs, rhs))
+    /// Multiplies the measure with another.
+    /// - Parameters:
+    ///   - lhs: A measurement.
+    ///   - rhs: Another measurement.
+    /// - Returns: A new `Measurement` with the product of quantities associated to a `Product` of units.
+    static func * <T: Measurable>(lhs: Self, rhs: Measurement<T, Value>) -> Measurement<Product<UnitType, T>, Value> {
+        lhs.multiply(by: rhs)
     }
 }
