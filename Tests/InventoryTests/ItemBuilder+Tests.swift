@@ -20,7 +20,7 @@ struct ItemBuilderTests {
             Mock.Supply([Item.number(4).x(5), Item.number(3).x(2)])
         )
     ])
-    func buildExpressionInventory(_ expression: Chest<Item>, expected: Mock.Supply) {
+    func buildExpressionInventory(_ expression: Chest<Item, Tally>, expected: Mock.Supply) {
         let result = ItemBuilder.buildExpression(expression)
         #expect(result == expected)
     }
@@ -157,8 +157,8 @@ struct ItemBuilderTests {
             Chest([Item.number(4).x(5), Item.text("gol").x(2)])
         )
     ])
-    func buildFinalResultInventory(_ component: Mock.Supply, expected: Chest<Item>) {
-        let result: Chest<Item> = ItemBuilder.buildFinalResult(component)
+    func buildFinalResultInventory(_ component: Mock.Supply, expected: Chest<Item, Tally>) {
+        let result: Chest<Item, Tally> = ItemBuilder.buildFinalResult(component)
         #expect(result == expected)
     }
 
@@ -196,8 +196,8 @@ extension ItemBuilderTests {
         Item.text("yes")
         Item.number(84)
 
-        var x = 6
-        var goal = "mask"
+        let x = 6
+        let goal = "mask"
 
         if x < 10 {
             Item.text("Energy Cell")
@@ -224,13 +224,13 @@ extension ItemBuilderTests {
         }
     }
 
-    @Mock func syntaxInventory() -> Chest<Item> {
+    @Mock func syntaxInventory() -> Chest<Item, Tally> {
         .number(2) * 49;
         .text("yes");
         .number(84);
 
-        var x = 4
-        var goal = "mask"
+        let x = 4
+        let goal = "mask"
 
         if x > 10 {
         } else {

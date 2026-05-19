@@ -7,12 +7,11 @@
 
 @testable import Inventory
 import Testing
+import TrinketsUnits
 
 extension CatalogueTests {
     // MARK: Mocks
     struct DefaultHas: Catalogue {
-        typealias Item = MockItem
-
         var numbers: [Measurement<MockItem, Tally>]
 
         init(_ items: Tally...) {
@@ -61,7 +60,7 @@ extension CatalogueTests {
             )
         ])
         func intersection(
-             _ sut: Mock,
+            _ sut: Mock,
             with other: [Measurement<MockItem, Tally>],
             compose: @Sendable ([Measurement<MockItem, Tally>]) -> Measurement<MockItem, Tally>?,
             expected: [Measurement<MockItem, Tally>]
@@ -99,7 +98,7 @@ extension CatalogueTests {
             )
         ])
         func intersection(
-             _ sut: Mock,
+            _ sut: Mock,
             with other: [Measurement<MockItem, Tally>],
             expected: [Measurement<MockItem, Tally>]
         ) {

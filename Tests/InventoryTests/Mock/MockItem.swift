@@ -5,7 +5,6 @@
 //  Created by Martônio Júnior on 19/12/2025.
 //
 
-import Inventory
 import TrinketsUnits
 
 struct MockItem {
@@ -32,9 +31,7 @@ extension MockItem: Equatable {}
 extension MockItem: Identifiable {}
 
 // MARK: Self: Measurable
-extension MockItem: Measurable {
-    typealias Value = Tally
-}
+extension MockItem: Measurable {}
 
 // MARK: Self: Sendable
 extension MockItem: Sendable {}
