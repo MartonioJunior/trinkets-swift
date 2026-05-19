@@ -12,8 +12,6 @@ public enum SM64Currency: String, CaseIterable {
 }
 
 extension SM64Currency: Trinket {
-    public typealias Value = Int
-
     public var id: String { rawValue }
 }
 

@@ -7,6 +7,7 @@
 
 import Collectables
 import SI
+import Tagged
 import TrinketsUnits
 
 public enum SM64Cap: String, CaseIterable {
@@ -72,10 +73,10 @@ public extension SM64Cap {
         }
     }
 
-    var effectDuration: Time.Measure {
+    var effectDuration: Tagged<Time.Seconds, Double> {
         switch self {
-            case .wing: Time.of(1, .minutes)
-            case .metal, .vanish: Time.of(20, .seconds)
+            case .wing: 60
+            case .metal, .vanish: 20
         }
     }
 
