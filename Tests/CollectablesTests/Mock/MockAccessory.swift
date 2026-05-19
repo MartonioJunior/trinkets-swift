@@ -7,4 +7,4 @@
 
 import Collectables
 
-public typealias MockAccessory = Token<String, Double>
+public typealias MockAccessory = Token<String>
