@@ -7,9 +7,10 @@
 
 @testable import Inventory
 import Testing
+import TrinketsUnits
 
 struct ChestTests {
-    typealias Mock = Chest<MockItem>
+    typealias Mock = Chest<MockItem, Tally>
 
     @Test("Creates a new chest with the given contents", arguments: [
         (
@@ -64,34 +65,34 @@ struct ChestTests {
     // MARK: Self: Depot
     @Test("Stores measure into the chest", arguments: [
         (
-            Mock(stack: true, { [MockItem.number(3).x(7)] }),
+            Mock(stacking: [MockItem.number(3).x(7)]),
             MockItem.number(8).x(2),
-            Mock(stack: true, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] })
+            Mock(stacking: [MockItem.number(3).x(7), MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: true, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
+            Mock(stacking: [MockItem.number(3).x(7), MockItem.number(8).x(2)]),
             MockItem.number(3).x(3),
-            Mock(stack: true, { [MockItem.number(3).x(10), MockItem.number(8).x(2)] })
+            Mock(stacking: [MockItem.number(3).x(10), MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: true, { [] }),
+            Mock(stack: true),
             MockItem.number(8).x(2),
-            Mock(stack: true, { [MockItem.number(8).x(2)] })
+            Mock(stacking: [MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: false, { [MockItem.number(3).x(7)] }),
+            Mock([MockItem.number(3).x(7)]),
             MockItem.number(8).x(2),
-            Mock(stack: false, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] })
+            Mock([MockItem.number(3).x(7), MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: false, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
+            Mock([MockItem.number(3).x(7), MockItem.number(8).x(2)]),
             MockItem.number(3).x(3),
-            Mock(stack: false, { [MockItem.number(3).x(7), MockItem.number(8).x(2), MockItem.number(3).x(3)] })
+            Mock([MockItem.number(3).x(7), MockItem.number(8).x(2), MockItem.number(3).x(3)])
         ),
         (
-            Mock(stack: false, { [] }),
+            Mock(stack: false),
             MockItem.number(8).x(2),
-            Mock(stack: false, { [MockItem.number(8).x(2)] })
+            Mock([MockItem.number(8).x(2)])
         )
     ])
     func store(
@@ -106,104 +107,71 @@ struct ChestTests {
     }
 
     // MARK: Self: Dispenser
-    @Test("Releases contents from the chest", arguments: [
+    @Test("Releases contents from the chest", arguments: [(Mock, Measurement<MockItem, Tally>, Measurement<MockItem, Tally>?, Mock)](arrayLiteral:
         (
-            Mock(stack: true, { [MockItem.number(3).x(7)] }),
-            MockItem.number(8).x(2),
-            MockItem.number(8).x(2),
-            Mock(stack: true, { [MockItem.number(3).x(7)] })
+            Mock(stacking: [MockItem.number(3).x(7)]), MockItem.number(8).x(2),
+            MockItem.number(8).x(2), Mock(stacking: [MockItem.number(3).x(7)])
         ),
         (
-            Mock(stack: true, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
-            MockItem.number(3).x(3),
-            Measurement<MockItem, Tally>?.none,
-            Mock(stack: true, { [MockItem.number(3).x(4), MockItem.number(8).x(2)] })
+            Mock(stacking: [MockItem.number(3).x(7), MockItem.number(8).x(2)]), MockItem.number(3).x(3),
+            Measurement<MockItem, Tally>?.none, Mock(stacking: [MockItem.number(3).x(4), MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: true, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
-            MockItem.number(3).x(11),
-            MockItem.number(3).x(4),
-            Mock(stack: true, { [MockItem.number(8).x(2)] })
+            Mock(stacking: [MockItem.number(3).x(7), MockItem.number(8).x(2)]),
+            MockItem.number(3).x(11), MockItem.number(3).x(4), Mock(stacking: [MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: true, { [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)] }),
-            MockItem.number(3).x(3),
-            Measurement<MockItem, Tally>?.none,
-            Mock(stack: true, { [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)] })
+            Mock(stacking: [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)]), MockItem.number(3).x(3),
+            Measurement<MockItem, Tally>?.none, Mock(stacking: [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: true, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
-            MockItem.number(3).x(.nullify),
-            Measurement<MockItem, Tally>?.none,
-            Mock(stack: true, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] })
+            Mock(stacking: [MockItem.number(3).x(7), MockItem.number(8).x(2)]), MockItem.number(3).x(.nullify),
+            Measurement<MockItem, Tally>?.none, Mock(stacking: [MockItem.number(3).x(7), MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: true, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
-            MockItem.number(3).x(.infinite),
-            Measurement<MockItem, Tally>?.none,
-            Mock(stack: true, { [MockItem.number(8).x(2)] })
+            Mock(stacking: [MockItem.number(3).x(7), MockItem.number(8).x(2)]), MockItem.number(3).x(.infinite),
+            Measurement<MockItem, Tally>?.none, Mock(stacking: [MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: true, { [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)] }),
-            MockItem.number(3).x(.infinite),
-            Measurement<MockItem, Tally>?.none,
-            Mock(stack: true, { [MockItem.number(8).x(2)] })
+            Mock(stacking: [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)]), MockItem.number(3).x(.infinite),
+            Measurement<MockItem, Tally>?.none, Mock(stacking: [MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: true, { [] }),
-            MockItem.number(8).x(2),
-            MockItem.number(8).x(2),
-            Mock(stack: true, { [] })
+            Mock(stack: true), MockItem.number(8).x(2), MockItem.number(8).x(2), Mock(stack: true)
         ),
         (
-            Mock(stack: false, { [MockItem.number(3).x(7)] }),
-            MockItem.number(8).x(2),
-            MockItem.number(8).x(2),
-            Mock(stack: false, { [MockItem.number(3).x(7)] })
+            Mock([MockItem.number(3).x(7)]), MockItem.number(8).x(2),
+            MockItem.number(8).x(2), Mock([MockItem.number(3).x(7)])
         ),
         (
-            Mock(stack: false, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
-            MockItem.number(3).x(3),
-            Measurement<MockItem, Tally>?.none,
-            Mock(stack: false, { [MockItem.number(3).x(4), MockItem.number(8).x(2)] })
+            Mock([MockItem.number(3).x(7), MockItem.number(8).x(2)]), MockItem.number(3).x(3),
+            Measurement<MockItem, Tally>?.none, Mock([MockItem.number(3).x(4), MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: false, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
-            MockItem.number(3).x(11),
-            MockItem.number(3).x(4),
-            Mock(stack: false, { [MockItem.number(8).x(2)] })
+            Mock([MockItem.number(3).x(7), MockItem.number(8).x(2)]), MockItem.number(3).x(11),
+            MockItem.number(3).x(4), Mock([MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: false, { [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)] }),
-            MockItem.number(3).x(3),
-            Measurement<MockItem, Tally>?.none,
-            Mock(stack: false, { [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)] })
+            Mock([MockItem.number(3).x(.infinite), MockItem.number(8).x(2)]), MockItem.number(3).x(3),
+            Measurement<MockItem, Tally>?.none, Mock([MockItem.number(3).x(.infinite), MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: false, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
-            MockItem.number(3).x(.nullify),
-            Measurement<MockItem, Tally>?.none,
-            Mock(stack: false, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] })
+            Mock([MockItem.number(3).x(7), MockItem.number(8).x(2)]), MockItem.number(3).x(.nullify),
+            Measurement<MockItem, Tally>?.none, Mock([MockItem.number(3).x(7), MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: false, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
-            MockItem.number(3).x(.infinite),
-            Measurement<MockItem, Tally>?.none,
-            Mock(stack: false, { [MockItem.number(8).x(2)] })
+            Mock([MockItem.number(3).x(7), MockItem.number(8).x(2)]), MockItem.number(3).x(.infinite),
+            Measurement<MockItem, Tally>?.none, Mock([MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: false, { [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)] }),
-            MockItem.number(3).x(.infinite),
-            Measurement<MockItem, Tally>?.none,
-            Mock(stack: false, { [MockItem.number(8).x(2)] })
+            Mock([MockItem.number(3).x(.infinite), MockItem.number(8).x(2)]), MockItem.number(3).x(.infinite),
+            Measurement<MockItem, Tally>?.none, Mock([MockItem.number(8).x(2)])
         ),
         (
-            Mock(stack: false, { [] }),
-            MockItem.number(8).x(2),
-            MockItem.number(8).x(2),
-            Mock(stack: false, { [] })
+            Mock([Measurement<MockItem, Tally>]()), MockItem.number(8).x(2),
+            MockItem.number(8).x(2), Mock([Measurement<MockItem, Tally>]())
         )
-    ])
+    ))
     func release(
         _ sut: Mock,
         _ content: Measurement<MockItem, Tally>,
@@ -220,11 +188,11 @@ struct ChestTests {
     @Test("Creates a non-stack chest from a list of contents", arguments: [
         (
             [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(2).x(3)],
-            Mock(stack: false, { [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(2).x(3)] })
+            Mock([MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(2).x(3)])
         ),
         (
             [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(6).x(3)],
-            Mock(stack: false, { [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(6).x(3)] })
+            Mock([MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(6).x(3)])
         )
     ])
     func initializer(
@@ -238,19 +206,19 @@ struct ChestTests {
     // MARK: Self: Inventory
     @Test("Lists all the contents in the chest", arguments: [
         (
-            Mock(stack: false, { [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(2).x(3)] }),
+            Mock([MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(2).x(3)]),
             [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(2).x(3)]
         ),
         (
-            Mock(stack: false, { [] }),
+            Mock(stack: false),
             [Measurement<MockItem, Tally>]()
         ),
         (
-            Mock(stack: true, { [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(2).x(3)] }),
+            Mock(stacking: [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(2).x(3)]),
             [MockItem.number(4).x(3), MockItem.number(2).x(8)]
         ),
         (
-            Mock(stack: true, { [] }),
+            Mock(stack: true),
             [Measurement<MockItem, Tally>]()
         )
     ])
@@ -264,20 +232,20 @@ struct ChestTests {
     // MARK: Self.Item.Value: AdditiveArithmetic
     @Test("Optimizes chest by combining similar elements", arguments: [
         (
-            Mock(stack: false, { [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(2).x(3)] }),
-            Mock(stack: false, { [MockItem.number(4).x(3), MockItem.number(2).x(8)] })
+            Mock([MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(2).x(3)]),
+            Mock([MockItem.number(4).x(3), MockItem.number(2).x(8)])
         ),
         (
-            Mock(stack: false, { [] }),
-            Mock(stack: false, { [] })
+            Mock(stack: false),
+            Mock(stack: false)
         ),
         (
-            Mock(stack: true, { [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(6).x(3)] }),
-            Mock(stack: true, { [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(6).x(3)] })
+            Mock(stacking: [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(6).x(3)]),
+            Mock(stacking: [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(6).x(3)])
         ),
         (
-            Mock(stack: true, { [] }),
-            Mock(stack: true, { [] })
+            Mock(stack: true),
+            Mock(stack: true)
         )
     ])
     func optimize(
