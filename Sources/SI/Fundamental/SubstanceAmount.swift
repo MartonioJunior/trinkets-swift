@@ -19,6 +19,7 @@ public extension SubstanceAmount {
     }
 }
 
+#if LocalizedSymbols
 public extension SubstanceAmount.Moles {
     static var symbol: UnitRepresentation {
         .init(symbol: .SubstanceAmount.molesSymbol, name: SyntaxFunction {
@@ -26,6 +27,7 @@ public extension SubstanceAmount.Moles {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == SubstanceAmount.Moles, Target == SubstanceAmount, Value: Numeric {
     static var to: Self { .init { $0 } }

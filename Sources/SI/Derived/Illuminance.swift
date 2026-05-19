@@ -20,11 +20,13 @@ public extension Illuminance {
     }
 }
 
+#if LocalizedSymbols
 public extension Illuminance.Lux {
     static var symbol: UnitRepresentation {
         .nonPluralized(symbol: .Illuminance.luxSymbol, name: .Illuminance.luxName)
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Illuminance.Lux, Target == Illuminance, Value: Numeric {
     static var to: Self { .init { $0 } }

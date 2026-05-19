@@ -20,11 +20,13 @@ public extension Capacitance {
     }
 }
 
+#if LocalizedSymbols
 public extension Capacitance.Farad {
     static var symbol: UnitRepresentation {
         .nonPluralized(symbol: .Capacitance.faradSymbol, name: .Capacitance.faradName)
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Capacitance.Farad, Target == Capacitance, Value: Numeric {
     static var to: Self { .init { $0 } }

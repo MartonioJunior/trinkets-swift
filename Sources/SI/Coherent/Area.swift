@@ -36,6 +36,7 @@ public extension Area {
     }
 }
 
+#if LocalizedSymbols
 public extension Area.Acres {
     static var symbol: UnitRepresentation {
         .init(symbol: .Area.acresSymbol, name: SyntaxFunction {
@@ -43,6 +44,7 @@ public extension Area.Acres {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Area.Acres, Target == Area, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 4046.86 } }
@@ -59,6 +61,7 @@ public extension Area {
     }
 }
 
+#if LocalizedSymbols
 public extension Area.Ares {
     static var symbol: UnitRepresentation {
         .init(symbol: .Area.aresSymbol, name: SyntaxFunction {
@@ -66,6 +69,7 @@ public extension Area.Ares {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Area.Ares, Target == Area, Value: Numeric {
     static var to: Self { .init { $0 * 100 } }
@@ -80,6 +84,7 @@ public extension Area {
     typealias Hectares = PrefixedUnit<Hecto, Ares>
 }
 
+#if LocalizedSymbols
 public extension Area.Hectares {
     // 10.000 m2
     static var symbol: UnitRepresentation {
@@ -88,6 +93,7 @@ public extension Area.Hectares {
         })
     }
 }
+#endif
 
 // MARK: Tagged (EX)
 import Tagged

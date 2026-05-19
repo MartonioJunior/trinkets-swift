@@ -21,6 +21,7 @@ public extension ElectricCharge {
     }
 }
 
+#if LocalizedSymbols
 public extension ElectricCharge.Coulombs {
     static var symbol: UnitRepresentation {
         .init(symbol: .ElectricCharge.coulombsSymbol, name: SyntaxFunction {
@@ -28,6 +29,7 @@ public extension ElectricCharge.Coulombs {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == ElectricCharge.Coulombs, Target == ElectricCharge, Value: Numeric {
     static var to: Self { .init { $0 } }
@@ -42,6 +44,7 @@ public extension ElectricCharge {
     typealias AmpereHours = Product<ElectricCurrent.Amperes, Time.Hours>
 }
 
+#if LocalizedSymbols
 public extension ElectricCharge.AmpereHours {
     static var symbol: UnitRepresentation {
         .init(symbol: .ElectricCharge.ampereHoursSymbol, name: SyntaxFunction {
@@ -49,6 +52,7 @@ public extension ElectricCharge.AmpereHours {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == ElectricCharge.AmpereHours, Target == ElectricCharge, Value: Numeric {
     static var to: Self { .init { $0 * 3600 } }

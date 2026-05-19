@@ -20,11 +20,13 @@ public extension ElectricPotentialDifference {
     }
 }
 
+#if LocalizedSymbols
 public extension ElectricPotentialDifference.Volts {
     static var symbol: UnitRepresentation {
         .nonPluralized(symbol: .ElectricPotentialDifference.voltsSymbol, name: .ElectricPotentialDifference.voltsName)
     }
 }
+#endif
 
 public extension StaticConverter where Origin == ElectricPotentialDifference.Volts, Target == ElectricPotentialDifference, Value: Numeric {
     static var to: Self { .init { $0 } }

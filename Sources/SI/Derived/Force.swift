@@ -21,6 +21,7 @@ public extension Force {
     }
 }
 
+#if LocalizedSymbols
 public extension Force.Newtons {
     static var symbol: UnitRepresentation {
         .init(symbol: .Force.newtonsSymbol, name: SyntaxFunction {
@@ -28,6 +29,7 @@ public extension Force.Newtons {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Force.Newtons, Target == Force, Value: Numeric {
     static var to: Self { .init { $0 } }

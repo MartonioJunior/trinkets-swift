@@ -21,6 +21,7 @@ public extension Speed {
     }
 }
 
+#if LocalizedSymbols
 public extension Speed.MetersPerSecond {
     static var symbol: UnitRepresentation {
         .init(symbol: .Speed.metersPerSecondSymbol, name: SyntaxFunction {
@@ -28,6 +29,7 @@ public extension Speed.MetersPerSecond {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Speed.MetersPerSecond, Target == Speed, Value: Numeric {
     static var to: Self { .init { $0 } }
@@ -42,6 +44,7 @@ public extension Speed {
     typealias KilometersPerHour = Fraction<PrefixedUnit<Kilo, Length.Meters>, Time.Hours>
 }
 
+#if LocalizedSymbols
 public extension Speed.KilometersPerHour {
     static var symbol: UnitRepresentation {
         .init(symbol: .Speed.kilometersPerHourSymbol, name: SyntaxFunction {
@@ -49,6 +52,7 @@ public extension Speed.KilometersPerHour {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Speed.KilometersPerHour, Target == Speed, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.277778 } }
@@ -63,6 +67,7 @@ public extension Speed {
     typealias MilesPerHour = Fraction<Length.Miles, Time.Hours>
 }
 
+#if LocalizedSymbols
 public extension Speed.MilesPerHour {
     static var symbol: UnitRepresentation {
         .init(symbol: .Speed.milesPerHourSymbol, name: SyntaxFunction {
@@ -70,6 +75,7 @@ public extension Speed.MilesPerHour {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Speed.MilesPerHour, Target == Speed, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.44704 } }
@@ -86,6 +92,7 @@ public extension Speed {
     }
 }
 
+#if LocalizedSymbols
 public extension Speed.Knots {
     static var symbol: UnitRepresentation {
         .init(symbol: .Speed.knotsSymbol, name: SyntaxFunction {
@@ -93,6 +100,7 @@ public extension Speed.Knots {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Speed.Knots, Target == Speed, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.514444 } }

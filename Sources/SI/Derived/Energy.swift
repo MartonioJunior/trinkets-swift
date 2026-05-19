@@ -24,6 +24,7 @@ public extension Energy {
     }
 }
 
+#if LocalizedSymbols
 public extension Energy.Joules {
     static var symbol: UnitRepresentation {
         .init(symbol: .Energy.joulesSymbol, name: SyntaxFunction {
@@ -31,6 +32,7 @@ public extension Energy.Joules {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Energy.Joules, Target == Energy, Value: Numeric {
     static var to: Self { .init { $0 } }
@@ -47,6 +49,7 @@ public extension Energy {
     }
 }
 
+#if LocalizedSymbols
 public extension Energy.Calories {
     static var symbol: UnitRepresentation {
         .init(symbol: .Energy.caloriesSymbol, name: SyntaxFunction {
@@ -54,6 +57,7 @@ public extension Energy.Calories {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Energy.Calories, Target == Energy, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 4.184 } }
@@ -68,6 +72,7 @@ public extension Energy {
     typealias MilliwattHours = Product<PrefixedUnit<Milli, Power.Watts>, Time.Hours>
 }
 
+#if LocalizedSymbols
 public extension Energy.MilliwattHours {
     static var symbol: UnitRepresentation {
         .init(symbol: .Energy.milliwattHoursSymbol, name: SyntaxFunction {
@@ -75,6 +80,7 @@ public extension Energy.MilliwattHours {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Energy.MilliwattHours, Target == Energy, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 3.6 } }
@@ -89,6 +95,7 @@ public extension Energy {
     typealias KilowattHours = Product<PrefixedUnit<Kilo, Power.Watts>, Time.Hours>
 }
 
+#if LocalizedSymbols
 public extension Energy.KilowattHours {
     static var symbol: UnitRepresentation {
         .init(symbol: .Energy.kilowattHoursSymbol, name: SyntaxFunction {
@@ -96,6 +103,7 @@ public extension Energy.KilowattHours {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Energy.KilowattHours, Target == Energy, Value: Numeric {
     static var to: Self { .init { $0 * 3_600_000 } }

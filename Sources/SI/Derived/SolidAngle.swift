@@ -21,6 +21,7 @@ public extension SolidAngle {
     }
 }
 
+#if LocalizedSymbols
 public extension SolidAngle.Steradians {
     static var symbol: UnitRepresentation {
         .init(symbol: .SolidAngle.steradiansSymbol, name: SyntaxFunction {
@@ -28,6 +29,7 @@ public extension SolidAngle.Steradians {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == SolidAngle.Steradians, Target == SolidAngle, Value: Numeric {
     static var to: Self { .init { $0 } }

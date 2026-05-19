@@ -23,6 +23,7 @@ public extension Pressure {
     }
 }
 
+#if LocalizedSymbols
 public extension Pressure.Pascals {
     static var symbol: UnitRepresentation {
         .init(symbol: .Pressure.pascalsSymbol, name: SyntaxFunction {
@@ -30,6 +31,7 @@ public extension Pressure.Pascals {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Pressure.Pascals, Target == Pressure, Value: Numeric {
     static var to: Self { .init { $0 } }
@@ -44,6 +46,7 @@ public extension Pressure {
     typealias NewtonsPerMetersSquared = Fraction<Force.Newtons, Area.SquareMeters>
 }
 
+#if LocalizedSymbols
 public extension Pressure.NewtonsPerMetersSquared {
     static var symbol: UnitRepresentation {
         .init(symbol: .Pressure.newtonsPerMetersSquaredSymbol, name: SyntaxFunction {
@@ -51,6 +54,7 @@ public extension Pressure.NewtonsPerMetersSquared {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Pressure.NewtonsPerMetersSquared, Target == Pressure, Value: Numeric {
     static var to: Self { .init { $0 } }
@@ -67,6 +71,7 @@ public extension Pressure {
     }
 }
 
+#if LocalizedSymbols
 public extension Pressure.Bars {
     static var symbol: UnitRepresentation {
         .init(symbol: .Pressure.barsSymbol, name: SyntaxFunction {
@@ -74,6 +79,7 @@ public extension Pressure.Bars {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Pressure.Bars, Target == Pressure, Value: Numeric {
     static var to: Self { .init { $0 * 100_000 } }
@@ -90,6 +96,7 @@ public extension Pressure {
     }
 }
 
+#if LocalizedSymbols
 public extension Pressure.InchesOfMercury {
     static var symbol: UnitRepresentation {
         .init(symbol: .Pressure.inchesOfMercurySymbol, name: SyntaxFunction {
@@ -97,6 +104,7 @@ public extension Pressure.InchesOfMercury {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Pressure.InchesOfMercury, Target == Pressure, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 3386.39 } }
@@ -113,6 +121,7 @@ public extension Pressure {
     }
 }
 
+#if LocalizedSymbols
 public extension Pressure.MillimetersOfMercury {
     static var symbol: UnitRepresentation {
         .init(symbol: .Pressure.millimetersOfMercurySymbol, name: SyntaxFunction {
@@ -120,6 +129,7 @@ public extension Pressure.MillimetersOfMercury {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Pressure.MillimetersOfMercury, Target == Pressure, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 133.322 } }
@@ -136,6 +146,7 @@ public extension Pressure {
     }
 }
 
+#if LocalizedSymbols
 public extension Pressure.PoundsForcePerSquareInch {
     static var symbol: UnitRepresentation {
         .init(symbol: .Pressure.poundsForcePerSquareInchSymbol, name: SyntaxFunction {
@@ -143,6 +154,7 @@ public extension Pressure.PoundsForcePerSquareInch {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Pressure.PoundsForcePerSquareInch, Target == Pressure, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 6894.76 } }

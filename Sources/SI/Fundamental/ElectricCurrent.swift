@@ -19,6 +19,7 @@ public extension ElectricCurrent {
     }
 }
 
+#if LocalizedSymbols
 public extension ElectricCurrent.Amperes {
     static var symbol: UnitRepresentation {
         .init(symbol: .ElectricCurrent.amperesSymbol, name: SyntaxFunction {
@@ -26,6 +27,7 @@ public extension ElectricCurrent.Amperes {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == ElectricCurrent.Amperes, Target == ElectricCurrent, Value: Numeric {
     static var to: Self { .init { $0 } }
