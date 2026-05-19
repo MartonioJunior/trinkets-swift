@@ -42,7 +42,7 @@ public struct Measurement<UnitType, Value> {
     /// Maps a measurement by it's value.
     /// - Parameter transform: Transformation function for the value.
     /// - Returns: A new measurement with the transformed value in the same unit.
-    public func mapValue(_ transform: (Value) -> Value) -> Self {
+    public func mapValue<T>(_ transform: (Value) -> T) -> Measurement<UnitType, T> {
         .init(value: transform(value), unit: unit)
     }
 }
