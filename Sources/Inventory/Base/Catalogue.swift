@@ -8,19 +8,19 @@
 import TrinketsUnits
 
 public protocol Catalogue {
-    associatedtype Item: Measurable where Item.Value == Tally
+    associatedtype Item: Measurable
 
-    func fetch<T>(_ transform: (Item.Measure) -> T?) -> [T]
-    func has(_ content: Item.Measure) -> Bool
+    func fetch<T>(_ transform: (Measurement<Item, Tally>) -> T?) -> [T]
+    func has(_ content: Measurement<Item, Tally>) -> Bool
 }
 
 // MARK: Default Implementation
 public extension Catalogue {
-    func fetch(where predicate: (Item.Measure) -> Bool) -> [Item.Measure] {
+    func fetch(where predicate: (Measurement<Item, Tally>) -> Bool) -> [Measurement<Item, Tally>] {
         fetch { predicate($0) ? $0 : nil }
     }
 
-    func fetchByItem(_ transform: (Item) -> Item?) -> [Item.Measure] {
+    func fetchByItem(_ transform: (Item) -> Item?) -> [Measurement<Item, Tally>] {
         fetch {
             guard let item = transform($0.unit) else { return nil }
 
@@ -43,16 +43,16 @@ public extension Catalogue {
     }
 
     func has(
-        @ItemBuilder<Item> _ contents: () -> [Item.Measure]
+        @ItemBuilder<Item> _ contents: () -> [Measurement<Item, Tally>]
     ) -> Bool {
         contents().allSatisfy { has($0) }
     }
 
     func intersection(
-        @ItemBuilder<Item> with other: () -> [Item.Measure],
-        overlap: (Item.Measure, Item.Measure) -> Item.Measure?,
-        compose: ([Item.Measure]) -> Item.Measure? = \.first
-    ) -> [Item.Measure] {
+        @ItemBuilder<Item> with other: () -> [Measurement<Item, Tally>],
+        overlap: (Measurement<Item, Tally>, Measurement<Item, Tally>) -> Measurement<Item, Tally>?,
+        compose: ([Measurement<Item, Tally>]) -> Measurement<Item, Tally>? = \.first
+    ) -> [Measurement<Item, Tally>] {
         let otherContents = other()
 
         return otherContents.compactMap { other in
@@ -64,9 +64,9 @@ public extension Catalogue {
     }
 
     func uniqueAgainst(
-        @ItemBuilder<Item> _ other: () -> [Item.Measure],
-        check: (Item.Measure, Item.Measure) -> Bool
-    ) -> [Item.Measure] {
+        @ItemBuilder<Item> _ other: () -> [Measurement<Item, Tally>],
+        check: (Measurement<Item, Tally>, Measurement<Item, Tally>) -> Bool
+    ) -> [Measurement<Item, Tally>] {
         let other = other()
 
         return fetch { item in
@@ -77,9 +77,9 @@ public extension Catalogue {
     }
 
     func uniqueNotIn(
-        @ItemBuilder<Item> _ other: () -> [Item.Measure],
+        @ItemBuilder<Item> _ other: () -> [Measurement<Item, Tally>],
         equals: (Item, Item) -> Bool
-    ) -> [Item.Measure] {
+    ) -> [Measurement<Item, Tally>] {
         let other = other()
 
         return fetch { lhs in
@@ -92,13 +92,13 @@ public extension Catalogue {
 
 // MARK: Self: Dispenser
 public extension Catalogue where Self: Dispenser {
-    mutating func releaseAll() -> [Item.Measure] {
+    mutating func releaseAll() -> [Measurement<Item, Tally>] {
         releaseAll { _ in true }
     }
 
     mutating func releaseAll(
-        where predicate: (Item.Measure) -> Bool
-    ) -> [Item.Measure] {
+        where predicate: (Measurement<Item, Tally>) -> Bool
+    ) -> [Measurement<Item, Tally>] {
         let forRemoval = fetch(where: predicate)
         return release { forRemoval }
     }
@@ -107,9 +107,9 @@ public extension Catalogue where Self: Dispenser {
 // MARK: Self.Item: Comparable
 public extension Catalogue where Item: Comparable {
     func intersection(
-        @ItemBuilder<Item> with other: () -> [Item.Measure],
-        compose: ([Item.Measure]) -> Item.Measure? = \.first
-    ) -> [Item.Measure] {
+        @ItemBuilder<Item> with other: () -> [Measurement<Item, Tally>],
+        compose: ([Measurement<Item, Tally>]) -> Measurement<Item, Tally>? = \.first
+    ) -> [Measurement<Item, Tally>] {
         intersection(with: other, overlap: {
             guard $0.unit == $1.unit else { return nil }
 
@@ -126,19 +126,19 @@ public extension Catalogue where Item: Comparable {
 
 // MARK: Self.Item: Equatable
 public extension Catalogue where Item: Equatable {
-    func has(_ content: Item.Measure) -> Bool {
+    func has(_ content: Measurement<Item, Tally>) -> Bool {
         has(content.value) { $0 == content.unit ? $0 : nil }
     }
 
     func lacking(
-        @ItemBuilder<Item> _ contents: () -> [Item.Measure]
+        @ItemBuilder<Item> _ contents: () -> [Measurement<Item, Tally>]
     ) -> Bool {
         !contents().allSatisfy { has($0) }
     }
 
     func uniqueNotIn(
-        @ItemBuilder<Item> _ other: () -> [Item.Measure]
-    ) -> [Item.Measure] {
+        @ItemBuilder<Item> _ other: () -> [Measurement<Item, Tally>]
+    ) -> [Measurement<Item, Tally>] {
         uniqueNotIn(other, equals: ==)
     }
 }
