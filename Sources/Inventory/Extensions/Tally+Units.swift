@@ -8,7 +8,7 @@
 import TrinketsUnits
 
 // MARK: Measurement (EX)
-public extension Measurement where UnitType.Value == Tally {
+public extension Measurement where Value == Tally {
     func contains(_ tally: Tally) -> Bool {
         switch tally {
             case .value(0): true
@@ -32,11 +32,11 @@ public extension Measurement where UnitType.Value == Tally {
     ) -> Self? {
         guard predicate(self, other) else { return nil }
 
-        return map { operation($0, other.value) }
+        return mapValue { operation($0, other.value) }
     }
 }
 
-public extension Measurement where UnitType: Equatable, UnitType.Value == Tally {
+public extension Measurement where UnitType: Equatable, Value == Tally {
     func canSupply(_ measure: Self) -> Bool {
         canSupply(measure, equals: ==)
     }
@@ -44,10 +44,10 @@ public extension Measurement where UnitType: Equatable, UnitType.Value == Tally 
 
 // MARK: RangeReplaceableCollection (EX)
 public extension RangeReplaceableCollection where Self: MutableCollection {
-    mutating func allocate<Item: Measurable & Equatable>(
+    mutating func allocate<Item: Measurable & Equatable, Value: AdditiveArithmetic>(
         _ supply: Element,
         stacking: Bool
-    ) where Element == Item.Measure, Item.Value: AdditiveArithmetic {
+    ) where Element == Measurement<Item, Value> {
         guard stacking, let index = firstIndex(where: { $0.unit == supply.unit }) else {
             append(supply)
             return
@@ -61,7 +61,7 @@ public extension RangeReplaceableCollection where Self: MutableCollection {
 public extension Sequence {
     func has<Item: Measurable>(
         _ tally: Tally
-    ) -> Bool where Element == Item.Measure, Item.Value == Tally {
+    ) -> Bool where Element == Measurement<Item, Tally> {
         switch tally {
             case let .value(value):
                 self.tally().reduce(.zero, +) >= .value(value)
@@ -72,13 +72,13 @@ public extension Sequence {
         }
     }
 
-    func tally<Item: Measurable>() -> [Item.Value] where Element == Item.Measure {
+    func tally<Item: Measurable>() -> [Tally] where Element == Measurement<Item, Tally> {
         map(\.value)
     }
 
     func tally<Item: Measurable, T: AdditiveArithmetic>(
-        _ transform: (Element.Value) -> T,
-    ) -> [T] where Element == Item.Measure {
+        _ transform: (Tally) -> T,
+    ) -> [T] where Element == Measurement<Item, Tally> {
         map { transform($0.value) }
     }
 }

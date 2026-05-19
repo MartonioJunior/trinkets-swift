@@ -8,24 +8,24 @@
 import TrinketsUnits
 
 public protocol ItemCollection {
-    associatedtype Item: Measurable where Item.Value == Tally
+    associatedtype Item: Measurable
     /// Instances the storage with an existing list of contents
     /// - Parameter contents: Contents of the inventory
-    init(_ contents: some Sequence<Item.Measure>)
+    init(_ contents: some Sequence<Measurement<Item, Tally>>)
 }
 
 // MARK: Default Implementation
 public extension ItemCollection {
     init() { self.init([]) }
 
-    init(@ItemBuilder<Item> _ elements: () -> [Item.Measure]) {
+    init(@ItemBuilder<Item> _ elements: () -> [Measurement<Item, Tally>]) {
         self.init(elements())
     }
 }
 
 // MARK: Self: ExpressibleByArrayLiteral
 public extension ItemCollection where Self: ExpressibleByArrayLiteral {
-    init(arrayLiteral elements: Item.Measure...) {
+    init(arrayLiteral elements: Measurement<Item, Tally>...) {
         self.init(elements)
     }
 }

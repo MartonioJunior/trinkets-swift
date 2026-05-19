@@ -8,11 +8,11 @@
 import TrinketsUnits
 
 public protocol Depot<Item> {
-    associatedtype Item: Measurable where Item.Value == Tally
+    associatedtype Item: Measurable
     /// Stores items for later use
     /// - Parameter content: How many items to add to storage
     /// - Returns: The remaining amount that was not collected, `nil` if all items got added
-    mutating func store(_ content: Item.Measure) -> Item.Measure?
+    mutating func store(_ content: Measurement<Item, Tally>) -> Measurement<Item, Tally>?
 }
 
 // MARK: Default Implementation
@@ -23,12 +23,12 @@ public extension Depot {
     ///
     /// - Returns: The remainder stock not added in.
     mutating func store(
-        @ItemBuilder<Item> _ contents: () -> [Item.Measure]
-    ) -> [Item.Measure] {
+        @ItemBuilder<Item> _ contents: () -> [Measurement<Item, Tally>]
+    ) -> [Measurement<Item, Tally>] {
         contents().compactMap { self.store($0) }
     }
 
-    static func += (lhs: inout Self, rhs: Item.Measure) {
+    static func += (lhs: inout Self, rhs: Measurement<Item, Tally>) {
         _ = lhs.store(rhs)
     }
 }

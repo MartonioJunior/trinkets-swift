@@ -8,8 +8,8 @@
 import TrinketsUnits
 
 public protocol Inventory: ItemCollection {
-    // MARK: Aliases
-    associatedtype Contents: Collection where Contents.Element == Item.Measure
+    associatedtype Contents: Collection where Contents.Element == Measurement<Item, Value>
+    typealias Value = Tally
     // MARK: Variables
     /// List of contents that the inventory has
     /// 
@@ -20,19 +20,19 @@ public protocol Inventory: ItemCollection {
 
 // MARK: Default Implementation
 public extension Inventory {
-    func mapValues(_ transform: (Item.Value) -> Item.Value) -> [Item.Measure] {
-        contents.map { $0.map(transform) }
+    func mapValues(_ transform: (Value) -> Value) -> [Measurement<Item, Value>] {
+        contents.map { $0.mapValue(transform) }
     }
 
-    func union(@ItemBuilder<Item> with other: () -> [Item.Measure]) -> [Item.Measure] {
+    func union(@ItemBuilder<Item> with other: () -> [Measurement<Item, Value>]) -> [Measurement<Item, Value>] {
         contents + other()
     }
 
-    static func * (lhs: Self, rhs: UInt) -> [Item.Measure] {
+    static func * (lhs: Self, rhs: UInt) -> [Measurement<Item, Value>] {
         lhs.mapValues { $0 * rhs }
     }
 
-    static func / (lhs: Self, rhs: UInt) -> [Item.Measure] {
+    static func / (lhs: Self, rhs: UInt) -> [Measurement<Item, Value>] {
         lhs.mapValues { $0 / rhs }
     }
 }
@@ -42,7 +42,7 @@ public typealias InventoryBuilder<I: Inventory> = ItemBuilder<I.Item>
 
 // MARK: Self: Catalogue
 public extension Inventory where Self: Catalogue {
-    func fetch<T>(_ transform: (Item.Measure) -> T?) -> [T] {
+    func fetch<T>(_ transform: (Measurement<Item, Value>) -> T?) -> [T] {
         contents.compactMap(transform)
     }
 }
@@ -50,7 +50,7 @@ public extension Inventory where Self: Catalogue {
 // MARK: Self: Dispenser
 public extension Inventory where Self: Dispenser {
     @discardableResult
-    mutating func transferAll<D: Depot>(to depot: inout D) -> [Item.Measure] where D.Item == Item {
+    mutating func transferAll<D: Depot>(to depot: inout D) -> [Measurement<Item, Value>] where D.Item == Item {
         let contents = contents.map(\.self)
         return transfer(to: &depot) { contents }
     }

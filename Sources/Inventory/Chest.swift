@@ -7,17 +7,17 @@
 
 import TrinketsUnits
 
-public struct Chest<Item: Measurable & Equatable> where Item.Value: AdditiveArithmetic {
+public struct Chest<Item: Measurable & Equatable, Value: AdditiveArithmetic> {
     // MARK: Variables
-    var items: [Item.Measure]
+    var items: [Measurement<Item, Value>]
     var stack: Bool
 
     // MARK: Initializers
     public init(
         stack: Bool = true,
-        @ItemBuilder<Item> _ contents: () -> [Item.Measure]
+        @ItemBuilder<Item> _ contents: () -> [Measurement<Item, Value>] = { [] }
     ) {
-        var items = [Item.Measure]()
+        var items = [Measurement<Item, Value>]()
 
         for element in contents() {
             items.allocate(element, stacking: stack)
@@ -34,23 +34,23 @@ public struct Chest<Item: Measurable & Equatable> where Item.Value: AdditiveArit
 }
 
 // MARK: Self: Catalogue
-extension Chest: Catalogue where Item.Value == Tally {
-    public func fetch<T>(_ transform: (Item.Measure) -> T?) -> [T] {
+extension Chest: Catalogue where Value == Tally {
+    public func fetch<T>(_ transform: (Measurement<Item, Value>) -> T?) -> [T] {
         items.compactMap(transform)
     }
 }
 
 // MARK: Self: Depot
-extension Chest: Depot where Item.Value == Tally {
-    public mutating func store(_ content: Item.Measure) -> Item.Measure? {
+extension Chest: Depot where Value == Tally {
+    public mutating func store(_ content: Measurement<Item, Value>) -> Measurement<Item, Value>? {
         items.allocate(content, stacking: stack)
         return nil
     }
 }
 
 // MARK: Self: Dispenser
-extension Chest: Dispenser where Item.Value == Tally {
-    public mutating func release(_ content: Item.Measure) -> Item.Measure? {
+extension Chest: Dispenser where Value == Tally {
+    public mutating func release(_ content: Measurement<Item, Value>) -> Measurement<Item, Value>? {
         switch content.value {
             case .nullify:
                 return nil
@@ -97,25 +97,25 @@ extension Chest: Dispenser where Item.Value == Tally {
 extension Chest: Equatable {}
 
 // MARK: Self: ItemCollection
-extension Chest: ItemCollection where Item.Value == Tally {
-    public init(_ contents: some Sequence<Item.Measure>) {
+extension Chest: ItemCollection where Value == Tally {
+    public init(_ contents: some Sequence<Measurement<Item, Value>>) {
         self.items = contents.map(\.self)
         self.stack = false
     }
 }
 
 // MARK: Self: Inventory
-extension Chest: Inventory where Item.Value == Tally {
-    public var contents: [Item.Measure] { items }
+extension Chest: Inventory where Value == Tally {
+    public var contents: [Measurement<Item, Value>] { items }
 }
 
 // MARK: Self: Sendable
-extension Chest: Sendable where Item.Measure: Sendable {}
+extension Chest: Sendable where Measurement<Item, Value>: Sendable {}
 
 // MARK: Self.Item.Value: AdditiveArithmetic
-public extension Chest where Item.Value: AdditiveArithmetic {
+public extension Chest where Value: AdditiveArithmetic {
     mutating func optimize() {
-        let queue: [Item.Measure] = items
+        let queue: [Measurement<Item, Value>] = items
         items = []
 
         for element in queue {

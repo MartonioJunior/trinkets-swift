@@ -10,7 +10,7 @@ import TrinketsUnits
 @resultBuilder
 public enum ItemBuilder<Item: Measurable> {
     // MARK: Self.Stock
-    public typealias Stock = Item.Measure
+    public typealias Stock = Measurement<Item, Tally>
 
     // MARK: Preprocessing
     public static func buildExpression<I: Inventory>(_ expression: I) -> Supply where I.Item == Item {
@@ -58,7 +58,7 @@ public enum ItemBuilder<Item: Measurable> {
     }
 
     // MARK: Postprocessing
-    public static func buildFinalResult(_ component: Supply) -> [Item.Measure] {
+    public static func buildFinalResult(_ component: Supply) -> [Measurement<Item, Tally>] {
         component.items
     }
 
@@ -86,11 +86,11 @@ public extension ItemBuilder {
     }
 }
 
-extension ItemBuilder.Supply: Equatable where Item.Measure: Equatable {}
-extension ItemBuilder.Supply: Sendable where Item.Measure: Sendable {}
+extension ItemBuilder.Supply: Equatable where Item: Equatable {}
+extension ItemBuilder.Supply: Sendable where Item: Sendable {}
 
 // MARK: Self.Item: Measurable
-public extension ItemBuilder where Item: Measurable, Item.Value: ExpressibleByIntegerLiteral {
+public extension ItemBuilder where Item: Measurable {
     static func buildExpression(_ expression: Item) -> Supply {
         .init([expression.x(1)])
     }
