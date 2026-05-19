@@ -9,26 +9,26 @@
 import Testing
 
 struct TokenMinterTests {
-    typealias Mock = TokenMinter<Double>
-
     @Test("Creates a new Amount instance")
     func initializer() {
-        let result = Mock()
+        let result = TokenMinter()
+        let expected = TokenMinter()
+        #expect(result == expected)
     }
 
     @Test("Creates a new Token", arguments: [
-        (Mock(), "element", Token<String, Double>("element"))
+        ("element", Token<String>("element"))
     ])
-    func `subscript`(_ sut: Mock, dynamicMember member: String, expected: Token<String, Double>) {
-        let result = sut[dynamicMember: member]
+    func `subscript`(dynamicMember member: String, expected: Token<String>) {
+        let result = TokenMinter[dynamicMember: member]
         #expect(result == expected)
     }
 
     @Test("Creates token with tag", arguments: [
-        ("apple", Token<String, Double>("apple"))
+        ("apple", Token<String>("apple"))
     ])
-    func of(_ tag: String, expected: Token<String, Double>) {
-        let result = Mock.mint(tag)
+    func of(_ tag: String, expected: Token<String>) {
+        let result = TokenMinter().mint(tag)
         #expect(result == expected)
     }
 }

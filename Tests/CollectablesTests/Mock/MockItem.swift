@@ -7,4 +7,4 @@
 
 import Collectables
 
-public typealias MockItem = Token<String, UInt>
+public typealias MockItem = Token<String>

@@ -9,7 +9,7 @@
 import Testing
 
 struct TokenTests {
-    typealias Mock = Token<String, Double>
+    typealias Mock = Token<String>
 
     @Test("Creates a new Token that can be used to designate a Trinket", arguments: [
         ("element")
@@ -21,9 +21,8 @@ struct TokenTests {
 
     @Test("Creates a new Amount type")
     func emit() {
-        let result = Mock.minting(Double.self)
-        let expected = TokenMinter<Double>()
-        #expect(result == expected)
+        let result = Mock.minting
+        #expect(result == TokenMinter.self)
     }
 
     // MARK: Self: ExpressibleByIntegerLiteral
@@ -39,15 +38,9 @@ struct TokenTests {
 
     @Test("Defines multiple ways to create a quantity")
     func syntax() {
-        let quantityA: Token<String, Double> = "coin"
-        let quantityB: Token = .minting(Double.self).coin
-        let quantityC = TokenMinter<Double>.mint("coin")
-        let quantityD = Token<String, Double>("coin")
-
-        typealias Material = Token<String, Int>
-        let materialA: Material = "arnuCoat"
-        let materialB: Material = .minting().arnuCoat
-        let materialC = TokenMinter<Int>.mint("arnuCoat")
-        let materialD = Material("arnuCoat")
+        #expect(type(of: Token<String>(stringLiteral: "coin")) == Token<String>.self)
+        #expect(type(of: Token<String>.minting.coin) == Token<String>.self)
+        #expect(type(of: TokenMinter.coin) == Token<String>.self)
+        #expect(type(of: Token<String>("coin")) == Token<String>.self)
     }
 }
