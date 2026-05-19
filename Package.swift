@@ -22,18 +22,6 @@ public extension Array where Element == SwiftSetting {
     static var upcomingFeatures: Self { UpcomingFeatures.allCases.map(\.asSetting) }
 }
 
-func dep(local: String) -> Package.Dependency {
-    .package(path: local)
-}
-
-func dep(url: String, _ version: Range<Version>, local: String = "") -> Package.Dependency {
-    if local.isEmpty {
-        .package(url: url, version)
-    } else {
-        dep(local: local)
-    }
-}
-
 func lib(_ name: String, targets: String...) -> Product {
     .library(name: name, targets: targets)
 }
@@ -42,8 +30,8 @@ func platformDeps(_ platforms: SupportedPlatform...) -> [SupportedPlatform] {
     platforms
 }
 
-func targetDep(name: String, package: String) -> Target.Dependency {
-    .product(name: name, package: package)
+func targetDep(name: String, package: String, condition: TargetDependencyCondition? = nil) -> Target.Dependency {
+    .product(name: name, package: package, condition: condition)
 }
 
 // MARK: - Traits
@@ -60,14 +48,14 @@ let numerics = targetDep(name: "Numerics", package: "swift-numerics")
 let tagged = targetDep(name: "Tagged", package: "swift-tagged")
 let variety = targetDep(name: "SwiftVariety", package: "swift-variety")
 
-let dependencies = [
-    dep(url: "https://github.com/pointfreeco/swift-case-paths", .upToNextMajor(from: "1.7.0")),
-    dep(url: "https://github.com/pointfreeco/swift-identified-collections", .upToNextMajor(from: "1.1.1")),
+let dependencies: [Package.Dependency] = [
+    .package(url: "https://github.com/pointfreeco/swift-case-paths", .upToNextMajor(from: "1.7.0")),
+    .package(url: "https://github.com/pointfreeco/swift-identified-collections", .upToNextMajor(from: "1.1.1")),
     .package(url: "https://github.com/pointfreeco/swift-tagged", .upToNextMajor(from: "0.10.0")),
-    dep(url: "https://github.com/apple/swift-numerics", .upToNextMajor(from: "1.1.0")),
-    .package(url: "https://github.com/MartonioJunior/Mathe", branch: "main"),
+    .package(url: "https://github.com/apple/swift-numerics", .upToNextMajor(from: "1.1.0")),
+    .package(url: "https://github.com/MartonioJunior/Mathe", branch: "main", traits: ["Numerics"]),
     .package(url: "https://github.com/MartonioJunior/Minimal", branch: "main"),
-    .package(url: "https://github.com/MartonioJunior/swift-variety", branch: "main")
+    .package(url: "https://github.com/MartonioJunior/swift-variety", branch: "main"),
 ]
 
 // MARK: - Targets
