@@ -31,8 +31,8 @@ struct ChestTests {
     ])
     func initializer(
         _ stack: Bool,
-        _ contents: [MockItem.Measure],
-        expectedItems: [MockItem.Measure]
+        _ contents: [Measurement<MockItem, Tally>],
+        expectedItems: [Measurement<MockItem, Tally>]
     ) {
         let result = Mock(stack: stack) { contents }
         #expect(result.contents == expectedItems)
@@ -96,7 +96,7 @@ struct ChestTests {
     ])
     func store(
         _ sut: Mock,
-        _ content: MockItem.Measure,
+        _ content: Measurement<MockItem, Tally>,
         expectedSut: Mock
     ) {
         var sut = sut
@@ -116,7 +116,7 @@ struct ChestTests {
         (
             Mock(stack: true, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
             MockItem.number(3).x(3),
-            MockItem.Measure?.none,
+            Measurement<MockItem, Tally>?.none,
             Mock(stack: true, { [MockItem.number(3).x(4), MockItem.number(8).x(2)] })
         ),
         (
@@ -128,25 +128,25 @@ struct ChestTests {
         (
             Mock(stack: true, { [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)] }),
             MockItem.number(3).x(3),
-            MockItem.Measure?.none,
+            Measurement<MockItem, Tally>?.none,
             Mock(stack: true, { [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)] })
         ),
         (
             Mock(stack: true, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
             MockItem.number(3).x(.nullify),
-            MockItem.Measure?.none,
+            Measurement<MockItem, Tally>?.none,
             Mock(stack: true, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] })
         ),
         (
             Mock(stack: true, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
             MockItem.number(3).x(.infinite),
-            MockItem.Measure?.none,
+            Measurement<MockItem, Tally>?.none,
             Mock(stack: true, { [MockItem.number(8).x(2)] })
         ),
         (
             Mock(stack: true, { [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)] }),
             MockItem.number(3).x(.infinite),
-            MockItem.Measure?.none,
+            Measurement<MockItem, Tally>?.none,
             Mock(stack: true, { [MockItem.number(8).x(2)] })
         ),
         (
@@ -164,7 +164,7 @@ struct ChestTests {
         (
             Mock(stack: false, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
             MockItem.number(3).x(3),
-            MockItem.Measure?.none,
+            Measurement<MockItem, Tally>?.none,
             Mock(stack: false, { [MockItem.number(3).x(4), MockItem.number(8).x(2)] })
         ),
         (
@@ -176,25 +176,25 @@ struct ChestTests {
         (
             Mock(stack: false, { [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)] }),
             MockItem.number(3).x(3),
-            MockItem.Measure?.none,
+            Measurement<MockItem, Tally>?.none,
             Mock(stack: false, { [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)] })
         ),
         (
             Mock(stack: false, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
             MockItem.number(3).x(.nullify),
-            MockItem.Measure?.none,
+            Measurement<MockItem, Tally>?.none,
             Mock(stack: false, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] })
         ),
         (
             Mock(stack: false, { [MockItem.number(3).x(7), MockItem.number(8).x(2)] }),
             MockItem.number(3).x(.infinite),
-            MockItem.Measure?.none,
+            Measurement<MockItem, Tally>?.none,
             Mock(stack: false, { [MockItem.number(8).x(2)] })
         ),
         (
             Mock(stack: false, { [MockItem.number(3).x(.infinite), MockItem.number(8).x(2)] }),
             MockItem.number(3).x(.infinite),
-            MockItem.Measure?.none,
+            Measurement<MockItem, Tally>?.none,
             Mock(stack: false, { [MockItem.number(8).x(2)] })
         ),
         (
@@ -206,8 +206,8 @@ struct ChestTests {
     ])
     func release(
         _ sut: Mock,
-        _ content: MockItem.Measure,
-        expected: MockItem.Measure?,
+        _ content: Measurement<MockItem, Tally>,
+        expected: Measurement<MockItem, Tally>?,
         expectedSut: Mock
     ) {
         var sut = sut
@@ -228,7 +228,7 @@ struct ChestTests {
         )
     ])
     func initializer(
-        _ contents: [MockItem.Measure],
+        _ contents: [Measurement<MockItem, Tally>],
         expected: Mock
     ) {
         let result = Mock(contents)
@@ -243,7 +243,7 @@ struct ChestTests {
         ),
         (
             Mock(stack: false, { [] }),
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         ),
         (
             Mock(stack: true, { [MockItem.number(4).x(3), MockItem.number(2).x(5), MockItem.number(2).x(3)] }),
@@ -251,12 +251,12 @@ struct ChestTests {
         ),
         (
             Mock(stack: true, { [] }),
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         )
     ])
     func contents(
         _ sut: Mock,
-        expected: [MockItem.Measure]
+        expected: [Measurement<MockItem, Tally>]
     ) {
         #expect(sut.contents == expected)
     }

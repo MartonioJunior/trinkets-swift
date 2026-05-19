@@ -7,15 +7,17 @@
 
 @testable import Inventory
 import Testing
+import TrinketsUnits
 
 struct DepotTests {
+    typealias Item = MockItem
+
     // MARK: Mocks
     struct Mock: Depot, Sendable {
-        typealias Item = MockItem
-        var stored: [Item.Measure]
-        var callback: @Sendable (Item.Measure) -> Item.Measure?
+        var stored: [Measurement<Item, Tally>]
+        var callback: @Sendable (Measurement<Item, Tally>) -> Measurement<Item, Tally>?
 
-        mutating func store(_ content: Item.Measure) -> Item.Measure? {
+        mutating func store(_ content: Measurement<Item, Tally>) -> Measurement<Item, Tally>? {
             let remainder = callback(content)
 
             if remainder == nil {
@@ -35,7 +37,7 @@ struct DepotTests {
         (
             Mock.shouldAbsorb(true),
             [MockItem.number(3).x(2), MockItem.number(4).x(3)],
-            [MockItem.Measure]()
+            [Measurement<Item, Tally>]()
         ),
         (
             Mock.shouldAbsorb(false),
@@ -45,8 +47,8 @@ struct DepotTests {
     ])
     func store(
         _ sut: Mock,
-        _ contents: [MockItem.Measure],
-        expected: [MockItem.Measure]
+        _ contents: [Measurement<Item, Tally>],
+        expected: [Measurement<Item, Tally>]
     ) {
         var sut = sut
         let result = sut.store { contents }
@@ -62,13 +64,13 @@ struct DepotTests {
         (
             Mock.shouldAbsorb(false),
             MockItem.number(3).x(2),
-            [MockItem.Measure]()
+            [Measurement<Item, Tally>]()
         )
     ])
     func plusAssign(
         lhs: Mock,
-        rhs: MockItem.Measure,
-        expected: [MockItem.Measure]
+        rhs: Measurement<Item, Tally>,
+        expected: [Measurement<Item, Tally>]
     ) {
         var lhs = lhs
         lhs += rhs

@@ -13,14 +13,14 @@ public struct CatalogueTests {
     struct Mock: Catalogue, Sendable, Dispenser {
         typealias Item = MockItem
 
-        var fetchCallback: @Sendable ((MockItem.Measure) -> Any?) -> [Any]
-        var hasCallback: @Sendable (MockItem.Measure) -> Bool
+        var fetchCallback: @Sendable ((Measurement<MockItem, Tally>) -> Any?) -> [Any]
+        var hasCallback: @Sendable (Measurement<MockItem, Tally>) -> Bool
 
-        func fetch<T>(_ transform: (MockItem.Measure) -> T?) -> [T] {
+        func fetch<T>(_ transform: (Measurement<MockItem, Tally>) -> T?) -> [T] {
             fetchCallback(transform).compactMap { $0 as? T }
         }
 
-        func has(_ content: MockItem.Measure) -> Bool {
+        func has(_ content: Measurement<MockItem, Tally>) -> Bool {
             hasCallback(content)
         }
 
@@ -32,17 +32,17 @@ public struct CatalogueTests {
             }
         }
 
-        mutating func release(_ content: MockItem.Measure) -> MockItem.Measure? {
+        mutating func release(_ content: Measurement<MockItem, Tally>) -> Measurement<MockItem, Tally>? {
             content
         }
     }
 
     // MARK: Test Utilities
-    static func measure(_ tally: Tally) -> MockItem.Measure {
+    static func measure(_ tally: Tally) -> Measurement<MockItem, Tally> {
         MockItem.number(Int(bitPattern: tally.amount)).x(tally)
     }
 
-    static func greaterThan(_ other: Tally) -> @Sendable (MockItem.Measure) -> Bool {
+    static func greaterThan(_ other: Tally) -> @Sendable (Measurement<MockItem, Tally>) -> Bool {
         { other < $0.value }
     }
 
@@ -58,11 +58,11 @@ public struct CatalogueTests {
         { $0.id.hasSuffix(value) ? $0 : nil }
     }
 
-    static func overlapMin() -> @Sendable (MockItem.Measure, MockItem.Measure) -> MockItem.Measure? {
+    static func overlapMin() -> @Sendable (Measurement<MockItem, Tally>, Measurement<MockItem, Tally>) -> Measurement<MockItem, Tally>? {
         { $0.unit == $1.unit ? $0.unit.x(min($0.value, $1.value)) : nil }
     }
 
-    static func compose(_ value: Bool) -> @Sendable ([MockItem.Measure]) -> MockItem.Measure? {
+    static func compose(_ value: Bool) -> @Sendable ([Measurement<MockItem, Tally>]) -> Measurement<MockItem, Tally>? {
         { value ? $0.first : $0.last }
     }
 
@@ -70,12 +70,12 @@ public struct CatalogueTests {
     @Test("Obtains measures by filtering them", arguments: [
         (Mock.numbers(3, 6, 4, 5), Self.greaterThan(4), [Self.measure(6), Self.measure(5)]),
         (Mock.numbers(8, 4, 6), Self.always(true), [Self.measure(8), Self.measure(4), Self.measure(6)]),
-        (Mock.numbers(8, 4, 6), Self.always(false), [MockItem.Measure]())
+        (Mock.numbers(8, 4, 6), Self.always(false), [Measurement<MockItem, Tally>]())
     ])
     func fetch(
         _ sut: Mock,
-        where predicate: @Sendable (MockItem.Measure) -> Bool,
-        expected: [MockItem.Measure]
+        where predicate: @Sendable (Measurement<MockItem, Tally>) -> Bool,
+        expected: [Measurement<MockItem, Tally>]
     ) {
         let result = sut.fetch(where: predicate)
         #expect(result == expected)
@@ -84,12 +84,12 @@ public struct CatalogueTests {
     @Test("Obtains measures by filtering item units", arguments: [
         (Mock.numbers(3, 7, 17), Self.endsWith("7"), [Self.measure(7), Self.measure(17)]),
         (Mock.numbers(8, 4, 6), Self.optional(true), [Self.measure(8), Self.measure(4), Self.measure(6)]),
-        (Mock.numbers(8, 4, 6), Self.optional(false), [MockItem.Measure]())
+        (Mock.numbers(8, 4, 6), Self.optional(false), [Measurement<MockItem, Tally>]())
     ])
     func fetchByItem(
         _ sut: Mock,
         _ transform: @Sendable (MockItem) -> MockItem?,
-        expected: [MockItem.Measure]
+        expected: [Measurement<MockItem, Tally>]
     ) {
         let result = sut.fetchByItem(transform)
         #expect(result == expected)
@@ -123,10 +123,10 @@ public struct CatalogueTests {
         (Mock.numbers(3, 4, 5), [Self.measure(4), Self.measure(6)], false),
         (Mock.numbers(3, 4, 5), [MockItem.number(3).x(2)], true),
         (Mock.numbers(), [MockItem.number(3).x(.nullify)], false),
-        (Mock.numbers(9, 4, 3), [MockItem.Measure](), true),
-        (Mock.numbers(), [MockItem.Measure](), true)
+        (Mock.numbers(9, 4, 3), [Measurement<MockItem, Tally>](), true),
+        (Mock.numbers(), [Measurement<MockItem, Tally>](), true)
     ])
-    func has(_ sut: Mock, _ contents: [MockItem.Measure], expected: Bool) {
+    func has(_ sut: Mock, _ contents: [Measurement<MockItem, Tally>], expected: Bool) {
         let result = sut.has { contents }
         #expect(result == expected)
     }
@@ -146,24 +146,24 @@ public struct CatalogueTests {
         (
             Mock.numbers(), [MockItem.number(5).x(.infinite), MockItem.number(6).x(4)],
             Self.compose(true),
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         ),
         (
-            Mock.numbers(3, 4, 5), [MockItem.Measure](),
+            Mock.numbers(3, 4, 5), [Measurement<MockItem, Tally>](),
             Self.compose(true),
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         ),
         (
-            Mock.numbers(), [MockItem.Measure](),
+            Mock.numbers(), [Measurement<MockItem, Tally>](),
             Self.compose(true),
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         )
     ])
     func intersection(
         _ sut: Mock,
-        with other: [MockItem.Measure],
-        compose: @Sendable ([MockItem.Measure]) -> MockItem.Measure?,
-        expected: [MockItem.Measure]
+        with other: [Measurement<MockItem, Tally>],
+        compose: @Sendable ([Measurement<MockItem, Tally>]) -> Measurement<MockItem, Tally>?,
+        expected: [Measurement<MockItem, Tally>]
     ) {
         let result = sut.intersection(with: { other }, overlap: Self.overlapMin(), compose: compose)
         #expect(result == expected)
@@ -181,21 +181,21 @@ public struct CatalogueTests {
         ),
         (
             Mock.numbers(), [MockItem.number(5).x(.infinite), MockItem.number(6).x(4)],
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         ),
         (
-            Mock.numbers(3, 4, 5), [MockItem.Measure](),
-            [MockItem.Measure]()
+            Mock.numbers(3, 4, 5), [Measurement<MockItem, Tally>](),
+            [Measurement<MockItem, Tally>]()
         ),
         (
-            Mock.numbers(), [MockItem.Measure](),
-            [MockItem.Measure]()
+            Mock.numbers(), [Measurement<MockItem, Tally>](),
+            [Measurement<MockItem, Tally>]()
         )
     ])
     func intersection(
         _ sut: Mock,
-        with other: [MockItem.Measure],
-        expected: [MockItem.Measure]
+        with other: [Measurement<MockItem, Tally>],
+        expected: [Measurement<MockItem, Tally>]
     ) {
         let result = sut.intersection(with: { other }, overlap: Self.overlapMin())
         #expect(result == expected)
@@ -213,23 +213,23 @@ public struct CatalogueTests {
         ),
         (
             Mock.numbers(), [MockItem.number(5).x(.infinite), MockItem.number(6).x(4)],
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         ),
         (
-            Mock.numbers(3, 4, 5), [MockItem.Measure](),
+            Mock.numbers(3, 4, 5), [Measurement<MockItem, Tally>](),
             [Self.measure(3), Self.measure(4), Self.measure(5)]
         ),
         (
-            Mock.numbers(), [MockItem.Measure](),
-            [MockItem.Measure]()
+            Mock.numbers(), [Measurement<MockItem, Tally>](),
+            [Measurement<MockItem, Tally>]()
         )
     ])
     func uniqueAgainst(
         _ sut: Mock,
-        _ other: [MockItem.Measure],
-        expected: [MockItem.Measure]
+        _ other: [Measurement<MockItem, Tally>],
+        expected: [Measurement<MockItem, Tally>]
     ) {
-        let criteria: (MockItem.Measure, MockItem.Measure) -> Bool = {
+        let criteria: (Measurement<MockItem, Tally>, Measurement<MockItem, Tally>) -> Bool = {
             $0 == $1
         }
 
@@ -249,21 +249,21 @@ public struct CatalogueTests {
         ),
         (
             Mock.numbers(), [MockItem.number(5).x(.infinite), MockItem.number(6).x(4)],
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         ),
         (
-            Mock.numbers(3, 4, 5), [MockItem.Measure](),
+            Mock.numbers(3, 4, 5), [Measurement<MockItem, Tally>](),
             [Self.measure(3), Self.measure(4), Self.measure(5)]
         ),
         (
-            Mock.numbers(), [MockItem.Measure](),
-            [MockItem.Measure]()
+            Mock.numbers(), [Measurement<MockItem, Tally>](),
+            [Measurement<MockItem, Tally>]()
         )
     ])
     func uniqueNotIn(
         _ sut: Mock,
-        _ other: [MockItem.Measure],
-        expected: [MockItem.Measure]
+        _ other: [Measurement<MockItem, Tally>],
+        expected: [Measurement<MockItem, Tally>]
     ) {
         let criteria: (MockItem, MockItem) -> Bool = {
             $0 == $1

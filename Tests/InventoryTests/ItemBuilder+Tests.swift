@@ -31,7 +31,7 @@ struct ItemBuilderTests {
             Mock.Supply([Item.text("energy").x(3)])
         )
     ])
-    func buildExpressionStock(_ expression: Item.Measure, expected: Mock.Supply) {
+    func buildExpressionStock(_ expression: Measurement<Item, Tally>, expected: Mock.Supply) {
         let result = ItemBuilder.buildExpression(expression)
         #expect(result == expected)
     }
@@ -42,7 +42,7 @@ struct ItemBuilderTests {
             Mock.Supply([Item.number(4).x(5), Item.text("gol").x(2)])
         )
     ])
-    func buildExpressionStock(_ expression: [Item.Measure], expected: Mock.Supply) {
+    func buildExpressionStock(_ expression: [Measurement<Item, Tally>], expected: Mock.Supply) {
         let result = ItemBuilder.buildExpression(expression)
         #expect(result == expected)
     }
@@ -146,8 +146,8 @@ struct ItemBuilderTests {
             [Item.number(4).x(5), Item.text("gol").x(2)]
         )
     ])
-    func buildFinalResultMeasurements(_ component: Mock.Supply, expected: [Item.Measure]) {
-        let result: [Item.Measure] = ItemBuilder.buildFinalResult(component)
+    func buildFinalResultMeasurements(_ component: Mock.Supply, expected: [Measurement<Item, Tally>]) {
+        let result: [Measurement<Item, Tally>] = ItemBuilder.buildFinalResult(component)
         #expect(result == expected)
     }
 
@@ -191,7 +191,7 @@ extension ItemBuilderTests {
 
 // MARK: Syntax Validation
 extension ItemBuilderTests {
-    @Mock func syntaxArray() -> [Item.Measure] {
+    @Mock func syntaxArray() -> [Measurement<Item, Tally>] {
         Item.number(2) * 49
         Item.text("yes")
         Item.number(84)
@@ -258,7 +258,7 @@ extension ItemBuilderTests {
         }
     }
 
-    @Mock func singleItem(_ item: Item.Measure) -> [Item.Measure] {
+    @Mock func singleItem(_ item: Measurement<Item, Tally>) -> [Measurement<Item, Tally>] {
         item
     }
 }

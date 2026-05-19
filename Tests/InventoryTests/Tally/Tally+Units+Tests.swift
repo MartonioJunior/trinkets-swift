@@ -10,7 +10,7 @@ import Testing
 
 // MARK: Measurement (EX)
 fileprivate struct MeasurementTests {
-    typealias Mock = MockItem.Measure
+    typealias Mock = Measurement<MockItem, Tally>
 
     @Test("Checks if supply has enough of a tally", arguments: [
         (MockItem(id: "apple").x(Tally.value(8)), 6, true),
@@ -19,7 +19,7 @@ fileprivate struct MeasurementTests {
         (MockItem(id: "apple").x(Tally.nullify), UInt.zero, true),
         (MockItem(id: "apple").x(Tally.nullify), 3, false)
     ])
-    func contains(_ sut: MockItem.Measure, _ amount: UInt, expected: Bool) {
+    func contains(_ sut: Measurement<MockItem, Tally>, _ amount: UInt, expected: Bool) {
         let result = sut.contains(.value(amount))
         #expect(result == expected)
     }
@@ -150,10 +150,10 @@ fileprivate struct RangeReplaceableCollectionTests {
         )
     ])
     func allocate(
-        _ sut: [MockItem.Measure],
-        _ supply: MockItem.Measure,
+        _ sut: [Measurement<MockItem, Tally>],
+        _ supply: Measurement<MockItem, Tally>,
         stacking: Bool,
-        expected: [MockItem.Measure]
+        expected: [Measurement<MockItem, Tally>]
     ) {
         var sut = sut
         sut.allocate(supply, stacking: stacking)
@@ -202,7 +202,7 @@ fileprivate struct SequenceTests {
         )
     ])
     func has(
-        _ sut: [MockItem.Measure],
+        _ sut: [Measurement<MockItem, Tally>],
         _ tally: Tally,
         expected: Bool
     ) {
@@ -216,12 +216,12 @@ fileprivate struct SequenceTests {
             [Tally.value(3), Tally.value(2), Tally.value(8)]
         ),
         (
-            [MockItem.Measure](),
+            [Measurement<MockItem, Tally>](),
             [Tally]()
         )
     ])
     func tally(
-        _ sut: [MockItem.Measure],
+        _ sut: [Measurement<MockItem, Tally>],
         expected: [MockItem.Value]
     ) {
         let result = sut.tally()
@@ -234,12 +234,12 @@ fileprivate struct SequenceTests {
             [3, 2, 8]
         ),
         (
-            [MockItem.Measure](),
+            [Measurement<MockItem, Tally>](),
             [Tally.Value]()
         )
     ])
     func tallyTransform(
-        _ sut: [MockItem.Measure],
+        _ sut: [Measurement<MockItem, Tally>],
         expected: [Tally.Value]
     ) {
         let result = sut.tally { $0.amount }
