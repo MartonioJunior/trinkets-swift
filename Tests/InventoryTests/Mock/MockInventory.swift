@@ -9,9 +9,9 @@ import Inventory
 import TrinketsUnits
 
 struct MockInventory {
-    var contents: [MockItem.Measure]
+    var contents: [Measurement<MockItem, Tally>]
 
-    init(_ contents: some Sequence<MockItem.Measure>) {
+    init(_ contents: some Sequence<Measurement<MockItem, Tally>>) {
         self.contents = contents.map(\.self)
     }
 }
@@ -21,7 +21,7 @@ extension MockInventory: Catalogue {}
 
 // MARK: Self: Dispenser
 extension MockInventory: Dispenser {
-    mutating func release(_ content: MockItem.Measure) -> MockItem.Measure? {
+    mutating func release(_ content: Measurement<MockItem, Tally>) -> Measurement<MockItem, Tally>? {
         guard let index = contents.firstIndex(where: { $0 == content }) else { return content }
 
         contents.remove(at: index)
@@ -37,7 +37,7 @@ extension MockInventory: ExpressibleByArrayLiteral {}
 
 // MARK: Self: Inventory
 extension MockInventory: Inventory {
-    typealias Contents = [MockItem.Measure]
+    typealias Contents = [Measurement<MockItem, Tally>]
     typealias Item = MockItem
 }
 

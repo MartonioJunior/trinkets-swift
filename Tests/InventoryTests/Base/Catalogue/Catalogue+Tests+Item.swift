@@ -13,13 +13,13 @@ extension CatalogueTests {
     struct DefaultHas: Catalogue {
         typealias Item = MockItem
 
-        var numbers: [MockItem.Measure]
+        var numbers: [Measurement<MockItem, Tally>]
 
         init(_ items: Tally...) {
             self.numbers = items.compactMap(measure)
         }
 
-        func fetch<T>(_ transform: (MockItem.Measure) -> T?) -> [T] {
+        func fetch<T>(_ transform: (Measurement<MockItem, Tally>) -> T?) -> [T] {
             numbers.compactMap(transform)
         }
     }
@@ -47,24 +47,24 @@ extension CatalogueTests {
             (
                 Mock.numbers(0), [MockItem.number(0).x(9), MockItem.number(5).x(.infinite), MockItem.number(6).x(4)],
                 CatalogueTests.compose(true),
-                [MockItem.Measure]()
+                [Measurement<MockItem, Tally>]()
             ),
             (
-                Mock.numbers(3, 4, 5), [MockItem.Measure](),
+                Mock.numbers(3, 4, 5), [Measurement<MockItem, Tally>](),
                 CatalogueTests.compose(true),
-                [MockItem.Measure]()
+                [Measurement<MockItem, Tally>]()
             ),
             (
-                Mock.numbers(), [MockItem.Measure](),
+                Mock.numbers(), [Measurement<MockItem, Tally>](),
                 CatalogueTests.compose(true),
-                [MockItem.Measure]()
+                [Measurement<MockItem, Tally>]()
             )
         ])
         func intersection(
              _ sut: Mock,
-            with other: [MockItem.Measure],
-            compose: @Sendable ([MockItem.Measure]) -> MockItem.Measure?,
-            expected: [MockItem.Measure]
+            with other: [Measurement<MockItem, Tally>],
+            compose: @Sendable ([Measurement<MockItem, Tally>]) -> Measurement<MockItem, Tally>?,
+            expected: [Measurement<MockItem, Tally>]
         ) {
             let result = sut.intersection(with: { other }, compose: compose)
             #expect(result == expected)
@@ -87,21 +87,21 @@ extension CatalogueTests {
             ),
             (
                 Mock.numbers(0), [MockItem.number(0).x(9), MockItem.number(5).x(.infinite), MockItem.number(6).x(4)],
-                [MockItem.Measure]()
+                [Measurement<MockItem, Tally>]()
             ),
             (
-                Mock.numbers(3, 4, 5), [MockItem.Measure](),
-                [MockItem.Measure]()
+                Mock.numbers(3, 4, 5), [Measurement<MockItem, Tally>](),
+                [Measurement<MockItem, Tally>]()
             ),
             (
-                Mock.numbers(), [MockItem.Measure](),
-                [MockItem.Measure]()
+                Mock.numbers(), [Measurement<MockItem, Tally>](),
+                [Measurement<MockItem, Tally>]()
             )
         ])
         func intersection(
              _ sut: Mock,
-            with other: [MockItem.Measure],
-            expected: [MockItem.Measure]
+            with other: [Measurement<MockItem, Tally>],
+            expected: [Measurement<MockItem, Tally>]
         ) {
             let result = sut.intersection { other }
             #expect(result == expected)
@@ -116,7 +116,7 @@ extension CatalogueTests {
             (DefaultHas(3, 4, 5), MockItem.number(3).x(2), true),
             (DefaultHas(), MockItem.number(3).x(.nullify), false)
         ])
-        func has(_ sut: DefaultHas, _ contents: MockItem.Measure, expected: Bool) {
+        func has(_ sut: DefaultHas, _ contents: Measurement<MockItem, Tally>, expected: Bool) {
             let result = sut.has(contents)
             #expect(result == expected)
         }
@@ -141,17 +141,17 @@ extension CatalogueTests {
                 true
             ),
             (
-                Mock.numbers(3, 4, 5), [MockItem.Measure](),
+                Mock.numbers(3, 4, 5), [Measurement<MockItem, Tally>](),
                 false
             ),
             (
-                Mock.numbers(), [MockItem.Measure](),
+                Mock.numbers(), [Measurement<MockItem, Tally>](),
                 false
             )
         ])
         func lacking(
             _ sut: Mock,
-            _ contents: [MockItem.Measure],
+            _ contents: [Measurement<MockItem, Tally>],
             expected: Bool
         ) {
             let result = sut.lacking { contents }
@@ -170,21 +170,21 @@ extension CatalogueTests {
             ),
             (
                 Mock.numbers(), [MockItem.number(5).x(.infinite), MockItem.number(6).x(4)],
-                [MockItem.Measure]()
+                [Measurement<MockItem, Tally>]()
             ),
             (
-                Mock.numbers(3, 4, 5), [MockItem.Measure](),
+                Mock.numbers(3, 4, 5), [Measurement<MockItem, Tally>](),
                 [CatalogueTests.measure(3), CatalogueTests.measure(4), CatalogueTests.measure(5)]
             ),
             (
-                Mock.numbers(), [MockItem.Measure](),
-                [MockItem.Measure]()
+                Mock.numbers(), [Measurement<MockItem, Tally>](),
+                [Measurement<MockItem, Tally>]()
             )
         ])
         func uniqueNotIn(
             _ sut: Mock,
-            _ other: [MockItem.Measure],
-            expected: [MockItem.Measure]
+            _ other: [Measurement<MockItem, Tally>],
+            expected: [Measurement<MockItem, Tally>]
         ) {
             let result = sut.uniqueNotIn { other }
             #expect(result == expected)

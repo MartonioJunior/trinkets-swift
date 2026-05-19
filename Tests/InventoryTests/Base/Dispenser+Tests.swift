@@ -7,16 +7,17 @@
 
 @testable import Inventory
 import Testing
+import TrinketsUnits
 
 struct DispenserTests {
     // MARK: Mocks
     struct Mock: Dispenser, Sendable {
         typealias Item = MockItem
 
-        var released: [Item.Measure]
-        var callback: @Sendable (Item.Measure) -> Item.Measure?
+        var released: [Measurement<MockItem, Tally>]
+        var callback: @Sendable (Measurement<MockItem, Tally>) -> Measurement<MockItem, Tally>?
 
-        mutating func release(_ content: Item.Measure) -> Item.Measure? {
+        mutating func release(_ content: Measurement<MockItem, Tally>) -> Measurement<MockItem, Tally>? {
             let remainder = callback(content)
 
             if remainder == nil {
@@ -36,7 +37,7 @@ struct DispenserTests {
         (
             Mock.shouldRelease(true),
             [MockItem.number(3).x(2), MockItem.number(4).x(3)],
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         ),
         (
             Mock.shouldRelease(false),
@@ -46,8 +47,8 @@ struct DispenserTests {
     ])
     func release(
         _ sut: Mock,
-        _ contents: [MockItem.Measure],
-        expected: [MockItem.Measure]
+        _ contents: [Measurement<MockItem, Tally>],
+        expected: [Measurement<MockItem, Tally>]
     ) {
         var sut = sut
         let result = sut.release { contents }
@@ -59,7 +60,7 @@ struct DispenserTests {
             Mock.shouldRelease(true),
             DepotTests.Mock.shouldAbsorb(true),
             [MockItem.number(3).x(2), MockItem.number(4).x(3)],
-            [MockItem.Measure](),
+            [Measurement<MockItem, Tally>](),
             [MockItem.number(3).x(2), MockItem.number(4).x(3)]
         ),
         (
@@ -67,29 +68,29 @@ struct DispenserTests {
             DepotTests.Mock.shouldAbsorb(true),
             [MockItem.number(3).x(2), MockItem.number(4).x(3)],
             [MockItem.number(3).x(2), MockItem.number(4).x(3)],
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         ),
         (
             Mock.shouldRelease(true),
             DepotTests.Mock.shouldAbsorb(false),
             [MockItem.number(3).x(2), MockItem.number(4).x(3)],
             [MockItem.number(3).x(2), MockItem.number(4).x(3)],
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         ),
         (
             Mock.shouldRelease(false),
             DepotTests.Mock.shouldAbsorb(false),
             [MockItem.number(3).x(2), MockItem.number(4).x(3)],
             [MockItem.number(3).x(2), MockItem.number(4).x(3)],
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         )
     ])
     func transfer(
         _ sut: Mock,
         to depot: DepotTests.Mock,
-        _ contents: [MockItem.Measure],
-        expected: [MockItem.Measure],
-        depotExpected: [MockItem.Measure]
+        _ contents: [Measurement<MockItem, Tally>],
+        expected: [Measurement<MockItem, Tally>],
+        depotExpected: [Measurement<MockItem, Tally>]
     ) {
         var sut = sut
         var depot = depot
@@ -107,13 +108,13 @@ struct DispenserTests {
         (
             Mock.shouldRelease(false),
             MockItem.number(3).x(2),
-            [MockItem.Measure]()
+            [Measurement<MockItem, Tally>]()
         )
     ])
     func minusAssign(
         lhs: Mock,
-        rhs: MockItem.Measure,
-        expected: [MockItem.Measure]
+        rhs: Measurement<MockItem, Tally>,
+        expected: [Measurement<MockItem, Tally>]
     ) {
         var lhs = lhs
         lhs -= rhs

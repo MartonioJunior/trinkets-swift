@@ -7,6 +7,7 @@
 
 @testable import Inventory
 import Testing
+import TrinketsUnits
 
 extension CatalogueTests {
     // MARK: Self: Dispenser
@@ -19,7 +20,7 @@ extension CatalogueTests {
         ])
         func releaseAll(
             _ sut: Mock,
-            expected: [MockItem.Measure]
+            expected: [Measurement<MockItem, Tally>]
         ) {
             var sut = sut
             let result = sut.releaseAll()
@@ -40,13 +41,13 @@ extension CatalogueTests {
             (
                 Mock.numbers(4, 2, 9),
                 CatalogueTests.always(false),
-                [MockItem.Measure]()
+                [Measurement<MockItem, Tally>]()
             )
         ])
         func releaseAll(
             _ sut: Mock,
-            where predicate: @Sendable (MockItem.Measure) -> Bool,
-            expected: [MockItem.Measure]
+            where predicate: @Sendable @escaping (Measurement<MockItem, Tally>) -> Bool,
+            expected: [Measurement<MockItem, Tally>]
         ) {
             var sut = sut
             let result = sut.releaseAll(where: predicate)
