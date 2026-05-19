@@ -7,6 +7,7 @@
 
 @testable import Inventory
 import Testing
+import TrinketsUnits
 
 // MARK: Measurement (EX)
 fileprivate struct MeasurementTests {
@@ -74,8 +75,8 @@ fileprivate struct MeasurementTests {
 }
 
 // MARK: RangeReplaceableCollection (EX)
-fileprivate struct RangeReplaceableCollectionTests {
-    @Test("Adds stock as new entry or on top of another", arguments: [
+private struct RangeReplaceableCollectionTests {
+    @Test("Adds stock as new entry or on top of another", arguments: [([Measurement<MockItem, Tally>], Measurement<MockItem, Tally>, Bool, [Measurement<MockItem, Tally>])](arrayLiteral:
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2)],
             MockItem.number(6).x(8),
@@ -84,15 +85,15 @@ fileprivate struct RangeReplaceableCollectionTests {
         ),
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2)],
-            MockItem.number(6).x(.infinite),
+            MockItem.number(6).x(Tally.infinite),
             false,
-            [MockItem.number(4).x(3), MockItem.number(6).x(2), MockItem.number(6).x(.infinite)]
+            [MockItem.number(4).x(3), MockItem.number(6).x(2), MockItem.number(6).x(Tally.infinite)]
         ),
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2)],
-            MockItem.number(6).x(.nullify),
+            MockItem.number(6).x(Tally.nullify),
             false,
-            [MockItem.number(4).x(3), MockItem.number(6).x(2), MockItem.number(6).x(.nullify)]
+            [MockItem.number(4).x(3), MockItem.number(6).x(2), MockItem.number(6).x(Tally.nullify)]
         ),
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2)],
@@ -102,15 +103,15 @@ fileprivate struct RangeReplaceableCollectionTests {
         ),
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2)],
-            MockItem.number(4).x(.infinite),
+            MockItem.number(4).x(Tally.infinite),
             false,
-            [MockItem.number(4).x(3), MockItem.number(6).x(2), MockItem.number(4).x(.infinite)]
+            [MockItem.number(4).x(3), MockItem.number(6).x(2), MockItem.number(4).x(Tally.infinite)]
         ),
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2)],
-            MockItem.number(4).x(.nullify),
+            MockItem.number(4).x(Tally.nullify),
             false,
-            [MockItem.number(4).x(3), MockItem.number(6).x(2), MockItem.number(4).x(.nullify)]
+            [MockItem.number(4).x(3), MockItem.number(6).x(2), MockItem.number(4).x(Tally.nullify)]
         ),
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2)],
@@ -120,15 +121,15 @@ fileprivate struct RangeReplaceableCollectionTests {
         ),
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2)],
-            MockItem.number(6).x(.infinite),
+            MockItem.number(6).x(Tally.infinite),
             true,
-            [MockItem.number(4).x(3), MockItem.number(6).x(.infinite)]
+            [MockItem.number(4).x(3), MockItem.number(6).x(Tally.infinite)]
         ),
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2)],
-            MockItem.number(6).x(.nullify),
+            MockItem.number(6).x(Tally.nullify),
             true,
-            [MockItem.number(4).x(3), MockItem.number(6).x(.nullify)]
+            [MockItem.number(4).x(3), MockItem.number(6).x(Tally.nullify)]
         ),
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2)],
@@ -138,17 +139,17 @@ fileprivate struct RangeReplaceableCollectionTests {
         ),
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2)],
-            MockItem.number(4).x(.infinite),
+            MockItem.number(4).x(Tally.infinite),
             true,
-            [MockItem.number(4).x(.infinite), MockItem.number(6).x(2)]
+            [MockItem.number(4).x(Tally.infinite), MockItem.number(6).x(2)]
         ),
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2)],
-            MockItem.number(4).x(.nullify),
+            MockItem.number(4).x(Tally.nullify),
             true,
-            [MockItem.number(4).x(.nullify), MockItem.number(6).x(2)]
+            [MockItem.number(4).x(Tally.nullify), MockItem.number(6).x(2)]
         )
-    ])
+    ))
     func allocate(
         _ sut: [Measurement<MockItem, Tally>],
         _ supply: Measurement<MockItem, Tally>,
@@ -162,8 +163,8 @@ fileprivate struct RangeReplaceableCollectionTests {
 }
 
 // MARK: Sequence (EX)
-fileprivate struct SequenceTests {
-    @Test("Checks if there's enough stock in a sequence", arguments: [
+private struct SequenceTests {
+    @Test("Checks if there's enough stock in a sequence", arguments: [([Measurement<MockItem, Tally>], Tally, Bool)](arrayLiteral:
         (
             [MockItem.number(2).x(9), MockItem.number(6).x(4)],
             Tally.value(12), true
@@ -181,11 +182,11 @@ fileprivate struct SequenceTests {
             Tally.infinite, false
         ),
         (
-            [MockItem.number(2).x(9), MockItem.number(6).x(.nullify)],
+            [MockItem.number(2).x(9), MockItem.number(6).x(Tally.nullify)],
             Tally.infinite, false
         ),
         (
-            [MockItem.number(2).x(9), MockItem.number(6).x(.infinite)],
+            [MockItem.number(2).x(9), MockItem.number(6).x(Tally.infinite)],
             Tally.infinite, true
         ),
         (
@@ -193,14 +194,14 @@ fileprivate struct SequenceTests {
             Tally.nullify, false
         ),
         (
-            [MockItem.number(2).x(.nullify), MockItem.number(6).x(4)],
+            [MockItem.number(2).x(Tally.nullify), MockItem.number(6).x(4)],
             Tally.nullify, true
         ),
         (
-            [MockItem.number(2).x(.infinite), MockItem.number(6).x(4)],
+            [MockItem.number(2).x(Tally.infinite), MockItem.number(6).x(4)],
             Tally.nullify, false
         )
-    ])
+    ))
     func has(
         _ sut: [Measurement<MockItem, Tally>],
         _ tally: Tally,
@@ -222,7 +223,7 @@ fileprivate struct SequenceTests {
     ])
     func tally(
         _ sut: [Measurement<MockItem, Tally>],
-        expected: [MockItem.Value]
+        expected: [Tally]
     ) {
         let result = sut.tally()
         #expect(result == expected)

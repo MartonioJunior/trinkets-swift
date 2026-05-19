@@ -7,6 +7,7 @@
 
 @testable import Inventory
 import Testing
+import TrinketsUnits
 
 struct InventoryTests {
     // MARK: Mock
