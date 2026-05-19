@@ -33,6 +33,18 @@ public struct Chest<Item: Measurable & Equatable, Value: AdditiveArithmetic> {
     }
 }
 
+// MARK: DotSyntax
+public extension Chest {
+    init(stacking contents: some Sequence<Measurement<Item, Value>>) {
+        self.items = []
+        self.stack = true
+
+        for element in contents {
+            items.allocate(element, stacking: true)
+        }
+    }
+}
+
 // MARK: Self: Catalogue
 extension Chest: Catalogue where Value == Tally {
     public func fetch<T>(_ transform: (Measurement<Item, Value>) -> T?) -> [T] {
