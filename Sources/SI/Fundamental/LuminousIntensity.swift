@@ -18,11 +18,13 @@ public extension LuminousIntensity {
     }
 }
 
+#if LocalizedSymbols
 public extension LuminousIntensity.Candela {
     static var symbol: UnitRepresentation {
         .nonPluralized(symbol: .LuminousIntensity.candelaSymbol, name: .LuminousIntensity.candelaName)
     }
 }
+#endif
 
 public extension StaticConverter where Origin == LuminousIntensity.Candela, Target == LuminousIntensity, Value: Numeric {
     static var to: Self { .init { $0 } }

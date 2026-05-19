@@ -46,6 +46,11 @@ func targetDep(name: String, package: String) -> Target.Dependency {
     .product(name: name, package: package)
 }
 
+// MARK: - Traits
+var traits: Set<Trait> = [
+    .trait(name: "LocalizedSymbols", description: "Adds in support for String Catalogs")
+]
+
 // MARK: - Dependencies
 let casePaths = targetDep(name: "CasePaths", package: "swift-case-paths")
 let identifiedCollections = targetDep(name: "IdentifiedCollections", package: "swift-identified-collections")
@@ -177,6 +182,7 @@ let package = Package(
     defaultLocalization: "en",
     platforms: supportedPlatforms,
     products: products,
+    traits: traits,
     dependencies: dependencies,
     targets: targets + testTargets,
     swiftLanguageModes: [.v6]

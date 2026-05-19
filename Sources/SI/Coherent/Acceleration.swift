@@ -21,6 +21,7 @@ public extension Acceleration {
     }
 }
 
+#if LocalizedSymbols
 public extension Acceleration.MetersPerSecondSquared {
     static var symbol: UnitRepresentation {
         .init(symbol: .Acceleration.metersPerSecondSquaredSymbol, name: SyntaxFunction {
@@ -28,6 +29,7 @@ public extension Acceleration.MetersPerSecondSquared {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Acceleration.MetersPerSecondSquared, Target == Acceleration, Value: Numeric {
     static var to: Self { .init { $0 } }
@@ -44,11 +46,13 @@ public extension Acceleration {
     }
 }
 
+#if LocalizedSymbols
 public extension Acceleration.Gravity {
     static var symbol: UnitRepresentation {
         .nonPluralized(symbol: .Acceleration.gravitySymbol, name: .Acceleration.gravityName)
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Acceleration.Gravity, Target == Acceleration, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 9.81 } }
@@ -67,9 +71,4 @@ public extension Tagged where Tag == Acceleration, RawValue == Acceleration.Mete
 
 public extension Tagged where Tag == Acceleration, RawValue == Acceleration.Gravity.Type {
     static var gravity: Self { .init(Acceleration.Gravity.self) }
-}
-
-func accelerationSyntax() {
-    // let multiComposeA = Product.of(.fraction(.seconds, per: .meters), .gravity)
-    // let multiComposeB = Product.of(.gravity, .fraction(.seconds, per: .meters))
 }

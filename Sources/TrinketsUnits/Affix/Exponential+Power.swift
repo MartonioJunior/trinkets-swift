@@ -48,12 +48,14 @@ public extension Exponential where N == 1 {}
 // MARK: N == 2
 @available(macOS 26.0, *)
 public extension Exponential where N == 2 {
+    #if LocalizedSymbols
     /// Symbol for a squared unit.
     static var symbol: UnitRepresentation {
         .init(symbol: .Units.squareSymbol, name: SyntaxFunction {
             .Units.squareName(suffix: "\($0)")
         })
     }
+    #endif
     /// Creates a squared unit.
     /// - Parameter unit: Base unit.
     /// - Returns: A new `Exponential` with `N` == 2.
@@ -106,12 +108,14 @@ public extension Tagged where Tag: StaticUnit, RawValue: Numeric {
 // MARK: N == 3
 @available(macOS 26.0, *)
 public extension Exponential where N == 3 {
+    #if LocalizedSymbols
     /// Symbol for a cubic unit.
     static var symbol: UnitRepresentation {
         .init(symbol: .Units.cubicSymbol, name: SyntaxFunction {
             .Units.cubicName(suffix: "\($0)")
         })
     }
+    #endif
     /// Creates a cubic unit.
     /// - Parameter unit: Base unit.
     /// - Returns: A new `Exponential` with `N` == 3.

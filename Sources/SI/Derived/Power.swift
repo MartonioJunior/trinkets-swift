@@ -23,6 +23,7 @@ public extension Power {
     }
 }
 
+#if LocalizedSymbols
 public extension Power.Watts {
     static var symbol: UnitRepresentation {
         .init(symbol: .Power.wattsSymbol, name: SyntaxFunction {
@@ -30,6 +31,7 @@ public extension Power.Watts {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Power.Watts, Target == Power, Value: Numeric {
     static var to: Self { .init { $0 } }
@@ -46,11 +48,13 @@ public extension Power {
     }
 }
 
+#if LocalizedSymbols
 public extension Power.Horsepower {
     static var symbol: UnitRepresentation {
         .nonPluralized(symbol: .Power.horsepowerSymbol, name: .Power.horsepowerName)
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Power.Horsepower, Target == Power, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 745.7 } }

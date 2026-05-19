@@ -20,11 +20,13 @@ public extension Frequency {
     }
 }
 
+#if LocalizedSymbols
 public extension Frequency.Hertz {
     static var symbol: UnitRepresentation {
         .nonPluralized(symbol: .Frequency.hertzSymbol, name: .Frequency.hertzName)
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Frequency.Hertz, Target == Frequency, Value: Numeric {
     static var to: Self { .init { $0 } }

@@ -19,11 +19,13 @@ public extension Temperature {
     }
 }
 
+#if LocalizedSymbols
 public extension Temperature.Kelvin {
     static var symbol: UnitRepresentation {
         .nonPluralized(symbol: .Temperature.kelvinSymbol, name: .Temperature.kelvinName)
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Temperature.Kelvin, Target == Temperature, Value: Numeric {
     static var to: Self { .init { $0 } }
@@ -40,6 +42,7 @@ public extension Temperature {
     }
 }
 
+#if LocalizedSymbols
 public extension Temperature.Celsius {
     static var symbol: UnitRepresentation {
         .init(symbol: .Temperature.celsiusSymbol, name: SyntaxFunction {
@@ -47,6 +50,7 @@ public extension Temperature.Celsius {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Temperature.Celsius, Target == Temperature, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 + 273.15 } }
@@ -63,6 +67,7 @@ public extension Temperature {
     }
 }
 
+#if LocalizedSymbols
 public extension Temperature.Fahrenheit {
     static var symbol: UnitRepresentation {
         .init(symbol: .Temperature.fahrenheitSymbol, name: SyntaxFunction {
@@ -70,6 +75,7 @@ public extension Temperature.Fahrenheit {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Temperature.Fahrenheit, Target == Temperature, Value: FloatingPoint & ExpressibleByFloatLiteral {
     static var to: Self { .init { ($0 + 459.67) * 5 / 9 } }

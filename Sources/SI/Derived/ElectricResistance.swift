@@ -20,11 +20,13 @@ public extension ElectricResistance {
     }
 }
 
+#if LocalizedSymbols
 public extension ElectricResistance.Ohms {
     static var symbol: UnitRepresentation {
         .nonPluralized(symbol: .ElectricResistance.ohmsSymbol, name: .ElectricResistance.ohmsName)
     }
 }
+#endif
 
 public extension StaticConverter where Origin == ElectricResistance.Ohms, Target == ElectricResistance, Value: Numeric {
     static var to: Self { .init { $0 } }

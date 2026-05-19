@@ -21,6 +21,7 @@ public extension Density {
     }
 }
 
+#if LocalizedSymbols
 public extension Density.KilogramsPerCubicMeter {
     static var symbol: UnitRepresentation {
         .init(symbol: .Density.kilogramsPerCubicMeterSymbol, name: SyntaxFunction {
@@ -28,6 +29,7 @@ public extension Density.KilogramsPerCubicMeter {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Density.KilogramsPerCubicMeter, Target == Density, Value: Numeric {
     static var to: Self { .init { $0 } }
@@ -42,6 +44,7 @@ public extension Density {
     typealias GramsPerLiter = Fraction<Mass.Grams, Volume.Liters>
 }
 
+#if LocalizedSymbols
 public extension Density.GramsPerLiter {
     static var symbol: UnitRepresentation {
         .init(symbol: .Density.gramsPerLiterSymbol, name: SyntaxFunction {
@@ -49,6 +52,7 @@ public extension Density.GramsPerLiter {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Density.GramsPerLiter, Target == Density, Value: Numeric {
     static var to: Self { .init { $0 } }
@@ -63,6 +67,7 @@ public extension Density {
     typealias MilligramsPerDeciliter = Fraction<PrefixedUnit<Milli, Mass.Grams>, PrefixedUnit<Deci, Volume.Liters>>
 }
 
+#if LocalizedSymbols
 public extension Density.MilligramsPerDeciliter {
     static var symbol: UnitRepresentation {
         .init(symbol: .Density.milligramsPerDeciliterSymbol, name: SyntaxFunction {
@@ -70,6 +75,7 @@ public extension Density.MilligramsPerDeciliter {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Density.MilligramsPerDeciliter, Target == Density, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.01 } }
@@ -100,6 +106,7 @@ public extension Density.MillimolesPerLiter {
     }
 }
 
+#if LocalizedSymbols
 public extension Density.MillimolesPerLiter {
     static var symbol: UnitRepresentation {
         .init(symbol: .Density.kilogramsPerCubicMeterSymbol, name: SyntaxFunction {
@@ -107,6 +114,7 @@ public extension Density.MillimolesPerLiter {
         })
     }
 }
+#endif
 
 public extension Measurement where UnitType == Density.MillimolesPerLiter, Value: FloatingPoint & ExpressibleByFloatLiteral, Value.FloatLiteralType == Double {
     var baseValue: Tagged<Density, Value> { unit.density() * .init(value) }

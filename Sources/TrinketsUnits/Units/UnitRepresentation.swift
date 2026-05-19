@@ -8,6 +8,7 @@
 import Foundation
 import Notation
 
+#if LocalizedSymbols
 /// Defines how an unit should be handled in textual representations.
 /// 
 /// This includes:
@@ -110,3 +111,4 @@ extension UnitRepresentation: Symbolic {
 
 // MARK: Self: Sendable
 extension UnitRepresentation: Sendable {}
+#endif

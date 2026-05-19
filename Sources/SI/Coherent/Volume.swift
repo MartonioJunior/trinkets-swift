@@ -21,6 +21,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.CubicMeters {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.cubicMetersSymbol, name: SyntaxFunction {
@@ -28,6 +29,7 @@ public extension Volume.CubicMeters {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.CubicMeters, Target == Volume, Value: Numeric {
     static var to: Self { .init { $0 } }
@@ -44,6 +46,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.Liters {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.litersSymbol, name: SyntaxFunction {
@@ -51,6 +54,7 @@ public extension Volume.Liters {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.Liters, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.001 } }
@@ -67,11 +71,13 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.AcreFeet {
     static var symbol: UnitRepresentation {
         .nonPluralized(symbol: .Volume.acreFeetSymbol, name: .Volume.acreFeetName)
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.AcreFeet, Target == Volume, Value: Numeric {
     static var to: Self { .init { $0 * 1_233 } }
@@ -88,6 +94,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.Bushels {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.bushelsSymbol, name: SyntaxFunction {
@@ -95,6 +102,7 @@ public extension Volume.Bushels {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.Bushels, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.0352391 } }
@@ -111,6 +119,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.TeaSpoons {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.teaSpoonsSymbol, name: SyntaxFunction {
@@ -118,6 +127,7 @@ public extension Volume.TeaSpoons {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.TeaSpoons, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.00000492892 } }
@@ -134,6 +144,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.TableSpoons {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.tableSpoonsSymbol, name: SyntaxFunction {
@@ -141,6 +152,7 @@ public extension Volume.TableSpoons {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.TableSpoons, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.0000147868 } }
@@ -157,6 +169,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.FluidOunces {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.fluidOuncesSymbol, name: SyntaxFunction {
@@ -164,6 +177,7 @@ public extension Volume.FluidOunces {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.FluidOunces, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.0000295735 } }
@@ -180,6 +194,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.Cups {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.cupsSymbol, name: SyntaxFunction {
@@ -187,6 +202,7 @@ public extension Volume.Cups {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.Cups, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.00024 } }
@@ -203,6 +219,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.Pints {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.pintsSymbol, name: SyntaxFunction {
@@ -210,6 +227,7 @@ public extension Volume.Pints {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.Pints, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.000473176 } }
@@ -226,6 +244,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.Quarts {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.quartsSymbol, name: SyntaxFunction {
@@ -233,6 +252,7 @@ public extension Volume.Quarts {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.Quarts, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.000946353 } }
@@ -249,6 +269,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.Gallons {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.gallonsSymbol, name: SyntaxFunction {
@@ -256,6 +277,7 @@ public extension Volume.Gallons {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.Gallons, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.00378541 } }
@@ -272,6 +294,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.ImperialTeaSpoons {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.imperialTeaSpoonsSymbol, name: SyntaxFunction {
@@ -279,6 +302,7 @@ public extension Volume.ImperialTeaSpoons {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.ImperialTeaSpoons, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.00000591939 } }
@@ -295,6 +319,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.ImperialTableSpoons {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.imperialTableSpoonsSymbol, name: SyntaxFunction {
@@ -302,6 +327,7 @@ public extension Volume.ImperialTableSpoons {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.ImperialTableSpoons, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.0000177582 } }
@@ -318,6 +344,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.ImperialFluidOunces {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.imperialFluidOuncesSymbol, name: SyntaxFunction {
@@ -325,6 +352,7 @@ public extension Volume.ImperialFluidOunces {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.ImperialFluidOunces, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.0000284131 } }
@@ -341,6 +369,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.ImperialPints {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.imperialPintsSymbol, name: SyntaxFunction {
@@ -348,6 +377,7 @@ public extension Volume.ImperialPints {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.ImperialPints, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.000568261 } }
@@ -364,6 +394,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.ImperialQuarts {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.imperialQuartsSymbol, name: SyntaxFunction {
@@ -371,6 +402,7 @@ public extension Volume.ImperialQuarts {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.ImperialQuarts, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.00113652 } }
@@ -387,6 +419,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.ImperialGallons {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.imperialGallonsSymbol, name: SyntaxFunction {
@@ -394,6 +427,7 @@ public extension Volume.ImperialGallons {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.ImperialGallons, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.00454609 } }
@@ -410,6 +444,7 @@ public extension Volume {
     }
 }
 
+#if LocalizedSymbols
 public extension Volume.MetricCups {
     static var symbol: UnitRepresentation {
         .init(symbol: .Volume.metricCupsSymbol, name: SyntaxFunction {
@@ -417,6 +452,7 @@ public extension Volume.MetricCups {
         })
     }
 }
+#endif
 
 public extension StaticConverter where Origin == Volume.MetricCups, Target == Volume, Value: Numeric & ExpressibleByFloatLiteral {
     static var to: Self { .init { $0 * 0.00025 } }
