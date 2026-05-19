@@ -14,13 +14,15 @@ concurrency:
 jobs:
   build-macos:
     name: Swift 6.3 on macOS
+    strategy:
+      matrix:
+        swift: ["6.3"]
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Select Xcode version
-        uses: maxim-lobanov/setup-xcode@v1
+      - uses: SwiftyLab/setup-swift@latest
         with:
-          xcode-version: '26.5'
+          swift-version: ${{ matrix.swift }}
       - name: Restore .build
         id: "restore-build"
         uses: actions/cache/restore@v4
@@ -29,7 +31,7 @@ jobs:
           key: "swiftpm-tests-build-${{ runner.os }}-${{ github.event.pull_request.base.sha || github.event.after }}"
           restore-keys: "swiftpm-tests-build-${{ runner.os }}-"
       - name: Build
-        run: swift build --build-tests --enable-code-coverage --build-system swiftbuild
+        run: swift build --build-tests --enable-code-coverage
       - name: Cache .build
         if: steps.restore-build.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
@@ -66,7 +68,7 @@ jobs:
           key: "swiftpm-tests-build-${{ runner.os }}-${{ github.event.pull_request.base.sha || github.event.after }}"
           restore-keys: "swiftpm-tests-build-${{ runner.os }}-"
       - name: Build
-        run: swift build --build-tests --enable-code-coverage --build-system swiftbuild
+        run: swift build --build-tests --enable-code-coverage
       - name: Cache .build
         if: steps.restore-build.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
@@ -96,7 +98,7 @@ jobs:
           key: "swiftpm-tests-build-${{ runner.os }}-${{ github.event.pull_request.base.sha || github.event.after }}"
           restore-keys: "swiftpm-tests-build-${{ runner.os }}-"
       - name: Build
-        run: swift build --build-tests --enable-code-coverage --build-system swiftbuild
+        run: swift build --build-tests --enable-code-coverage
       - name: Cache .build
         if: steps.restore-build.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
@@ -124,7 +126,7 @@ jobs:
           key: "swiftpm-tests-build-${{ runner.os }}-${{ github.event.pull_request.base.sha || github.event.after }}"
           restore-keys: "swiftpm-tests-build-${{ runner.os }}-"
       - name: Build
-        run: swift build --build-tests --enable-code-coverage --build-system swiftbuild
+        run: swift build --build-tests --enable-code-coverage
       - name: Cache .build
         if: steps.restore-build.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
