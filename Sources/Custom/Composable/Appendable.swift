@@ -7,13 +7,20 @@
 
 import Foundation
 
-/// Protocol that defines a type that can have elements appended to it.
+/// Type that can have elements appended to it.
+/// 
+/// Describes the assimilation of elements, increase of value and advancements into a model.
+/// 
+/// Can be used to create structures such as:
+/// - In-game equipment
+/// - Upgrades
+/// - Advancing to the next level and/or battle
 public protocol Appendable<Append, Appended> {
     /// Element that can be appended to the type.
     associatedtype Append
     /// Result of the append operation.
     associatedtype Appended = Self
-
+    // MARK: Methods
     /// Appends a value to the object.
     func appending(_ value: Append) -> Appended
 }
@@ -28,12 +35,21 @@ public extension Appendable {
 
 // MARK: Self.Append == Void
 public extension Appendable where Self.Append == Void {
-    var upgraded: Appended { appending(()) }
+    /// Alias representing an upgrade for the current state.
+    typealias Upgrade = Append
+    /// Alias representing the upgraded state.
+    /// - In Optional definitions, `nil` indicates that it can't be further upgraded.
+    /// - In `Never` definitions, blocks any upgrades from happening, even if it conforms.
+    typealias Upgraded = Appended
+    /// Upgraded version of this value.
+    var upgraded: Upgraded { appending(()) }
 }
 
 public extension Appendable where Self.Append == Void, Appended == Self {
+    /// Upgrades this value.
     mutating func upgrade() { append(()) }
-
+    /// Upgrades this value a set amount of times.
+    /// - Parameter step: Number of times to upgrade.
     mutating func upgrade(by step: UInt) {
         for _ in 0..<step { upgrade() }
     }
@@ -41,22 +57,27 @@ public extension Appendable where Self.Append == Void, Appended == Self {
 
 // MARK: Self.Appended == Self
 public extension Appendable where Appended == Self {
+    /// Appends a value to this object.
+    /// - Parameter value: Value to be appended.
     mutating func append(_ value: Append) {
         self = self.appending(value)
     }
-    /// Returns a new version of the object with the specified elements appended to it.
-    /// - Parameter elements: The elements to append.
+    /// New version of the object with the specified elements appended to it.
+    /// - Parameter elements: Elements to append.
+    /// - Returns: Modified object.
     mutating func appending(_ elements: Append...) -> Self {
         appendMany(elements)
         return self
     }
     /// Appends multiple elements to the object.
+    /// - Parameter elements: Elements to be appended.
     @_disfavoredOverload
     mutating func appendMany(_ elements: some Sequence<Append>) {
         elements.forEach { append($0) }
     }
     /// Appends multiple elements to the object.
-    /// - Returns: the number of elements successfully appended.
+    /// - Parameter elements: Elements to be appended.
+    /// - Returns: Number of elements successfully appended.
     @discardableResult
     mutating func appendMany(_ elements: some Sequence<Append>) -> Int where Self: Equatable {
         elements.count {
@@ -68,6 +89,9 @@ public extension Appendable where Appended == Self {
         }
     }
     /// Appends an element to the object in place.
+    /// - Parameters:
+    ///   - lhs: Target to be mutated.
+    ///   - rhs: Value to be appended.
     static func += (lhs: inout Self, rhs: Append) {
         lhs.append(rhs)
     }
@@ -75,7 +99,9 @@ public extension Appendable where Appended == Self {
 
 // MARK: Sequence (EX)
 public extension Sequence {
-    /// Appends all elements of the sequence to the target.
+    /// Creates a target by appending elements of the sequence to the target.
+    /// - Parameter target: Instance to add elements to.
+    /// - Returns: Target with the appended elements.
     func appending<T: Appendable>(to target: T) -> T where T.Append == Element, T.Appended == T {
         reduce(target) { $0.appending($1) }
     }
@@ -88,10 +114,15 @@ public extension Sequence {
 
 // MARK: Dictionary (EX)
 public extension Dictionary where Value: Appendable, Value.Appended == Value {
+    /// Appends an element to a Dictionary's value at the given key.
+    /// - Parameters:
+    ///   - element: Element to be appended.
+    ///   - key: Location of the value to be appended to.
+    ///
     mutating func appendInside(
-        _ value: Value.Append,
+        _ element: Value.Append,
         for key: Key
     ) where Value: ExpressibleByArrayLiteral {
-        self[key, default: []].append(value)
+        self[key, default: []].append(element)
     }
 }
