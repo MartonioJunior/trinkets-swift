@@ -10,7 +10,7 @@ import Testing
 
 struct TallyTests {
     @Test("Defines the quantity of a Tally", arguments: [
-        (Tally.value(22), UInt(22)),
+        (Tally.fixed(22), UInt(22)),
         (Tally.infinite, UInt.max),
         (Tally.nullify, UInt(0))
     ])
@@ -19,8 +19,8 @@ struct TallyTests {
     }
 
     @Test("Defines if a Tally has stock available", arguments: [
-        (Tally.value(22), true),
-        (Tally.value(0), false),
+        (Tally.fixed(22), true),
+        (Tally.fixed(0), false),
         (Tally.infinite, true),
         (Tally.nullify, false)
     ])
@@ -30,9 +30,9 @@ struct TallyTests {
 
     // MARK: Operators
     @Test("Adds a value to the Tally", arguments: [
-        (Tally.value(3), UInt(5), Tally.value(8)),
-        (Tally.value(6), UInt(0), Tally.value(6)),
-        (Tally.value(32), UInt.max, Tally.value(.max)),
+        (Tally.fixed(3), UInt(5), Tally.fixed(8)),
+        (Tally.fixed(6), UInt(0), Tally.fixed(6)),
+        (Tally.fixed(32), UInt.max, Tally.fixed(.max)),
         (Tally.infinite, UInt(5), Tally.infinite),
         (Tally.infinite, UInt(0), Tally.infinite),
         (Tally.infinite, UInt.max, Tally.infinite),
@@ -50,9 +50,9 @@ struct TallyTests {
     }
 
     @Test("Subtracts a value to the Tally", arguments: [
-        (Tally.value(32), UInt(19), Tally.value(13)),
-        (Tally.value(3), UInt(5), Tally.value(0)),
-        (Tally.value(6), UInt(0), Tally.value(6)),
+        (Tally.fixed(32), UInt(19), Tally.fixed(13)),
+        (Tally.fixed(3), UInt(5), Tally.fixed(0)),
+        (Tally.fixed(6), UInt(0), Tally.fixed(6)),
         (Tally.infinite, UInt(5), Tally.infinite),
         (Tally.infinite, UInt(0), Tally.infinite),
         (Tally.infinite, UInt.max, Tally.infinite),
@@ -70,9 +70,9 @@ struct TallyTests {
     }
 
     @Test("Multiplies the Tally with a value", arguments: [
-        (Tally.value(32), UInt(2), Tally.value(64)),
-        (Tally.value(3), UInt.max, Tally.value(.max)),
-        (Tally.value(99), UInt(0), Tally.value(0)),
+        (Tally.fixed(32), UInt(2), Tally.fixed(64)),
+        (Tally.fixed(3), UInt.max, Tally.fixed(.max)),
+        (Tally.fixed(99), UInt(0), Tally.fixed(0)),
         (Tally.infinite, UInt(5), Tally.infinite),
         (Tally.infinite, UInt(0), Tally.infinite),
         (Tally.infinite, UInt.max, Tally.infinite),
@@ -90,19 +90,19 @@ struct TallyTests {
     }
 
     @Test("Multiples tallies together (when possible)", arguments: [
-        (Tally.value(22), Tally.value(4), Tally.value(88)),
-        (Tally.value(22), Tally.value(.max), Tally.value(.max)),
-        (Tally.value(22), Tally.value(0), Tally.value(0)),
-        (Tally.value(22), Tally.infinite, Tally.infinite),
-        (Tally.value(22), Tally.nullify, Tally.nullify),
-        (Tally.infinite, Tally.value(4), Tally.infinite),
-        (Tally.infinite, Tally.value(.max), Tally.infinite),
-        (Tally.infinite, Tally.value(0), Tally.infinite),
+        (Tally.fixed(22), Tally.fixed(4), Tally.fixed(88)),
+        (Tally.fixed(22), Tally.fixed(.max), Tally.fixed(.max)),
+        (Tally.fixed(22), Tally.fixed(0), Tally.fixed(0)),
+        (Tally.fixed(22), Tally.infinite, Tally.infinite),
+        (Tally.fixed(22), Tally.nullify, Tally.nullify),
+        (Tally.infinite, Tally.fixed(4), Tally.infinite),
+        (Tally.infinite, Tally.fixed(.max), Tally.infinite),
+        (Tally.infinite, Tally.fixed(0), Tally.infinite),
         (Tally.infinite, Tally.infinite, Tally.infinite),
         (Tally.infinite, Tally.nullify, Tally?.none),
-        (Tally.nullify, Tally.value(4), Tally.nullify),
-        (Tally.nullify, Tally.value(.max), Tally.nullify),
-        (Tally.nullify, Tally.value(0), Tally.nullify),
+        (Tally.nullify, Tally.fixed(4), Tally.nullify),
+        (Tally.nullify, Tally.fixed(.max), Tally.nullify),
+        (Tally.nullify, Tally.fixed(0), Tally.nullify),
         (Tally.nullify, Tally.infinite, Tally?.none),
         (Tally.nullify, Tally.nullify, Tally.nullify)
     ])
@@ -112,9 +112,9 @@ struct TallyTests {
     }
 
     @Test("Divides a Tally by the given value", arguments: [
-        (Tally.value(32), UInt(2), Tally.value(16)),
-        (Tally.value(3), UInt.max, Tally.value(0)),
-        (Tally.value(99), UInt(0), Tally.value(0)),
+        (Tally.fixed(32), UInt(2), Tally.fixed(16)),
+        (Tally.fixed(3), UInt.max, Tally.fixed(0)),
+        (Tally.fixed(99), UInt(0), Tally.fixed(0)),
         (Tally.infinite, UInt(5), Tally.infinite),
         (Tally.infinite, UInt(0), Tally.infinite),
         (Tally.infinite, UInt.max, Tally.infinite),
@@ -132,21 +132,21 @@ struct TallyTests {
     }
 
     @Test("Divides a Tally by the other (when possible)", arguments: [
-        (Tally.value(22), Tally.value(2), Tally.value(11)),
-        (Tally.value(22), Tally.value(.max), Tally.value(0)),
-        (Tally.value(22), Tally.value(0), Tally.value(0)),
-        (Tally.value(22), Tally.infinite, Tally.value(0)),
-        (Tally.value(22), Tally.nullify, Tally?.none),
-        (Tally.infinite, Tally.value(4), Tally.infinite),
-        (Tally.infinite, Tally.value(.max), Tally.infinite),
-        (Tally.infinite, Tally.value(0), Tally.infinite),
-        (Tally.infinite, Tally.infinite, Tally.value(1)),
+        (Tally.fixed(22), Tally.fixed(2), Tally.fixed(11)),
+        (Tally.fixed(22), Tally.fixed(.max), Tally.fixed(0)),
+        (Tally.fixed(22), Tally.fixed(0), Tally.fixed(0)),
+        (Tally.fixed(22), Tally.infinite, Tally.fixed(0)),
+        (Tally.fixed(22), Tally.nullify, Tally?.none),
+        (Tally.infinite, Tally.fixed(4), Tally.infinite),
+        (Tally.infinite, Tally.fixed(.max), Tally.infinite),
+        (Tally.infinite, Tally.fixed(0), Tally.infinite),
+        (Tally.infinite, Tally.infinite, Tally.fixed(1)),
         (Tally.infinite, Tally.nullify, Tally?.none),
-        (Tally.nullify, Tally.value(4), Tally.nullify),
-        (Tally.nullify, Tally.value(.max), Tally.nullify),
-        (Tally.nullify, Tally.value(0), Tally.nullify),
+        (Tally.nullify, Tally.fixed(4), Tally.nullify),
+        (Tally.nullify, Tally.fixed(.max), Tally.nullify),
+        (Tally.nullify, Tally.fixed(0), Tally.nullify),
         (Tally.nullify, Tally.infinite, Tally.nullify),
-        (Tally.nullify, Tally.nullify, Tally.value(1))
+        (Tally.nullify, Tally.nullify, Tally.fixed(1))
     ])
     func division(lhs: Tally, rhs: Tally, expected: Tally?) {
         let result = lhs / rhs
@@ -155,30 +155,30 @@ struct TallyTests {
 
     @Test("Defines a Tally with amount 1")
     func one() {
-        #expect(Tally.one == Tally.value(1))
+        #expect(Tally.one == Tally.fixed(1))
     }
 
     // MARK: Self: AdditiveArithmetic
     struct ConformsToAdditiveArithmetic {
         @Test("Defines the Tally with amount 0")
         func zero() {
-            #expect(Tally.zero == Tally.value(0))
+            #expect(Tally.zero == Tally.fixed(0))
         }
 
         @Test("Adds tallies together", arguments: [
-            (Tally.value(22), Tally.value(4), Tally.value(26)),
-            (Tally.value(22), Tally.value(.max), Tally.value(.max)),
-            (Tally.value(22), Tally.value(0), Tally.value(22)),
-            (Tally.value(22), Tally.infinite, Tally.infinite),
-            (Tally.value(22), Tally.nullify, Tally.nullify),
-            (Tally.infinite, Tally.value(4), Tally.infinite),
-            (Tally.infinite, Tally.value(.max), Tally.infinite),
-            (Tally.infinite, Tally.value(0), Tally.infinite),
+            (Tally.fixed(22), Tally.fixed(4), Tally.fixed(26)),
+            (Tally.fixed(22), Tally.fixed(.max), Tally.fixed(.max)),
+            (Tally.fixed(22), Tally.fixed(0), Tally.fixed(22)),
+            (Tally.fixed(22), Tally.infinite, Tally.infinite),
+            (Tally.fixed(22), Tally.nullify, Tally.nullify),
+            (Tally.infinite, Tally.fixed(4), Tally.infinite),
+            (Tally.infinite, Tally.fixed(.max), Tally.infinite),
+            (Tally.infinite, Tally.fixed(0), Tally.infinite),
             (Tally.infinite, Tally.infinite, Tally.infinite),
             (Tally.infinite, Tally.nullify, Tally.infinite),
-            (Tally.nullify, Tally.value(4), Tally.nullify),
-            (Tally.nullify, Tally.value(.max), Tally.nullify),
-            (Tally.nullify, Tally.value(0), Tally.nullify),
+            (Tally.nullify, Tally.fixed(4), Tally.nullify),
+            (Tally.nullify, Tally.fixed(.max), Tally.nullify),
+            (Tally.nullify, Tally.fixed(0), Tally.nullify),
             (Tally.nullify, Tally.infinite, Tally.infinite),
             (Tally.nullify, Tally.nullify, Tally.nullify)
         ])
@@ -188,19 +188,19 @@ struct TallyTests {
         }
 
         @Test("Subtracts one Tally from another", arguments: [
-            (Tally.value(22), Tally.value(4), Tally.value(18)),
-            (Tally.value(22), Tally.value(.max), Tally.value(0)),
-            (Tally.value(22), Tally.value(0), Tally.value(22)),
-            (Tally.value(22), Tally.infinite, Tally.nullify),
-            (Tally.value(22), Tally.nullify, Tally.value(22)),
-            (Tally.infinite, Tally.value(4), Tally.infinite),
-            (Tally.infinite, Tally.value(.max), Tally.infinite),
-            (Tally.infinite, Tally.value(0), Tally.infinite),
-            (Tally.infinite, Tally.infinite, Tally.value(0)),
+            (Tally.fixed(22), Tally.fixed(4), Tally.fixed(18)),
+            (Tally.fixed(22), Tally.fixed(.max), Tally.fixed(0)),
+            (Tally.fixed(22), Tally.fixed(0), Tally.fixed(22)),
+            (Tally.fixed(22), Tally.infinite, Tally.nullify),
+            (Tally.fixed(22), Tally.nullify, Tally.fixed(22)),
+            (Tally.infinite, Tally.fixed(4), Tally.infinite),
+            (Tally.infinite, Tally.fixed(.max), Tally.infinite),
+            (Tally.infinite, Tally.fixed(0), Tally.infinite),
+            (Tally.infinite, Tally.infinite, Tally.fixed(0)),
             (Tally.infinite, Tally.nullify, Tally.infinite),
-            (Tally.nullify, Tally.value(4), Tally.nullify),
-            (Tally.nullify, Tally.value(.max), Tally.nullify),
-            (Tally.nullify, Tally.value(0), Tally.nullify),
+            (Tally.nullify, Tally.fixed(4), Tally.nullify),
+            (Tally.nullify, Tally.fixed(.max), Tally.nullify),
+            (Tally.nullify, Tally.fixed(0), Tally.nullify),
             (Tally.nullify, Tally.infinite, Tally.nullify),
             (Tally.nullify, Tally.nullify, Tally.nullify)
         ])
@@ -213,14 +213,14 @@ struct TallyTests {
     // MARK: Self: Comparable
     struct ConformsToComparable {
         @Test("Compares two tallies", arguments: [
-            (Tally.value(7), Tally.value(7), false),
-            (Tally.value(12), Tally.value(4), false),
-            (Tally.value(4), Tally.value(12), true),
-            (Tally.value(0), Tally.nullify, false),
-            (Tally.nullify, Tally.value(0), true),
+            (Tally.fixed(7), Tally.fixed(7), false),
+            (Tally.fixed(12), Tally.fixed(4), false),
+            (Tally.fixed(4), Tally.fixed(12), true),
+            (Tally.fixed(0), Tally.nullify, false),
+            (Tally.nullify, Tally.fixed(0), true),
             (Tally.nullify, Tally.nullify, false),
-            (Tally.value(.max), Tally.infinite, true),
-            (Tally.infinite, Tally.value(.max), false),
+            (Tally.fixed(.max), Tally.infinite, true),
+            (Tally.infinite, Tally.fixed(.max), false),
             (Tally.infinite, Tally.infinite, false)
         ])
         func lessThan(lhs: Tally, rhs: Tally, expected: Bool) {
@@ -232,7 +232,7 @@ struct TallyTests {
     // MARK: Self: ExpressibleByIntegerLiteral
     struct ConformsToExpressibleByIntegerLiteral {
         @Test("Creates a new Tally with fixed amount", arguments: [
-            (UInt(23), Tally.value(23))
+            (UInt(23), Tally.fixed(23))
         ])
         func initializer(integerLiteral value: UInt, expected: Tally) {
             let result = Tally(integerLiteral: value)

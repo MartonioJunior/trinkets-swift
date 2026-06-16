@@ -9,14 +9,14 @@ public enum Tally {
     public typealias Value = UInt
 
     // MARK: Cases
-    case value(Value)
+    case fixed(Value)
     case infinite
     case nullify
 
     // MARK: Properties
     public var amount: Value {
         switch self {
-            case .value(let amount): amount
+            case .fixed(let amount): amount
             case .infinite: .max
             case .nullify: .zero
         }
@@ -24,7 +24,7 @@ public enum Tally {
 
     public var inStock: Bool {
         switch self {
-            case .value(let amount): amount != 0
+            case .fixed(let amount): amount != 0
             case .infinite: true
             case .nullify: false
         }
@@ -40,7 +40,7 @@ public enum Tally {
 public extension Tally {
     static func + (lhs: Self, rhs: Value) -> Self {
         switch lhs {
-            case .value(let a): .value(manage(a.addingReportingOverflow(rhs), fallback: .max))
+            case .fixed(let a): .fixed(manage(a.addingReportingOverflow(rhs), fallback: .max))
             default: lhs
         }
     }
@@ -51,7 +51,7 @@ public extension Tally {
 
     static func - (lhs: Self, rhs: Value) -> Self {
         switch lhs {
-            case .value(let a): .value(manage(a.subtractingReportingOverflow(rhs), fallback: .zero))
+            case .fixed(let a): .fixed(manage(a.subtractingReportingOverflow(rhs), fallback: .zero))
             default: lhs
         }
     }
@@ -62,15 +62,15 @@ public extension Tally {
 
     static func * (lhs: Self, rhs: Value) -> Self {
         switch lhs {
-            case .value(let a): .value(manage(a.multipliedReportingOverflow(by: rhs), fallback: .max))
+            case .fixed(let a): .fixed(manage(a.multipliedReportingOverflow(by: rhs), fallback: .max))
             default: lhs
         }
     }
 
     static func * (lhs: Self, rhs: Self) -> Self? {
         switch (lhs, rhs) {
-            case let (.value(a), .value(b)):
-                .value(manage(a.multipliedReportingOverflow(by: b), fallback: .max))
+            case let (.fixed(a), .fixed(b)):
+                .fixed(manage(a.multipliedReportingOverflow(by: b), fallback: .max))
             case (.infinite, .nullify), (.nullify, .infinite):
                 nil
             case (.infinite, _), (_, .infinite):
@@ -86,14 +86,14 @@ public extension Tally {
 
     static func / (lhs: Self, rhs: Value) -> Self {
         switch lhs {
-            case .value(let a): .value(manage(a.dividedReportingOverflow(by: rhs), fallback: .zero))
+            case .fixed(let a): .fixed(manage(a.dividedReportingOverflow(by: rhs), fallback: .zero))
             default: lhs
         }
     }
 
     static func / (lhs: Self, rhs: Self) -> Self? {
         switch (lhs, rhs) {
-            case let (.value(a), .value(b)): .value(manage(a.dividedReportingOverflow(by: b), fallback: .zero))
+            case let (.fixed(a), .fixed(b)): .fixed(manage(a.dividedReportingOverflow(by: b), fallback: .zero))
             case (.infinite, .infinite), (.nullify, .nullify): .one
             case (_, .nullify): nil
             case (.nullify, _): .nullify
@@ -109,16 +109,16 @@ public extension Tally {
 
 // MARK: DotSyntax
 public extension Tally {
-    static var one: Self { value(1) }
+    static var one: Self { fixed(1) }
 }
 
 // MARK: Self: AdditiveArithmetic
 extension Tally: AdditiveArithmetic {
-    public static var zero: Self { .value(0) }
+    public static var zero: Self { .fixed(0) }
 
     public static func + (lhs: Self, rhs: Self) -> Self {
         switch (lhs, rhs) {
-            case let (.value(a), .value(b)): .value(manage(a.addingReportingOverflow(b), fallback: .max))
+            case let (.fixed(a), .fixed(b)): .fixed(manage(a.addingReportingOverflow(b), fallback: .max))
             case (.infinite, _), (_, .infinite): .infinite
             case (.nullify, _), (_, .nullify): .nullify
         }
@@ -127,7 +127,7 @@ extension Tally: AdditiveArithmetic {
     public static func - (lhs: Self, rhs: Self) -> Self {
         switch (lhs, rhs) {
             case (.infinite, .infinite): .zero
-            case let (.value(a), .value(b)): .value(manage(a.subtractingReportingOverflow(b), fallback: .zero))
+            case let (.fixed(a), .fixed(b)): .fixed(manage(a.subtractingReportingOverflow(b), fallback: .zero))
             case (_, .nullify): lhs
             case (.infinite, _): .infinite
             default: .nullify
@@ -139,7 +139,7 @@ extension Tally: AdditiveArithmetic {
 extension Tally: Comparable {
     public static func < (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
-            case let (.value(a), .value(b)): a < b
+            case let (.fixed(a), .fixed(b)): a < b
             case (.infinite, _), (_, .nullify): false
             default: true
         }
@@ -152,7 +152,7 @@ extension Tally: Equatable {}
 // MARK: Self: ExpressibleByIntegerLiteral
 extension Tally: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: Value) {
-        self = .value(value)
+        self = .fixed(value)
     }
 }
 

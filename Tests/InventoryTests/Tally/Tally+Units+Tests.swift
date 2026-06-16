@@ -14,22 +14,22 @@ fileprivate struct MeasurementTests {
     typealias Mock = Measurement<MockItem, Tally>
 
     @Test("Checks if supply has enough of a tally", arguments: [
-        (MockItem(id: "apple").x(Tally.value(8)), 6, true),
-        (MockItem(id: "apple").x(Tally.value(8)), 12, false),
+        (MockItem(id: "apple").x(Tally.fixed(8)), 6, true),
+        (MockItem(id: "apple").x(Tally.fixed(8)), 12, false),
         (MockItem(id: "apple").x(Tally.infinite), UInt.max, true),
         (MockItem(id: "apple").x(Tally.nullify), UInt.zero, true),
         (MockItem(id: "apple").x(Tally.nullify), 3, false)
     ])
     func contains(_ sut: Measurement<MockItem, Tally>, _ amount: UInt, expected: Bool) {
-        let result = sut.contains(.value(amount))
+        let result = sut.contains(.fixed(amount))
         #expect(result == expected)
     }
 
     @Test("Checks if supply has enough of a tally with predicate", arguments: [
-        (MockItem(id: "apple").x(Tally.value(8)), 6, true, true),
-        (MockItem(id: "apple").x(Tally.value(8)), 6, false, false),
-        (MockItem(id: "apple").x(Tally.value(8)), 12, true, false),
-        (MockItem(id: "apple").x(Tally.value(8)), 12, false, false),
+        (MockItem(id: "apple").x(Tally.fixed(8)), 6, true, true),
+        (MockItem(id: "apple").x(Tally.fixed(8)), 6, false, false),
+        (MockItem(id: "apple").x(Tally.fixed(8)), 12, true, false),
+        (MockItem(id: "apple").x(Tally.fixed(8)), 12, false, false),
         (MockItem(id: "apple").x(Tally.infinite), UInt.max, true, true),
         (MockItem(id: "apple").x(Tally.infinite), UInt.max, false, false),
         (MockItem(id: "apple").x(Tally.nullify), UInt.zero, true, true),
@@ -38,15 +38,15 @@ fileprivate struct MeasurementTests {
         (MockItem(id: "apple").x(Tally.nullify), 3, false, false)
     ])
     func canSupply(_ sut: Mock, _ amount: UInt, equals: Bool, expected: Bool) {
-        let result = sut.canSupply(sut.unit.x(.value(amount))) { _, _ in equals }
+        let result = sut.canSupply(sut.unit.x(.fixed(amount))) { _, _ in equals }
         #expect(result == expected)
     }
 
     @Test("Maps tally based on the stock information", arguments: [
         (
-            MockItem(id: "apple").x(Tally.value(8)),
-            MockItem(id: "apple").x(Tally.value(16)),
-            MockItem(id: "apple").x(Tally.value(24)),
+            MockItem(id: "apple").x(Tally.fixed(8)),
+            MockItem(id: "apple").x(Tally.fixed(16)),
+            MockItem(id: "apple").x(Tally.fixed(24)),
         )
     ])
     func mergeTallies(_ sut: Mock, with other: Mock, expected: Mock?) {
@@ -56,14 +56,14 @@ fileprivate struct MeasurementTests {
 
     @Test("Maps tally based on the stock information", arguments: [
         (
-            MockItem(id: "apple").x(Tally.value(8)),
-            MockItem(id: "apple").x(Tally.value(16)),
+            MockItem(id: "apple").x(Tally.fixed(8)),
+            MockItem(id: "apple").x(Tally.fixed(16)),
             true,
-            MockItem(id: "apple").x(Tally.value(24)),
+            MockItem(id: "apple").x(Tally.fixed(24)),
         ),
         (
-            MockItem(id: "apple").x(Tally.value(8)),
-            MockItem(id: "apple").x(Tally.value(16)),
+            MockItem(id: "apple").x(Tally.fixed(8)),
+            MockItem(id: "apple").x(Tally.fixed(16)),
             false,
             Mock?.none,
         )
@@ -167,15 +167,15 @@ private struct SequenceTests {
     @Test("Checks if there's enough stock in a sequence", arguments: [([Measurement<MockItem, Tally>], Tally, Bool)](arrayLiteral:
         (
             [MockItem.number(2).x(9), MockItem.number(6).x(4)],
-            Tally.value(12), true
+            Tally.fixed(12), true
         ),
         (
             [MockItem.number(2).x(9), MockItem.number(6).x(4)],
-            Tally.value(2), true
+            Tally.fixed(2), true
         ),
         (
             [MockItem.number(2).x(9), MockItem.number(6).x(4)],
-            Tally.value(32), false
+            Tally.fixed(32), false
         ),
         (
             [MockItem.number(2).x(9), MockItem.number(6).x(4)],
@@ -214,7 +214,7 @@ private struct SequenceTests {
     @Test("Reduces all stock entries in a collection based on a certain type", arguments: [
         (
             [MockItem.number(4).x(3), MockItem.number(6).x(2), MockItem.number(4).x(8)],
-            [Tally.value(3), Tally.value(2), Tally.value(8)]
+            [Tally.fixed(3), Tally.fixed(2), Tally.fixed(8)]
         ),
         (
             [Measurement<MockItem, Tally>](),
