@@ -115,7 +115,7 @@ public extension Catalogue where Item: Comparable {
 
             let minimum = min($0.value, $1.value)
             return switch minimum {
-                case .value(0), .nullify:
+                case .fixed(0), .nullify:
                     nil
                 default:
                     $0.unit.x(minimum)

@@ -11,7 +11,7 @@ import TrinketsUnits
 public extension Measurement where Value == Tally {
     func contains(_ tally: Tally) -> Bool {
         switch tally {
-            case .value(0): true
+            case .fixed(0): true
             default: tally <= value
         }
     }
@@ -63,8 +63,8 @@ public extension Sequence {
         _ tally: Tally
     ) -> Bool where Element == Measurement<Item, Tally> {
         switch tally {
-            case let .value(value):
-                self.tally().reduce(.zero, +) >= .value(value)
+            case let .fixed(value):
+                self.tally().reduce(.zero, +) >= .fixed(value)
             case .infinite:
                 contains { $0.value == .infinite }
             case .nullify:

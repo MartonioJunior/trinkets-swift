@@ -69,9 +69,9 @@ extension Chest: Dispenser where Value == Tally {
             case .infinite:
                 infiniteTally(on: indicesFor(content.unit))
                 return nil
-            case .value(let amount):
+            case .fixed(let amount):
                 let remainder = fixedTally(amount, on: indicesFor(content.unit))
-                return remainder == 0 ? nil : content.unit.x(.value(remainder))
+                return remainder == 0 ? nil : content.unit.x(.fixed(remainder))
         }
 
         func infiniteTally(on indices: [Int]) {
@@ -89,7 +89,7 @@ extension Chest: Dispenser where Value == Tally {
                 let stock = items[i]
 
                 switch stock.value {
-                    case .value(let a) where a > remainder:
+                    case .fixed(let a) where a > remainder:
                         items[i].value -= remainder
                         return 0
                     case .infinite:
