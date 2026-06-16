@@ -6,39 +6,68 @@
 //
 
 import Custom
-
+/// Exchange performed by a trader.
 public typealias ExchangeFor<T: Trader> = Exchange<T, T.Buy, T.Sell>
-
+/// Transaction that exchanges contents for a target.
+/// - Target: Target of this operation.
+/// - Buy: Contents to be removed from the target.
+/// - Sell: Contents to be added to the target.
+/// 
+/// Example:
+/// ```swift
+/// Exchange {
+///   Currency.of(1500, .gil)
+/// } for: {
+///   Potion(.super, plus: .hp)
+/// }
+/// ```
 public struct Exchange<Target, Buy, Sell> {
     // MARK: Variables
+    /// Operation that removes elements from the target.
     var drain: Drain<Target, Sell>
+    /// Operation that adds elements to the target.
     var tap: Tap<Target, Buy>
-
     // MARK: Initializers
+    /// Creates a new exchange for a target type.
+    /// - Parameters:
+    ///   - drain: Operation that removes elements from the target.
+    ///   - tap: Operation that adds elements to the target.
+    ///
     public init(drain: Drain<Target, Sell>, tap: Tap<Target, Buy>) {
         self.drain = drain
         self.tap = tap
     }
-
     // MARK: Methods
+    /// Drains a given target.
+    /// - Parameter target: Target to be drained.
+    /// - Returns: Contents that were not drained from the target.
     @_disfavoredOverload
     public func drain(_ target: inout Target?) -> Sell? {
         drain.apply(to: &target)
     }
-
+    /// Drains a given target.
+    /// - Parameter target: Target to be drained.
+    /// - Returns: Contents that were not drained from the target.
     public func drain(unwrapped target: inout Target) -> Sell? {
         guard let remainder = drain.apply(unwrapped: &target) else { return nil }
 
         return remainder
     }
-
+    /// Transforms the contents of the exchange.
+    /// - Parameters:
+    ///   - purchase: Function transforming the contents to be added.
+    ///   - price: Function transforming the contents to be removed.
+    ///
+    /// - Returns: New exchange with the transformed contents.
     public func map(
         _ purchase: (Buy) -> Buy,
         for price: (Sell) -> Sell
     ) -> Self {
         .init(drain: drain.map(price), tap: tap.map(purchase))
     }
-
+    /// Taps a given target.
+    /// - Parameter target: Target to be tapped.
+    /// - Returns: Contents that were not tapped into the target.
     public func tap(_ target: inout Target) -> Buy? {
         tap.apply(to: &target)
     }
@@ -46,6 +75,12 @@ public struct Exchange<Target, Buy, Sell> {
 
 // MARK: DotSyntax
 public extension Exchange {
+    /// Creates a new exchange for a target.
+    /// - Parameters:
+    ///   - purchase: Tap for the target.
+    ///   - price: Drain for the target.
+    ///
+    /// - Returns: New exchange.
     static func buy(
         _ purchase: () -> Tap<Target, Buy>,
         for price: () -> Drain<Target, Sell>
@@ -54,8 +89,18 @@ public extension Exchange {
     }
 }
 
+// MARK: Self.Remainder
+public extension Exchange {
+    /// Remainder of an exchange operation.
+    struct Remainder {
+        var buy: Buy
+        var sell: Sell?
+    }
+}
+
 // MARK: Self: Comparable
 extension Exchange: Comparable where Buy: Comparable, Sell: Comparable {
+    // swiftlint:disable:next missing_docs
     public static func < (lhs: Self, rhs: Self) -> Bool {
         if lhs.drain == rhs.drain {
             lhs.tap < rhs.tap
@@ -67,6 +112,7 @@ extension Exchange: Comparable where Buy: Comparable, Sell: Comparable {
 
 // MARK: Self: Equatable
 extension Exchange: Equatable where Buy: Equatable, Sell: Equatable {
+    // swiftlint:disable:next missing_docs
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.tap == rhs.tap && lhs.drain == rhs.drain
     }
@@ -74,11 +120,7 @@ extension Exchange: Equatable where Buy: Equatable, Sell: Equatable {
 
 // MARK: Self: Modifier
 extension Exchange: Modifier {
-    public struct Remainder {
-        var buy: Buy
-        var sell: Sell?
-    }
-
+    // swiftlint:disable:next missing_docs
     public func apply(to target: inout Target) -> Remainder? {
         let drainResult = drain.preview(on: target)
 
@@ -105,17 +147,24 @@ extension Exchange: Sendable where Target: Sendable, Buy: Sendable, Sell: Sendab
 
 // MARK: Self.Buy == Self.Sell
 public extension Exchange where Buy == Sell {
+    /// Flips the contents of the exchange around:
+    /// - What is removed will now be added.
+    /// - What is added will now be removed.
     var flipped: Exchange<Target, Sell, Buy> {
         .init(drain: .init(tap.contents, apply: drain.apply), tap: .init(drain.contents, apply: tap.apply))
     }
-
+    /// Creates a drain-only exchange.
+    /// - Parameter make: Creates the drain used in this exchange.
+    /// - Returns: New exchange.
     static func drain(
-        _ make: @autoclosure () -> Transaction<Target?, Sell>
+        _ make: @autoclosure () -> Drain<Target, Sell>
     ) -> Self {
         let transaction = make()
         return .init(drain: transaction, tap: .noop(transaction.contents))
     }
-
+    /// Creates a tap-only exchange.
+    /// - Parameter make: Creates the tap used in this exchange.
+    /// - Returns: New exchange.
     static func tap(
         _ make: @autoclosure () -> Transaction<Target, Buy>
     ) -> Self {
@@ -126,7 +175,13 @@ public extension Exchange where Buy == Sell {
 
 // MARK: Transaction (EX)
 public extension Transaction {
-    static func | <T>(lhs: Transaction<Target?, T>, rhs: Transaction<Target, Contents>) -> Exchange<Target, Contents, T> {
+    /// Creates an exchange by combining a drain with a tap
+    /// - Parameters:
+    ///   - lhs: Drain of the exchange.
+    ///   - rhs: Tap of the exchange.
+    ///
+    /// - Returns: New exchange.
+    static func | <T>(lhs: Drain<Target, T>, rhs: Tap<Target, Contents>) -> Exchange<Target, Contents, T> {
         .init(drain: lhs, tap: rhs)
     }
 }
