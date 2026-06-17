@@ -7,9 +7,13 @@
 
 import TrinketsUnits
 
+/// Type that can release items.
+/// 
+/// Can be a slot, container or a feature of the inventory.
 public protocol Dispenser<Item> {
+    /// Type of item that can be released.
     associatedtype Item: Measurable
-    /// Removes items from the component
+    /// Removes items from the storage.
     /// - Parameter content: How many items to remove from storage
     /// - Returns: The remaining amount that was not discarded, `nil` if all items got removed
     mutating func release(_ content: Measurement<Item, Tally>) -> Measurement<Item, Tally>?
@@ -22,12 +26,32 @@ public extension Dispenser {
     ///   - contents: List of items to be discarded
     ///
     /// - Returns: The remainder stock not removed.
+    /// 
+    /// Example:
+    /// ```swift
+    /// inventory.release {
+    ///   starShards.x(250)
+    ///   lostKey
+    /// }
+    /// ```
     mutating func release(
         @ItemBuilder<Item> _ contents: () -> [Measurement<Item, Tally>]
     ) -> [Measurement<Item, Tally>] {
         contents().compactMap { self.release($0) }
     }
-
+    /// Moves items from this dispenser to a depot.
+    /// - Parameters:
+    ///   - depot: Depot that will receive the items.
+    ///   - contents: List of contents to be transferred.
+    ///
+    /// - Returns: Remainder of the transfer operation.
+    /// 
+    /// Example:
+    /// ```swift
+    /// inventory.transfer(to: &drawPile) {
+    ///   5 * coins
+    /// }
+    /// ```
     @discardableResult
     mutating func transfer<D: Depot>(
         to depot: inout D,
@@ -46,7 +70,11 @@ public extension Dispenser {
             }
         }
     }
-
+    /// Removes items from the storage.
+    /// - Parameters:
+    ///   - lhs: Dispenser to be mutated.
+    ///   - rhs: Measurement of item to be released.
+    ///
     static func -= (lhs: inout Self, rhs: Measurement<Item, Tally>) {
         _ = lhs.release(rhs)
     }
