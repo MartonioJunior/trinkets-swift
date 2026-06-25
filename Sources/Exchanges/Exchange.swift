@@ -37,6 +37,17 @@ public struct Exchange<Target, Buy, Sell> {
         self.drain = drain
         self.tap = tap
     }
+    /// Creates a new exchange for a target.
+    /// - Parameters:
+    ///   - purchase: Tap for the target.
+    ///   - price: Drain for the target.
+    ///
+    public init(
+        _ purchase: () -> Tap<Target, Buy>,
+        for price: () -> Drain<Target, Sell>
+    ) {
+        self.init(drain: price(), tap: purchase())
+    }
     // MARK: Methods
     /// Drains a given target.
     /// - Parameter target: Target to be drained.
@@ -62,22 +73,6 @@ public struct Exchange<Target, Buy, Sell> {
     /// - Returns: Contents that were not tapped into the target.
     public func tap(_ target: inout Target) -> Buy? {
         tap.apply(to: &target)
-    }
-}
-
-// MARK: DotSyntax
-public extension Exchange {
-    /// Creates a new exchange for a target.
-    /// - Parameters:
-    ///   - purchase: Tap for the target.
-    ///   - price: Drain for the target.
-    ///
-    /// - Returns: New exchange.
-    static func buy(
-        _ purchase: () -> Tap<Target, Buy>,
-        for price: () -> Drain<Target, Sell>
-    ) -> Self {
-        .init(drain: price(), tap: purchase())
     }
 }
 
