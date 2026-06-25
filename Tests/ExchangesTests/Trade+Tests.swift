@@ -14,8 +14,8 @@ func mockTrade(_ buy: Int, for sell: Int) -> Trade<MockTrader, MockTrader> {
 
 struct TradeTests {
     static func mockExchange(_ buy: Int, for sell: Int) -> Exchange<MockTrader, Int, Int> {
-        .init(drain: .init(buy) {
-            $0 == nil ? $1 : nil
+        .init(drain: .init(buy) { _, _ in
+            nil
         }, tap: .init(sell) { _, _ in
             nil
         })
@@ -44,7 +44,7 @@ struct TradeTests {
         to supplier: MockTrader,
         expected: (remainder: (buyer: Int?, seller: Int?), purchaser: MockTrader, supplier: MockTrader)
     ) {
-        var purchaser: MockTrader? = purchaser
+        var purchaser = purchaser
         var supplier = supplier
         let remainder = sut.drain(from: &purchaser, to: &supplier)
 
@@ -66,7 +66,7 @@ struct TradeTests {
         expected: (remainder: (buyer: Int?, seller: Int?), purchaser: MockTrader, supplier: MockTrader)
     ) {
         var purchaser = purchaser
-        var supplier: MockTrader? = supplier
+        var supplier = supplier
         let remainder = sut.tap(&purchaser, using: &supplier)
 
         #expect(remainder == expected.remainder)

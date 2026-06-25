@@ -9,35 +9,39 @@
 import Testing
 
 // MARK: Mocks
-func mockDrain(_ contents: Int) -> Transaction<Int?, Int> {
-    .init(contents) {
-        guard let value = $0 else { return $1 }
-
-        $0 = value - $1
-        return nil
-    }
+private func mockDrain(_ contents: Int) -> Transaction<Int, Int> {
+    .init(contents) { $0 -= $1; return nil }
 }
 
-func mockExchange(_ drain: Int, for tap: Int) -> Exchange<Int, Int, Int> {
-    .init(drain: .init(drain) {
-        guard let value = $0 else { return $1 }
-        $0 = value - $1
-        return nil
-    }, tap: .init(tap) {
-        $0 += $1
-        return nil
-    })
+private func mockTap(_ contents: Int) -> Transaction<Int, Int> {
+    .init(contents) { $0 += $1; return nil }
+}
+
+private func mockExchange(_ drain: Int, for tap: Int) -> Exchange<Int, Int, Int> {
+    .init(drain: mockDrain(drain), tap: mockTap(tap))
 }
 
 struct ExchangeTests {
     // MARK: Initializers
     @Test("Creates a new exchange", arguments: [
-        (Transaction<Int?, Int>.noop(8), Transaction<Int, Int>.noop(4))
+        (Transaction<Int, Int>.noop(8), Transaction<Int, Int>.noop(4))
     ])
-    func initializer(drain: Transaction<Int?, Int>, tap: Transaction<Int, Int>) {
+    func initializer(drain: Transaction<Int, Int>, tap: Transaction<Int, Int>) {
         let result = Exchange(drain: drain, tap: tap)
         #expect(result.drain == drain)
         #expect(result.tap == tap)
+    }
+
+    @Test("Creates an exchange with simpler syntax", arguments: [
+        (mockTransaction(6), mockDrain(12), mockExchange(12, for: 6))
+    ])
+    func initializer(_ purchase: Transaction<Int, Int>, for price: Transaction<Int, Int>, expected: Exchange<Int, Int, Int>) {
+        let result = Exchange {
+            purchase
+        } for: {
+            price
+        }
+        #expect(result == expected)
     }
 
     // MARK: Methods
@@ -46,14 +50,20 @@ struct ExchangeTests {
         (Exchange<Int, Int, Int>(drain: .nullify(3), tap: mockTransaction(7)), 8, (remainder: Int?.none, target: 8))
     ])
     func drain(_ sut: Exchange<Int, Int, Int>, target: Int, expected: (remainder: Int?, target: Int)) {
-        var targetOptional: Int? = target
-        var targetNonOptional = target
-        let remainderOptional = sut.drain(&targetOptional)
-        let remainderNonOptional = sut.drain(unwrapped: &targetNonOptional)
+        var target = target
+        let remainder = sut.drain(&target)
 
-        #expect(targetOptional == expected.target)
-        #expect(targetNonOptional == expected.target)
-        #expect(remainderOptional == expected.remainder)
+        #expect(target == expected.target)
+        #expect(remainder == expected.remainder)
+    }
+
+    @Test("Removes resources from an Optional target", arguments: [
+        (Exchange<Int?, Int, Int>(drain: mockDrain(3).optional, tap: mockTap(7).optional), 8, (remainder: Int?.none, target: 5)),
+        (Exchange<Int?, Int, Int>(drain: .nullify(3), tap: mockTransaction(7).optional), 8, (remainder: Int?.none, target: 8))
+    ])
+    func drain(unwrapped sut: Exchange<Int?, Int, Int>, target: Int, expected: (remainder: Int?, target: Int)) {
+        var target = target
+        let remainderNonOptional = sut.drain(unwrapped: &target)
         #expect(remainderNonOptional == expected.remainder)
     }
 
@@ -78,36 +88,6 @@ struct ExchangeTests {
 
         #expect(target == expected.target)
         #expect(remainder == expected.remainder)
-    }
-
-    @Test("Creates an exchange with simpler syntax", arguments: [
-        (mockTransaction(6), mockDrain(12), mockExchange(12, for: 6))
-    ])
-    func buy(_ purchase: Transaction<Int, Int>, for price: Transaction<Int?, Int>, expected: Exchange<Int, Int, Int>) {
-        let result = Exchange.buy {
-            purchase
-        } for: {
-            price
-        }
-        #expect(result == expected)
-    }
-
-    // MARK: Self: Comparable
-    struct ConformsToComparable {
-        typealias Mock = Exchange<Int, Int, Int>
-        @Test("Compares the tap and drain, in that order", arguments: [
-            (mockExchange(7, for: 8), mockExchange(9, for: 12), true),
-            (mockExchange(7, for: 8), mockExchange(9, for: 6), true),
-            (mockExchange(7, for: 8), mockExchange(7, for: 12), true),
-            (mockExchange(7, for: 8), mockExchange(7, for: 8), false),
-            (mockExchange(7, for: 8), mockExchange(4, for: 12), false),
-            (mockExchange(7, for: 8), mockExchange(7, for: 2), false),
-            (mockExchange(7, for: 8), mockExchange(4, for: 7), false)
-        ])
-        func lesserThan(lhs: Mock, rhs: Mock, expected: Bool) {
-            let result = lhs < rhs
-            #expect(result == expected)
-        }
     }
 
     // MARK: Self: Equatable
@@ -156,7 +136,7 @@ struct ExchangeTests {
         @Test("Creates a drain-only exchange", arguments: [
             (mockDrain(8), mockExchange(8, for: 8))
         ])
-        func drain(_ make: Transaction<Int?, Int>, expected: Exchange<Int, Int, Int>) {
+        func drain(_ make: Transaction<Int, Int>, expected: Exchange<Int, Int, Int>) {
             let result = Exchange<Int, Int, Int>.drain(make)
             #expect(result == expected)
         }
@@ -175,7 +155,7 @@ struct ExchangeTests {
         @Test("Combines two transactions together into one", arguments: [
             (mockDrain(8), mockTransaction(12), mockExchange(8, for: 12))
         ])
-        func barOperator(lhs: Transaction<Int?, Int>, rhs: Transaction<Int, Int>, expected: Exchange<Int, Int, Int>) {
+        func barOperator(lhs: Transaction<Int, Int>, rhs: Transaction<Int, Int>, expected: Exchange<Int, Int, Int>) {
             let result = lhs | rhs
             #expect(result == expected)
         }
