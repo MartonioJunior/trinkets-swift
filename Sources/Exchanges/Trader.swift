@@ -65,7 +65,7 @@ public extension Exchange where Target: Trader & SendableMetatype, Target.Buy ==
         .buy {
             Tap(purchase) { $0.buy($1) }
         } for: {
-            Drain(price) { $0?.sell($1) }
+            Drain(price) { $0.sell($1) }
         }
     }
 }

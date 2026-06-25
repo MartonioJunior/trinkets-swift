@@ -7,7 +7,7 @@
 
 import Custom
 /// Transaction that removes resources from the economy.
-public typealias Drain<Target, Contents> = Transaction<Target?, Contents>
+public typealias Drain<Target, Contents> = Transaction<Target, Contents>
 /// Transaction that adds resources to the economy
 public typealias Tap<Target, Contents> = Transaction<Target, Contents>
 /// Modifier that changes the economy in a target.

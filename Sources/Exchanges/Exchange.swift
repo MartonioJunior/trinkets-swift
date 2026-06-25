@@ -42,16 +42,8 @@ public struct Exchange<Target, Buy, Sell> {
     /// - Parameter target: Target to be drained.
     /// - Returns: Contents that were not drained from the target.
     @_disfavoredOverload
-    public func drain(_ target: inout Target?) -> Sell? {
+    public func drain(_ target: inout Target) -> Sell? {
         drain.apply(to: &target)
-    }
-    /// Drains a given target.
-    /// - Parameter target: Target to be drained.
-    /// - Returns: Contents that were not drained from the target.
-    public func drain(unwrapped target: inout Target) -> Sell? {
-        guard let remainder = drain.apply(unwrapped: &target) else { return nil }
-
-        return remainder
     }
     /// Transforms the contents of the exchange.
     /// - Parameters:
@@ -124,10 +116,11 @@ extension Exchange: Modifier {
     public func apply(to target: inout Target) -> Remainder? {
         let drainResult = drain.preview(on: target)
 
-        guard let drainedTarget = drainResult.target, drainResult.output == nil else {
+        guard drainResult.output == nil else {
             return .init(buy: tap.contents, sell: drain.contents)
         }
 
+        let drainedTarget = drainResult.target
         let tapResult = tap.preview(on: drainedTarget)
         target = tapResult.target
 
@@ -170,6 +163,18 @@ public extension Exchange where Buy == Sell {
     ) -> Self {
         let transaction = make()
         return .init(drain: .noop(transaction.contents), tap: transaction)
+    }
+}
+
+// MARK: Self.Target: Optional
+public extension Exchange {
+    /// Drains a given target.
+    /// - Parameter target: Target to be drained.
+    /// - Returns: Contents that were not drained from the target.
+    func drain<T>(unwrapped target: inout T) -> Sell? where Target == T? {
+        guard let remainder = drain.apply(unwrapped: &target) else { return nil }
+
+        return remainder
     }
 }
 
