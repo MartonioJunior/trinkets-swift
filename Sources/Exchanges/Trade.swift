@@ -48,7 +48,7 @@ public struct Trade<A: Trader, B: Trader> where A.Buy == B.Sell, B.Buy == A.Sell
     ///   - supplier: Supplier of goods.
     ///
     /// - Returns: Remainder of the operation.
-    public func drain(from purchaser: inout A?, to supplier: inout B) -> (buyer: A.Sell?, seller: B.Buy?) {
+    public func drain(from purchaser: inout A, to supplier: inout B) -> (buyer: A.Sell?, seller: B.Buy?) {
         let buyerRemainder = buyer.drain.apply(to: &purchaser)
         let sellerRemainder = seller.tap.apply(to: &supplier)
 
@@ -60,7 +60,7 @@ public struct Trade<A: Trader, B: Trader> where A.Buy == B.Sell, B.Buy == A.Sell
     ///   - supplier: Supplier of goods.
     ///
     /// - Returns: Remainder of the operation.
-    public func tap(_ purchaser: inout A, using supplier: inout B?) -> (buyer: A.Buy?, seller: B.Sell?) {
+    public func tap(_ purchaser: inout A, using supplier: inout B) -> (buyer: A.Buy?, seller: B.Sell?) {
         let sellerRemainder = seller.drain.apply(to: &supplier)
         let buyerRemainder = buyer.tap.apply(to: &purchaser)
 
