@@ -85,18 +85,6 @@ public extension Exchange {
     }
 }
 
-// MARK: Self: Comparable
-extension Exchange: Comparable where Buy: Comparable, Sell: Comparable {
-    // swiftlint:disable:next missing_docs
-    public static func < (lhs: Self, rhs: Self) -> Bool {
-        if lhs.drain == rhs.drain {
-            lhs.tap < rhs.tap
-        } else {
-            lhs.drain < rhs.drain
-        }
-    }
-}
-
 // MARK: Self: Equatable
 extension Exchange: Equatable where Buy: Equatable, Sell: Equatable {
     // swiftlint:disable:next missing_docs
