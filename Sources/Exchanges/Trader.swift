@@ -62,7 +62,7 @@ public extension Exchange where Target: Trader & SendableMetatype, Target.Buy ==
     ///
     /// - Returns:
     static func buy(_ purchase: Buy, for price: Sell) -> Self {
-        .buy {
+        Exchange {
             Tap(purchase) { $0.buy($1) }
         } for: {
             Drain(price) { $0.sell($1) }
