@@ -53,9 +53,9 @@ public extension Tagged where Tag: StaticUnit {
     /// - Parameter converter: Converter used to obtain the base value.
     /// - Returns: A tagged value that represents the base value.
     func baseValue(
-        _ converter: StaticConverter<Tag, Tag.Base, RawValue>
+        _ converter: (Tagged<Tag, RawValue>) -> Tagged<Tag.Base, RawValue>
     ) -> Tagged<Tag.Base, RawValue> {
-        .init(converter.f(rawValue))
+        .init(converter(.init(rawValue)).rawValue)
     }
     /// Converts the tagged value to another static unit.
     /// - Parameters:
@@ -64,8 +64,8 @@ public extension Tagged where Tag: StaticUnit {
     ///
     /// - Returns: A new tagged value in the new unit.
     func converted<T: StaticUnit>(
-        _ base: StaticConverter<Tag, Tag.Base, RawValue>,
-        _ converter: StaticConverter<T.Base, T, RawValue>
+        _ base: (Tagged<Tag, RawValue>) -> Tagged<Tag.Base, RawValue>,
+        _ converter: (Tagged<T.Base, RawValue>) -> Tagged<T, RawValue>
     ) -> Tagged<T, RawValue> where Tag.Base == T.Base {
         baseValue(base).converted(to: converter)
     }
@@ -76,9 +76,9 @@ public extension Tagged {
     /// - Parameter converter: Converter to static unit.
     /// - Returns: A new tagged value in the new unit.
     func converted<T: StaticUnit>(
-        to converter: StaticConverter<Tag, T, RawValue>
+        to converter: (Tagged<Tag, RawValue>) -> Tagged<T, RawValue>
     ) -> Tagged<T, RawValue> {
-        .init(converter.f(rawValue))
+        .init(converter(.init(rawValue)).rawValue)
     }
     /// Converts value to a dynamic unit.
     /// - Parameters:

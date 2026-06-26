@@ -63,12 +63,6 @@ public extension Dimension {
     }
 }
 
-// MARK: Converter (EX)
-public extension StaticConverter where Origin: Dimension, Target == Origin.BaseUnit {
-    /// Default converter for the base unit, keeping the value as-is.
-    static var baseUnit: Self { .init { $0 } }
-}
-
 // MARK: Tagged (EX)
 import Tagged
 

@@ -123,16 +123,16 @@ public extension Tagged where RawValue: BinaryFloatingPoint {
     /// - Parameter converter: Static converter between unit types (without exponents).
     /// - Returns: Tagged value on the target unit.
     func pow<T, O, let N: Int>(
-        _ converter: StaticConverter<T, O, RawValue>
+        _ converter: (Tagged<T, RawValue>) -> Tagged<O, RawValue>
     ) -> Tagged<O, RawValue> where Tag == Exponential<T, N> {
-        .init(RawValue(Double.pow(Double(converter.f(rawValue)), N)))
+        .init(RawValue(Double.pow(Double(converter(.init(rawValue)).rawValue), N)))
     }
     /// Converts a tagged value to a target exponential unit.
     /// - Parameter converter: Static converter between unit types (without exponents).
     /// - Returns: Tagged exponential value.
     func root<T, let N: Int>(
-        _ converter: StaticConverter<Tag, T, RawValue>
+        _ converter: (Self) -> Tagged<T, RawValue>
     ) -> Tagged<Exponential<T, N>, RawValue> {
-        .init(converter.f(RawValue(Double.root(Double(rawValue), N))))
+        .init(converter(.init(RawValue(Double.root(Double(rawValue), N)))).rawValue)
     }
 }

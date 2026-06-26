@@ -61,7 +61,7 @@ public struct Measured<UnitType: Convertible, Value> {
     ///   - toBase: Converter used to get to base value.
     public mutating func setValue<T: StaticUnit>(
         _ tagged: Tagged<T, Value>,
-        _ toBase: StaticConverter<T, T.Base, Value>
+        _ toBase: (Tagged<T, Value>) -> Tagged<T.Base, Value>
     ) where UnitType.Base == T.Base {
         setValue(tagged.baseValue(toBase))
     }
