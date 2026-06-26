@@ -5,6 +5,8 @@
 //  Created by Martônio Júnior on 01/05/2026.
 //
 
+import Tagged
+
 /// Converter that defines a transformation between unit instances of the same type.
 public typealias DynamicUnitConverter<Unit, Value> = DynamicConverter<Unit, Unit, Value>
 /// Converter that defines a transformation from a dynamic unit to a base value (and vice-versa).
@@ -13,18 +15,6 @@ public typealias DynamicUnitConverter<Unit, Value> = DynamicConverter<Unit, Unit
 public struct DynamicConverter<Unit, Reference, Value> {
     // MARK: Variables
     var f: (Unit, Value) -> Value
-    /// Wraps the converter as a `StaticConverter` instance.
-    /// 
-    /// Unit is defined as the origin of the transformation.
-    var asStaticOrigin: (Unit) -> StaticConverter<Unit, Reference, Value> {
-        { unit in .init { f(unit, $0) } }
-    }
-    /// Wraps the converter as a `StaticConverter` instance.
-    /// 
-    /// Unit is defined as the target of the transformation.
-    var asStaticTarget: (Unit) -> StaticConverter<Reference, Unit, Value> {
-        { unit in .init { f(unit, $0) } }
-    }
     // MARK: Initializers
     /// Creates a new converter.
     /// - Parameter f: Transformation function.
@@ -35,12 +25,6 @@ public struct DynamicConverter<Unit, Reference, Value> {
 
 // MARK: DotSyntax
 public extension DynamicConverter {
-    /// Creates a dynamic converter from a static one.
-    /// - Parameter selector: Function that select which converter to use for a given dynamic unit.
-    /// - Returns: A new dynamic converter.
-    static func from(_ selector: @escaping (Unit) -> StaticConverter<Unit, Reference, Value>) -> Self {
-        .init { selector($0).f($1) }
-    }
     /// Converts a value from a measurement to a reference value.
     /// - Parameter f: Transformation function.
     /// - Returns: A new dynamic converter.
@@ -71,10 +55,10 @@ public extension DynamicConverter {
     ///
     /// - Returns: A new dynamic converter.
     static func fromStatic(
-        _ base: StaticConverter<Reference, Reference.Base, Value>,
+        _ base: @escaping (Tagged<Reference, Value>) -> Tagged<Reference.Base, Value>,
         _ converter: DynamicConverter<Unit, Reference.Base, Value>
     ) -> Self where Reference: StaticUnit {
-        .init { converter.f($0, base.f($1)) }
+        .init { converter.f($0, base(.init($1)).rawValue) }
     }
     /// Creates a converter from a dynamic unit to a static one.
     /// - Parameters:
@@ -84,8 +68,8 @@ public extension DynamicConverter {
     /// - Returns: A new dynamic converter.
     static func toStatic(
         _ base: DynamicConverter<Unit, Reference.Base, Value>,
-        _ converter: StaticConverter<Reference.Base, Reference, Value>
+        _ converter: @escaping (Tagged<Reference.Base, Value>) -> Tagged<Reference, Value>
     ) -> Self where Reference: StaticUnit {
-        .init { converter.f(base.f($0, $1)) }
+        .init { converter(.init(base.f($0, $1))).rawValue }
     }
 }

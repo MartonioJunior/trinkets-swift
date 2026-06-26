@@ -134,17 +134,29 @@ public extension Tagged {
     /// - Parameter converter: Static converter for the first factor.
     /// - Returns: A new tagged value with the converted quantity.
     func convertFirst<A, B, C>(
-        _ converter: StaticConverter<A, C, RawValue>
+        _ converter: (Tagged<A, RawValue>) -> Tagged<C, RawValue>
     ) -> Tagged<Product<C, B>, RawValue> where Tag == Product<A, B> {
-        .init(converter.f(rawValue))
+        .init(converter(.init(rawValue)).rawValue)
     }
     /// Transforms a tagged value to another product by converting it's second factor.
     /// - Parameter converter: Static converter for the second factor.
     /// - Returns: A new tagged value with the converted quantity.
     func convertSecond<A, B, C>(
-        _ converter: StaticConverter<B, C, RawValue>
+        _ converter: (Tagged<B, RawValue>) -> Tagged<C, RawValue>
     ) -> Tagged<Product<A, C>, RawValue> where Tag == Product<A, B> {
-        .init(converter.f(rawValue))
+        .init(converter(.init(rawValue)).rawValue)
+    }
+    /// Converts to another product, applying conversions from left-to-right.
+    /// - Parameters:
+    ///   - lhs: A static converter.
+    ///   - rhs: Another static converter.
+    ///
+    /// - Returns: Converted value.
+    func first<A, B, C, D>(
+        _ lhs: (Tagged<A, RawValue>) -> Tagged<C, RawValue>,
+        then rhs: (Tagged<B, RawValue>) -> Tagged<D, RawValue>
+    ) -> Tagged<Product<C, D>, RawValue> where Tag == Product<A, B> {
+        convertFirst(lhs).convertSecond(rhs)
     }
     /// Defines a reference to a type of product.
     /// - Returns: Reference to the product type.
@@ -153,5 +165,17 @@ public extension Tagged {
         _: Tagged<B.Base, B.Type>
     ) -> Self where Tag == Product<A.Base, B.Base>, RawValue == Product<A, B>.Type {
         .init(Product<A, B>.self)
+    }
+    /// Converts to another product, applying conversions from right-to-left.
+    /// - Parameters:
+    ///   - lhs: A static converter.
+    ///   - rhs: Another static converter.
+    ///
+    /// - Returns: Converted value.
+    func right<A, B, C, D>(
+        _ rhs: (Tagged<B, RawValue>) -> Tagged<D, RawValue>,
+        then lhs: (Tagged<A, RawValue>) -> Tagged<C, RawValue>
+    ) -> Tagged<Product<C, D>, RawValue> where Tag == Product<A, B> {
+        convertSecond(rhs).convertFirst(lhs)
     }
 }

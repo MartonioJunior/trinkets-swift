@@ -79,34 +79,6 @@ extension Product: SendableMetatype {}
 // MARK: Self: StaticUnit
 extension Product: StaticUnit where A: StaticUnit, B: StaticUnit {}
 
-// MARK: Converter (EX)
-public extension StaticConverter {
-    /// Defines a conversion to another product, applying conversions from left-to-right.
-    /// - Parameters:
-    ///   - lhs: A static converter.
-    ///   - rhs: Another static converter.
-    ///
-    /// - Returns: A new `StaticConverter`.
-    static func leftFirst<A, B, C, D>(
-        _ lhs: StaticConverter<A, C, Value>,
-        then rhs: StaticConverter<B, D, Value>
-    ) -> Self where Origin == Product<A, B>, Target == Product<C, D> {
-        .init { rhs.f(lhs.f($0)) }
-    }
-    /// Defines a conversion to another product, applying conversions from right-to-left.
-    /// - Parameters:
-    ///   - lhs: A static converter.
-    ///   - rhs: Another static converter.
-    ///
-    /// - Returns: A new `StaticConverter`.
-    static func rightFirst<A, B, C, D>(
-        _ rhs: StaticConverter<B, D, Value>,
-        then lhs: StaticConverter<A, C, Value>
-    ) -> Self where Origin == Product<A, B>, Target == Product<C, D> {
-        .init { lhs.f(rhs.f($0)) }
-    }
-}
-
 // MARK: Measurement (EX)
 public extension Measurement where UnitType: Measurable, Value: Numeric {
     /// Multiplies the measure with another.

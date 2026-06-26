@@ -77,34 +77,6 @@ extension Fraction: SendableMetatype {}
 // MARK: Self: StaticUnit
 extension Fraction: StaticUnit where A: StaticUnit, B: StaticUnit {}
 
-// MARK: Converter (EX)
-public extension StaticConverter {
-    /// Defines a conversion to another fraction, applying conversions from denominator, then numerator.
-    /// - Parameters:
-    ///   - lhs: A static converter, for the denominator.
-    ///   - rhs: Another static converter, for the numerator.
-    ///
-    /// - Returns: A new `StaticConverter`.
-    static func denominatorFirst<A, B, C, D>(
-        _ rhs: StaticConverter<B, D, Value>,
-        then lhs: StaticConverter<A, C, Value>
-    ) -> Self where Origin == Fraction<A, B>, Target == Fraction<C, D> {
-        .init { lhs.f(rhs.f($0)) }
-    }
-    /// Defines a conversion to another fraction, applying conversions from numerator, then denominator.
-    /// - Parameters:
-    ///   - lhs: A static converter, for the numerator.
-    ///   - rhs: Another static converter, for the denominator.
-    ///
-    /// - Returns: A new `StaticConverter`.
-    static func numeratorFirst<A, B, C, D>(
-        _ lhs: StaticConverter<A, C, Value>,
-        then rhs: StaticConverter<B, D, Value>
-    ) -> Self where Origin == Fraction<A, B>, Target == Fraction<C, D> {
-        .init { rhs.f(lhs.f($0)) }
-    }
-}
-
 // MARK: Measurement (EX)
 public extension Measurement where UnitType: Measurable, Value: FloatingPoint {
     /// Divides a measure by another.

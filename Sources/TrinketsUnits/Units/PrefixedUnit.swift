@@ -86,7 +86,7 @@ public extension Tagged where RawValue: Numeric & ExpressibleByFloatLiteral, Raw
     /// - Parameter converter: Converter from the wrapped unit to the base value. 
     /// - Returns: A new tagged base value.
     func baseValue<Prefix: UnitPrefix, Unit: StaticUnit>(
-        _ converter: StaticConverter<Unit, Unit.Base, RawValue>
+        _ converter: (Tagged<Unit, RawValue>) -> Tagged<Unit.Base, RawValue>
     ) -> Tagged<Unit.Base, RawValue> where Tag == PrefixedUnit<Prefix, Unit> {
         unwrapPrefix().baseValue(converter)
     }
@@ -121,7 +121,7 @@ public extension Tagged where RawValue: FloatingPoint & ExpressibleByFloatLitera
     /// - Returns: A new tagged value under the prefixed unit.
     func converted<Prefix: UnitPrefix, T: StaticUnit>(
         to prefix: Tagged<Prefix.Base, Prefix.Type>,
-        _ converter: StaticConverter<Tag, T, RawValue>
+        _ converter: (Tagged<Tag, RawValue>) -> Tagged<T, RawValue>
     ) -> Tagged<PrefixedUnit<Prefix, T>, RawValue> {
         converted(to: converter).setPrefix(prefix)
     }
