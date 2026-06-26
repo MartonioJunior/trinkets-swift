@@ -88,33 +88,36 @@ public extension Dimension {
 // MARK: Tagged (EX)
 import Tagged
 
-public extension Dimension {
-    // Static unit from the dimension to be used.
+public extension Tagged where Tag: Dimension {
+    /// Static unit from the dimension to be used.
     /// - Returns: Prefixed static unit as a type.
     /// 
     /// Works as an easy DotSyntax accessor for the static units of a given dimension:
     /// 
     /// ```swift
-    /// let unit = Time.in(.milli, .seconds)
+    /// let unit = Tagged<Time, Double>.in(.milli, \.seconds)
     /// ```
-    static func `in`<Prefix: UnitPrefix, Unit: StaticUnit>(
+    static func `in`<Prefix: UnitPrefix, Unit: StaticUnit, T>(
         _: Tagged<Prefix.Base, Prefix.Type>,
-        _: Tagged<Self, Unit.Type>
-    ) -> PrefixedUnit<Prefix, Unit>.Type where Self == Unit.Base {
-        PrefixedUnit<Prefix, Unit>.self
+        _: KeyPath<Self, Tagged<Unit, T>>
+    ) -> Tagged<PrefixedUnit<Prefix, Unit>, T>.Type {
+        Tagged<PrefixedUnit<Prefix, Unit>, T>.self
     }
+}
+
+public extension Dimension {
     /// Defines a prefixed tagged value in the given dimension.
     /// - Parameter value: Quantity for the measure.
     /// - Returns: A new tagged measure in the given dimension, wrapped in an unit prefix.
     /// 
     /// Example:
     /// ```swift
-    /// let oneMeter = Length.of(1, kilo, .meter)
+    /// let oneMeter = Length.of(1, .kilo, \.meter)
     /// ```
     static func of<Prefix: UnitPrefix, Unit: StaticUnit, Value>(
         _ value: Value,
         _: Tagged<Prefix.Base, Prefix.Type>,
-        _: Tagged<Self, Unit.Type>
+        _: KeyPath<Tagged<Self, Value>, Tagged<Unit, Value>>
     ) -> Tagged<PrefixedUnit<Prefix, Unit>, Value> where Self == Unit.Base {
         .init(value)
     }

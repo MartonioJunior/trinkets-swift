@@ -5,6 +5,7 @@
 //  Created by Martônio Júnior on 16/06/25.
 //
 
+import Tagged
 import TrinketsUnits
 
 public struct RPGMoney {}
@@ -25,12 +26,12 @@ public extension RPGMoney {
 
 extension RPGMoney.Gil: Sendable {}
 
-public extension StaticConverter where Origin == RPGMoney.Gil, Target == RPGMoney, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == RPGMoney.Gil, RawValue: Numeric {
+    var rpgMoney: Tagged<RPGMoney, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == RPGMoney, Target == RPGMoney.Gil, Value: Numeric {
-    static var gil: Self { .init { $0 } }
+public extension Tagged where Tag == RPGMoney, RawValue: Numeric {
+    var gil: Tagged<RPGMoney.Gil, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.Linen
@@ -44,12 +45,12 @@ public extension RPGMoney {
 
 extension RPGMoney.Linen: Sendable {}
 
-public extension StaticConverter where Origin == RPGMoney.Linen, Target == RPGMoney, Value: Numeric {
-    static var to: Self { .init { $0 * 2 + 7 } }
+public extension Tagged where Tag == RPGMoney.Linen, RawValue: Numeric {
+    var rpgMoney: Tagged<RPGMoney, RawValue> { .init(rawValue * 2 + 7) }
 }
 
-public extension StaticConverter where Origin == RPGMoney, Target == RPGMoney.Linen, Value: FloatingPoint {
-    static var linen: Self { .init { ($0 - 7) / 2 } }
+public extension Tagged where Tag == RPGMoney, RawValue: FloatingPoint {
+    var linen: Tagged<RPGMoney.Linen, RawValue> { .init((rawValue - 7) / 2) }
 }
 
 // MARK: Self.Zeni
@@ -63,12 +64,12 @@ public extension RPGMoney {
 
 extension RPGMoney.Zeni: Sendable {}
 
-public extension StaticConverter where Origin == RPGMoney.Zeni, Target == RPGMoney, Value: Numeric {
-    static var to: Self { .init { $0 * 3 } }
+public extension Tagged where Tag == RPGMoney.Zeni, RawValue: Numeric {
+    var rpgMoney: Tagged<RPGMoney, RawValue> { .init(rawValue * 3) }
 }
 
-public extension StaticConverter where Origin == RPGMoney, Target == RPGMoney.Zeni, Value: FloatingPoint {
-    static var zeni: Self { .init { $0 / 3 } }
+public extension Tagged where Tag == RPGMoney, RawValue: FloatingPoint {
+    var zeni: Tagged<RPGMoney.Zeni, RawValue> { .init(rawValue / 3) }
 }
 
 // MARK: Self.Zero
@@ -82,12 +83,12 @@ public extension RPGMoney {
 
 extension RPGMoney.Zero: Sendable {}
 
-public extension StaticConverter where Origin == RPGMoney.Zero, Target == RPGMoney, Value: Numeric {
-    static var to: Self { .init { _ in .zero } }
+public extension Tagged where Tag == RPGMoney.Zero, RawValue: Numeric {
+    var rpgMoney: Tagged<RPGMoney, RawValue> { .init(.zero) }
 }
 
-public extension StaticConverter where Origin == RPGMoney, Target == RPGMoney.Zero, Value: Numeric {
-    static var zero: Self { .init { _ in .zero } }
+public extension Tagged where Tag == RPGMoney, RawValue: Numeric {
+    var zero: Tagged<RPGMoney.Zero, RawValue> { .init(.zero) }
 }
 
 // MARK: Self.Constant
@@ -122,26 +123,7 @@ public extension Measurement where UnitType == RPGMoney.Constant, Value: Additiv
     var baseValue: Tagged<RPGMoney, Value> { baseValue(.base) }
 }
 
-
 // MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == RPGMoney, RawValue == RPGMoney.Gil.Type {
-    static var gil: Self { .init(RPGMoney.Gil.self) }
-}
-
-public extension Tagged where Tag == RPGMoney, RawValue == RPGMoney.Linen.Type {
-    static var linen: Self { .init(RPGMoney.Linen.self) }
-}
-
-public extension Tagged where Tag == RPGMoney, RawValue == RPGMoney.Zeni.Type {
-    static var zeni: Self { .init(RPGMoney.Zeni.self) }
-}
-
-public extension Tagged where Tag == RPGMoney, RawValue == RPGMoney.Zero.Type {
-    static var zero: Self { .init(RPGMoney.Zero.self) }
-}
-
 public extension Tagged where Tag == RPGMoney, RawValue: FloatingPoint {
     func constant(_ value: Int) -> Measurement<RPGMoney.Constant, RawValue> {
         .init(rawValue, .init(value: value))

@@ -7,5 +7,5 @@
 
 /// Unit where it's features are statically defined.
 /// 
-/// Works as a marker protocol for non-instanceable types (e.g. enums with no cases)
+/// Works as a marker protocol for non-instantiable types (e.g. enums with no cases)
 public protocol StaticUnit: Measurable, Convertible where Base: Domain {}

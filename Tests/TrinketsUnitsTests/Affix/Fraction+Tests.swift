@@ -13,15 +13,17 @@ struct FractionTests {
     // MARK: Syntax
     @Test("Evaluates use cases for the type")
     func syntax() {
-        #expect(type(of: Fraction(RefreshRate.FPS(refreshRate: 24), per: RPGMoney.Constant(value: 12))) == Fraction<RefreshRate.FPS, RPGMoney.Constant>.self)
+        typealias MoneyPerFrame<T> = Tagged<Fraction<RPGMoney, RefreshRate>, T>
 
-        #expect(type(of: Fraction.of(.zeni, per: .cinema)) == Fraction<RPGMoney.Zeni, RefreshRate.Cinema>.Type.self)
-        #expect(type(of: RPGMoney.in(.zeni).per(.cinema)) == Tagged<Fraction<RPGMoney, RefreshRate>, Fraction<RPGMoney.Zeni, RefreshRate.Cinema>.Type>.self)
-        #expect(type(of: RPGMoney.Zeni.per(.cinema)) == Tagged<Fraction<RPGMoney, RefreshRate>, Fraction<RPGMoney.Zeni, RefreshRate.Cinema>.Type>.self)
-        #expect(type(of: Tagged.fraction(.zeni, per: .cinema)) == Tagged<Fraction<RPGMoney, RefreshRate>, Fraction<RPGMoney.Zeni, RefreshRate.Cinema>.Type>.self)
-        #expect(type(of: RPGMoney.Zeni.per(RefreshRate.self)) == Tagged<Fraction<RPGMoney, RefreshRate>, Fraction<RPGMoney.Zeni, RefreshRate>.Type>.self)
-        #expect(type(of: RPGMoney.in(.zeni).per(RefreshRate.self)) == Tagged<Fraction<RPGMoney, RefreshRate>, Fraction<RPGMoney.Zeni, RefreshRate>.Type>.self)
-        #expect(type(of: RPGMoney.per(.cinema)) == Tagged<Fraction<RPGMoney, RefreshRate>, Fraction<RPGMoney, RefreshRate.Cinema>.Type>.self)
+        #expect(type(of: Fraction(RefreshRate.FPS(refreshRate: 24), per: RPGMoney.Constant(value: 12))) == Fraction<RefreshRate.FPS, RPGMoney.Constant>.self)
+        #expect(type(of: MoneyPerFrame<Double>.in(\.zeni, per: \.cinema)) == Tagged<Fraction<RPGMoney.Zeni, RefreshRate.Cinema>, Double>.Type.self)
+        #expect(type(of: Fraction.of(25, \.zeni, per: \.cinema)) == Tagged<Fraction<RPGMoney.Zeni, RefreshRate.Cinema>, Double>.self)
+        #expect(type(of: Tagged<RPGMoney, Double>.in(\.zeni).per(\.cinema)) == Tagged<Fraction<RPGMoney.Zeni, RefreshRate.Cinema>, Double>.Type.self)
+        #expect(type(of: Tagged<_, Double>.in(\.zeni, per: \.cinema)) == Tagged<Fraction<RPGMoney.Zeni, RefreshRate.Cinema>, Double>.Type.self)
+        #expect(type(of: RPGMoney.Zeni.per(RefreshRate.Cinema.self)) == Fraction<RPGMoney.Zeni, RefreshRate.Cinema>.Type.self)
+        #expect(type(of: RPGMoney.Zeni.per(RefreshRate.self)) == Fraction<RPGMoney.Zeni, RefreshRate>.Type.self)
+        #expect(type(of: Tagged<_, Double>.in(\.zeni).per(RefreshRate.self)) == Tagged<Fraction<RPGMoney.Zeni, RefreshRate>, Double>.Type.self)
+        #expect(type(of: RPGMoney.per(RefreshRate.Cinema.self)) == Fraction<RPGMoney, RefreshRate.Cinema>.Type.self)
         #expect(type(of: RPGMoney.per(RefreshRate.self)) == Fraction<RPGMoney, RefreshRate>.Type.self)
     }
 
@@ -83,46 +85,46 @@ struct FractionTests {
     @Test("Returns base value using numerator, then denominator")
     func baseValue() {
         let a = Tagged<Fraction<RPGMoney.Linen, RefreshRate.Cinema>, Double>(10)
-        #expect(a.baseValue(.numeratorFirst(.to, then: .to)) == 648)
-        #expect(a.baseValue(.denominatorFirst(.to, then: .to)) == 487)
+        #expect(a.numerator(\.rpgMoney, then: \.refreshRate) == 648)
+        #expect(a.denominator(\.refreshRate, then: \.rpgMoney) == 487)
 
         let b = Tagged<Fraction<RPGMoney.Zeni, RefreshRate.Cinema>, Double>(432)
-        #expect(b.baseValue(.numeratorFirst(.to, then: .to)) == 31104)
-        #expect(b.baseValue(.denominatorFirst(.to, then: .to)) == 31104)
+        #expect(b.numerator(\.rpgMoney, then: \.refreshRate) == 31104)
+        #expect(b.denominator(\.refreshRate, then: \.rpgMoney) == 31104)
 
         let c = Tagged<Fraction<RPGMoney.Zeni, RefreshRate.Cinema>, Double>(0)
-        #expect(c.baseValue(.numeratorFirst(.to, then: .to)) == 0)
-        #expect(c.baseValue(.denominatorFirst(.to, then: .to)) == 0)
+        #expect(c.numerator(\.rpgMoney, then: \.refreshRate) == 0)
+        #expect(c.denominator(\.refreshRate, then: \.rpgMoney) == 0)
 
         let d = Tagged<Fraction<RPGMoney.Linen, RefreshRate.Cinema>, Double>(20.5)
-        #expect(d.baseValue(.numeratorFirst(.to, then: .to)) == 1152)
-        #expect(d.baseValue(.denominatorFirst(.to, then: .to)) == 991)
+        #expect(d.numerator(\.rpgMoney, then: \.refreshRate) == 1152)
+        #expect(d.denominator(\.refreshRate, then: \.rpgMoney) == 991)
 
         let e = Tagged<Fraction<RPGMoney.Linen, RefreshRate.Cinema>, Double>(-7)
-        #expect(e.baseValue(.numeratorFirst(.to, then: .to)) == -168)
-        #expect(e.baseValue(.denominatorFirst(.to, then: .to)) == -329)
+        #expect(e.numerator(\.rpgMoney, then: \.refreshRate) == -168)
+        #expect(e.denominator(\.refreshRate, then: \.rpgMoney) == -329)
     }
 
     @Test("Returns base value using denominator, then numerator")
     func converted() {
         let a = Tagged<Fraction<RPGMoney, RefreshRate>, Double>(12)
-        #expect(a.converted(to: .numeratorFirst(.gil, then: .cinema)) == 0.5)
-        #expect(a.converted(to: .denominatorFirst(.cinema, then: .gil)) == 0.5)
+        #expect(a.numerator(\.gil, then: \.cinema) == 0.5)
+        #expect(a.denominator(\.cinema, then: \.gil) == 0.5)
 
         let b = Tagged<Fraction<RPGMoney, RefreshRate>, Double>(360)
-        #expect(b.converted(to: .numeratorFirst(.zeni, then: .cinema)) == 5)
-        #expect(b.converted(to: .denominatorFirst(.cinema, then: .zeni)) == 5)
+        #expect(b.numerator(\.zeni, then: \.cinema) == 5)
+        #expect(b.denominator(\.cinema, then: \.zeni) == 5)
 
         let c = Tagged<Fraction<RPGMoney, RefreshRate>, Double>(0)
-        #expect(c.converted(to: .numeratorFirst(.zeni, then: .cinema)) == 0)
-        #expect(c.converted(to: .denominatorFirst(.cinema, then: .zeni)) == 0)
+        #expect(c.numerator(\.zeni, then: \.cinema) == 0)
+        #expect(c.denominator(\.cinema, then: \.zeni) == 0)
 
         let d = Tagged<Fraction<RPGMoney, RefreshRate>, Double>(72)
-        #expect(d.converted(to: .numeratorFirst(.linen, then: .cinema)) == 1.3541666666666667)
-        #expect(d.converted(to: .denominatorFirst(.cinema, then: .linen)) == -2)
+        #expect(d.numerator(\.linen, then: \.cinema) == 1.3541666666666667)
+        #expect(d.denominator(\.cinema, then: \.linen) == -2)
 
         let e = Tagged<Fraction<RPGMoney, RefreshRate>, Double>(0)
-        #expect(e.converted(to: .numeratorFirst(.linen, then: .cinema)) == -0.14583333333333334)
-        #expect(e.converted(to: .denominatorFirst(.cinema, then: .linen)) == -3.5)
+        #expect(e.numerator(\.linen, then: \.cinema) == -0.14583333333333334)
+        #expect(e.denominator(\.cinema, then: \.linen) == -3.5)
     }
 }
