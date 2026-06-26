@@ -5,12 +5,26 @@
 //  Created by Martônio Júnior on 17/06/2025.
 //
 
+import Tagged
 import TrinketsUnits
 
 public enum Frequency: Dimension {
     public typealias BaseUnit = Hertz
 
     public static let dimensionality: Dimensionality = [Time.self: -1]
+}
+
+@available(macOS 26.0, *)
+public extension Tagged where Tag == Exponential<Time, -1> {
+    var asFrequency: Tagged<Frequency, RawValue> { .init(rawValue) }
+}
+
+public extension Tagged where Tag == Time, RawValue: FloatingPoint {
+    var frequency: Tagged<Frequency, RawValue> { .init(1 / rawValue) }
+}
+
+public extension Tagged where Tag == Frequency, RawValue: FloatingPoint {
+    var time: Tagged<Time, RawValue> { .init(1 / rawValue) }
 }
 
 // MARK: Self.Hertz
@@ -28,12 +42,12 @@ public extension Frequency.Hertz {
 }
 #endif
 
-public extension StaticConverter where Origin == Frequency.Hertz, Target == Frequency, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Frequency.Hertz, RawValue: Numeric {
+    var frequency: Tagged<Frequency, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Frequency, Target == Frequency.Hertz, Value: Numeric {
-    static var hertz: Self { .init { $0 } }
+public extension Tagged where Tag == Frequency, RawValue: Numeric {
+    var hertz: Tagged<Frequency.Hertz, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.Frames
@@ -67,24 +81,4 @@ public extension Tagged where Tag == Time, RawValue: FloatingPoint & Expressible
     func frames(refreshRate: Tagged<Frequency.Hertz, Int>) -> Measurement<Frequency.Frames, RawValue> {
         .init(rawValue * RawValue(refreshRate.rawValue), .init(refreshRate: refreshRate))
     }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == Frequency, RawValue == Frequency.Hertz.Type {
-    static var hertz: Self { .init(Frequency.Hertz.self) }
-}
-
-@available(macOS 26.0, *)
-public extension Tagged where Tag == Exponential<Time, -1> {
-    var asFrequency: Tagged<Frequency, RawValue> { .init(rawValue) }
-}
-
-public extension Tagged where Tag == Time, RawValue: FloatingPoint {
-    var frequency: Tagged<Frequency, RawValue> { .init(1 / rawValue) }
-}
-
-public extension Tagged where Tag == Frequency, RawValue: FloatingPoint {
-    var time: Tagged<Time, RawValue> { .init(1 / rawValue) }
 }

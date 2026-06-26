@@ -5,6 +5,7 @@
 //  Created by Martônio Júnior on 17/06/2025.
 //
 
+import Tagged
 import TrinketsUnits
 
 public enum Angle: Dimension {
@@ -20,12 +21,12 @@ public extension Angle {
     }
 }
 
-public extension StaticConverter where Origin == Angle.Degrees, Target == Angle, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Angle.Degrees, RawValue: Numeric {
+    var angle: Tagged<Angle, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Angle, Target == Angle.Degrees, Value: Numeric {
-    static var degrees: Self { .init { $0 } }
+public extension Tagged where Tag == Angle, RawValue: Numeric {
+    var degrees: Tagged<Angle.Degrees, RawValue> { .init(rawValue) }
 }
 
 // MARK: Angle.ArcMinutes
@@ -35,12 +36,12 @@ public extension Angle {
     }
 }
 
-public extension StaticConverter where Origin == Angle.ArcMinutes, Target == Angle, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 0.016667 } }
+public extension Tagged where Tag == Angle.ArcMinutes, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var angle: Tagged<Angle, RawValue> { .init(rawValue * 0.016667) }
 }
 
-public extension StaticConverter where Origin == Angle, Target == Angle.ArcMinutes, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var arcMinutes: Self { .init { $0 / 0.016667 } }
+public extension Tagged where Tag == Angle, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var arcMinutes: Tagged<Angle.ArcMinutes, RawValue> { .init(rawValue / 0.016667) }
 }
 
 // MARK: Angle.ArcSeconds
@@ -50,12 +51,12 @@ public extension Angle {
     }
 }
 
-public extension StaticConverter where Origin == Angle.ArcSeconds, Target == Angle, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 0.00027778 } }
+public extension Tagged where Tag == Angle.ArcSeconds, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var angle: Tagged<Angle, RawValue> { .init(rawValue * 0.00027778) }
 }
 
-public extension StaticConverter where Origin == Angle, Target == Angle.ArcSeconds, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var arcSeconds: Self { .init { $0 / 0.00027778 } }
+public extension Tagged where Tag == Angle, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var arcSeconds: Tagged<Angle.ArcSeconds, RawValue> { .init(rawValue / 0.00027778) }
 }
 
 // MARK: Angle.Radians
@@ -65,12 +66,12 @@ public extension Angle {
     }
 }
 
-public extension StaticConverter where Origin == Angle.Radians, Target == Angle, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 57.29577951308232 } }
+public extension Tagged where Tag == Angle.Radians, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var angle: Tagged<Angle, RawValue> { .init(rawValue * 57.29577951308232) }
 }
 
-public extension StaticConverter where Origin == Angle, Target == Angle.Radians, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var radians: Self { .init { $0 / 57.29577951308232 } }
+public extension Tagged where Tag == Angle, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var radians: Tagged<Angle.Radians, RawValue> { .init(rawValue / 57.29577951308232) }
 }
 
 // MARK: Angle.Gradians
@@ -80,12 +81,12 @@ public extension Angle {
     }
 }
 
-public extension StaticConverter where Origin == Angle.Gradians, Target == Angle, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 0.9 } }
+public extension Tagged where Tag == Angle.Gradians, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var angle: Tagged<Angle, RawValue> { .init(rawValue * 0.9) }
 }
 
-public extension StaticConverter where Origin == Angle, Target == Angle.Gradians, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var gradians: Self { .init { $0 / 0.9} }
+public extension Tagged where Tag == Angle, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var gradians: Tagged<Angle.Gradians, RawValue> { .init(rawValue / 0.9) }
 }
 
 // MARK: Angle.Revolutions
@@ -95,12 +96,12 @@ public extension Angle {
     }
 }
 
-public extension StaticConverter where Origin == Angle.Revolutions, Target == Angle, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 360 } }
+public extension Tagged where Tag == Angle.Revolutions, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var angle: Tagged<Angle, RawValue> { .init(rawValue * 360) }
 }
 
-public extension StaticConverter where Origin == Angle, Target == Angle.Revolutions, Value: FloatingPoint {
-    static var revolutions: Self { .init { $0 / 360 } }
+public extension Tagged where Tag == Angle, RawValue: FloatingPoint {
+    var revolutions: Tagged<Angle.Revolutions, RawValue> { .init(rawValue / 360) }
 }
 
 // MARK: Angle.Pi
@@ -110,12 +111,12 @@ public extension Angle {
     }
 }
 
-public extension StaticConverter where Origin == Angle.Pi, Target == Angle, Value: Numeric {
-    static var to: Self { .init { $0 * 180 } }
+public extension Tagged where Tag == Angle.Pi, RawValue: Numeric {
+    var angle: Tagged<Angle, RawValue> { .init(rawValue * 180) }
 }
 
-public extension StaticConverter where Origin == Angle, Target == Angle.Pi, Value: FloatingPoint {
-    static var pi: Self { .init { $0 / 180 } }
+public extension Tagged where Tag == Angle, RawValue: FloatingPoint {
+    var pi: Tagged<Angle.Pi, RawValue> { .init(rawValue / 180) }
 }
 
 // MARK: Angle.SlicedCircle
@@ -138,7 +139,7 @@ public extension Angle.SlicedCircle {
 }
 
 public extension Measurement where UnitType == Angle.SlicedCircle, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    var baseValue: Tagged<Angle, Value> { unit.sliceAngle() * .init(value) }
+    var angle: Tagged<Angle, Value> { unit.sliceAngle() * .init(value) }
 }
 
 public extension Tagged where Tag == Angle, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
@@ -150,33 +151,13 @@ public extension Tagged where Tag == Angle, RawValue: FloatingPoint & Expressibl
     }
 }
 
-// MARK: Tagged (EX)
-import Tagged
+// MARK: Angle.Unit
+public typealias AngleUnit = Tagged<Angle, UInt>
 
-public extension Tagged where Tag == Angle, RawValue == Angle.Degrees.Type {
-    static var degrees: Self { .init(Angle.Degrees.self) }
-}
-
-public extension Tagged where Tag == Angle, RawValue == Angle.ArcMinutes.Type {
-    static var arcMinutes: Self { .init(Angle.ArcMinutes.self) }
-}
-
-public extension Tagged where Tag == Angle, RawValue == Angle.ArcSeconds.Type {
-    static var arcSeconds: Self { .init(Angle.ArcSeconds.self) }
-}
-
-public extension Tagged where Tag == Angle, RawValue == Angle.Radians.Type {
-    static var radians: Self { .init(Angle.Radians.self) }
-}
-
-public extension Tagged where Tag == Angle, RawValue == Angle.Gradians.Type {
-    static var gradians: Self { .init(Angle.Gradians.self) }
-}
-
-public extension Tagged where Tag == Angle, RawValue == Angle.Revolutions.Type {
-    static var revolutions: Self { .init(Angle.Revolutions.self) }
-}
-
-public extension Tagged where Tag == Angle, RawValue == Angle.Pi.Type {
-    static var pi: Self { .init(Angle.Pi.self) }
+public extension AngleUnit {
+    var baseValue: Tagged<Angle, Double> {
+        let integerPart = Double(rawValue / 360)
+        let fractionalPart = Double(rawValue % 360) / 360
+        return .init(integerPart + fractionalPart)
+    }
 }

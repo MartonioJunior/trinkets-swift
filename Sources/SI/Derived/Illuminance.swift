@@ -5,6 +5,7 @@
 //  Created by Martônio Júnior on 17/06/2025.
 //
 
+import Tagged
 import TrinketsUnits
 
 public enum Illuminance: Dimension {
@@ -28,17 +29,10 @@ public extension Illuminance.Lux {
 }
 #endif
 
-public extension StaticConverter where Origin == Illuminance.Lux, Target == Illuminance, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Illuminance.Lux, RawValue: Numeric {
+    var illuminance: Self { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Illuminance, Target == Illuminance.Lux, Value: Numeric {
-    static var lux: Self { .init { $0 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == Illuminance, RawValue == Illuminance.Lux.Type {
-    static var lux: Self { .init(Illuminance.Lux.self) }
+public extension Tagged where Tag == Illuminance, RawValue: Numeric {
+    var lux: Self { .init(rawValue) }
 }

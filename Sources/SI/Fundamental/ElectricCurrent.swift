@@ -6,6 +6,7 @@
 //
 
 import Notation
+import Tagged
 import TrinketsUnits
 
 public enum ElectricCurrent: Dimension {
@@ -29,17 +30,10 @@ public extension ElectricCurrent.Amperes {
 }
 #endif
 
-public extension StaticConverter where Origin == ElectricCurrent.Amperes, Target == ElectricCurrent, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == ElectricCurrent.Amperes, RawValue: Numeric {
+    var electricCurrent: Tagged<ElectricCurrent, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == ElectricCurrent, Target == ElectricCurrent.Amperes, Value: Numeric {
-    static var amperes: Self { .init { $0 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == ElectricCurrent, RawValue == ElectricCurrent.Amperes.Type {
-    static var amperes: Self { .init(ElectricCurrent.Amperes.self) }
+public extension Tagged where Tag == ElectricCurrent, RawValue: Numeric {
+    var amperes: Tagged<ElectricCurrent.Amperes, RawValue> { .init(rawValue) }
 }

@@ -17,7 +17,7 @@ public struct WindMeasurementUsage<Value: FloatingPoint & ExpressibleByFloatLite
 extension WindMeasurementUsage: MeasurementUsage {
     // swiftlint:disable:next missing_docs
     public func measure(for baseValue: Tagged<Speed, Value>) -> Tagged<Speed.KilometersPerHour, Value> {
-        baseValue.converted(to: .kilometersPerHour)
+        baseValue.converted(to: \.kilometersPerHour)
     }
 }
 

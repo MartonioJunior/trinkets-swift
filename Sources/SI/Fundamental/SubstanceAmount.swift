@@ -6,6 +6,7 @@
 //
 
 import Notation
+import Tagged
 import TrinketsUnits
 
 public enum SubstanceAmount: Dimension {
@@ -29,17 +30,10 @@ public extension SubstanceAmount.Moles {
 }
 #endif
 
-public extension StaticConverter where Origin == SubstanceAmount.Moles, Target == SubstanceAmount, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == SubstanceAmount.Moles, RawValue: Numeric {
+    var substanceAmount: Tagged<SubstanceAmount, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == SubstanceAmount, Target == SubstanceAmount.Moles, Value: Numeric {
-    static var moles: Self { .init { $0 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == SubstanceAmount, RawValue == SubstanceAmount.Moles.Type {
-    static var moles: Self { .init(SubstanceAmount.Moles.self) }
+public extension Tagged where Tag == SubstanceAmount, RawValue: Numeric {
+    var moles: Tagged<SubstanceAmount.Moles, RawValue> { .init(rawValue) }
 }

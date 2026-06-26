@@ -18,7 +18,7 @@ where Value.FloatLiteralType == Double {}
 extension RainfallMeasurementUsage: MeasurementUsage {
     // swiftlint:disable:next missing_docs
     public func measure(for baseValue: Tagged<Length, Value>) -> Tagged<PrefixedUnit<Centi, Length.Meters>, Value> {
-        baseValue.converted(to: .centi, .meters)
+        baseValue.converted(to: .centi, \.meters)
     }
 }
 

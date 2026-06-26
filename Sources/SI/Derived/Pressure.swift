@@ -6,6 +6,7 @@
 //
 
 import Notation
+import Tagged
 import TrinketsUnits
 
 public typealias Stress = Pressure
@@ -14,6 +15,10 @@ public enum Pressure: Dimension {
     public typealias BaseUnit = Pascals
 
     public static let dimensionality: Dimensionality = [Mass.self: 1, Length.self: -1, Time.self: -2]
+}
+
+public extension Tagged where Tag == Fraction<Force, Area> {
+    var asPressure: Tagged<Pressure, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.Pascals
@@ -33,12 +38,12 @@ public extension Pressure.Pascals {
 }
 #endif
 
-public extension StaticConverter where Origin == Pressure.Pascals, Target == Pressure, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Pressure.Pascals, RawValue: Numeric {
+    var pressure: Tagged<Pressure, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Pressure, Target == Pressure.Pascals, Value: Numeric {
-    static var pascals: Self { .init { $0 } }
+public extension Tagged where Tag == Pressure, RawValue: Numeric {
+    var pascals: Tagged<Pressure.Pascals, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.NewtonsPerMetersSquared
@@ -56,12 +61,12 @@ public extension Pressure.NewtonsPerMetersSquared {
 }
 #endif
 
-public extension StaticConverter where Origin == Pressure.NewtonsPerMetersSquared, Target == Pressure, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Pressure.NewtonsPerMetersSquared, RawValue: Numeric {
+    var pressure: Tagged<Pressure, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Pressure, Target == Pressure.NewtonsPerMetersSquared, Value: Numeric {
-    static var newtonsPerMetersSquared: Self { .init { $0 } }
+public extension Tagged where Tag == Pressure, RawValue: Numeric {
+    var newtonsPerMetersSquared: Tagged<Pressure.NewtonsPerMetersSquared, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.Bars
@@ -81,12 +86,12 @@ public extension Pressure.Bars {
 }
 #endif
 
-public extension StaticConverter where Origin == Pressure.Bars, Target == Pressure, Value: Numeric {
-    static var to: Self { .init { $0 * 100_000 } }
+public extension Tagged where Tag == Pressure.Bars, RawValue: Numeric {
+    var pressure: Tagged<Pressure, RawValue> { .init(rawValue * 100_000) }
 }
 
-public extension StaticConverter where Origin == Pressure, Target == Pressure.Bars, Value: FloatingPoint {
-    static var bars: Self { .init { $0 / 100_000 } }
+public extension Tagged where Tag == Pressure, RawValue: FloatingPoint {
+    var bars: Tagged<Pressure.Bars, RawValue> { .init(rawValue / 100_000) }
 }
 
 // MARK: Self.InchesOfMercury
@@ -106,12 +111,12 @@ public extension Pressure.InchesOfMercury {
 }
 #endif
 
-public extension StaticConverter where Origin == Pressure.InchesOfMercury, Target == Pressure, Value: Numeric & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 3386.39 } }
+public extension Tagged where Tag == Pressure.InchesOfMercury, RawValue: Numeric & ExpressibleByFloatLiteral {
+    var pressure: Tagged<Pressure, RawValue> { .init(rawValue * 3386.39) }
 }
 
-public extension StaticConverter where Origin == Pressure, Target == Pressure.InchesOfMercury, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var inchesOfMercury: Self { .init { $0 / 3386.39 } }
+public extension Tagged where Tag == Pressure, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var inchesOfMercury: Tagged<Pressure.InchesOfMercury, RawValue> { .init(rawValue / 3386.39) }
 }
 
 // MARK: Self.MillimetersOfMercury
@@ -131,12 +136,12 @@ public extension Pressure.MillimetersOfMercury {
 }
 #endif
 
-public extension StaticConverter where Origin == Pressure.MillimetersOfMercury, Target == Pressure, Value: Numeric & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 133.322 } }
+public extension Tagged where Tag == Pressure.MillimetersOfMercury, RawValue: Numeric & ExpressibleByFloatLiteral {
+    var pressure: Tagged<Pressure, RawValue> { .init(rawValue * 133.322) }
 }
 
-public extension StaticConverter where Origin == Pressure, Target == Pressure.MillimetersOfMercury, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var millimetersOfMercury: Self { .init { $0 / 133.322 } }
+public extension Tagged where Tag == Pressure, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var millimetersOfMercury: Tagged<Pressure.MillimetersOfMercury, RawValue> { .init(rawValue / 133.322) }
 }
 
 // MARK: Self.PoundsForcePerSquareInch
@@ -156,41 +161,10 @@ public extension Pressure.PoundsForcePerSquareInch {
 }
 #endif
 
-public extension StaticConverter where Origin == Pressure.PoundsForcePerSquareInch, Target == Pressure, Value: Numeric & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 6894.76 } }
+public extension Tagged where Tag == Pressure.PoundsForcePerSquareInch, RawValue: Numeric & ExpressibleByFloatLiteral {
+    var pressure: Tagged<Pressure, RawValue> { .init(rawValue * 6894.76) }
 }
 
-public extension StaticConverter where Origin == Pressure, Target == Pressure.PoundsForcePerSquareInch, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var poundsForcePerSquareInch: Self { .init { $0 / 6894.76 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == Pressure, RawValue == Pressure.Pascals.Type {
-    static var pascals: Self { .init(Pressure.Pascals.self) }
-}
-
-public extension Tagged where Tag == Pressure, RawValue == Pressure.NewtonsPerMetersSquared.Type {
-    static var newtonsPerMetersSquared: Self { .init(Pressure.NewtonsPerMetersSquared.self) }
-}
-
-public extension Tagged where Tag == Pressure, RawValue == Pressure.Bars.Type {
-    static var bars: Self { .init(Pressure.Bars.self) }
-}
-
-public extension Tagged where Tag == Pressure, RawValue == Pressure.InchesOfMercury.Type {
-    static var inchesOfMercury: Self { .init(Pressure.InchesOfMercury.self) }
-}
-
-public extension Tagged where Tag == Pressure, RawValue == Pressure.MillimetersOfMercury.Type {
-    static var millimetersOfMercury: Self { .init(Pressure.MillimetersOfMercury.self) }
-}
-
-public extension Tagged where Tag == Pressure, RawValue == Pressure.PoundsForcePerSquareInch.Type {
-    static var poundsForcePerSquareInch: Self { .init(Pressure.PoundsForcePerSquareInch.self) }
-}
-
-public extension Tagged where Tag == Fraction<Force, Area> {
-    var asPressure: Tagged<Pressure, RawValue> { .init(rawValue) }
+public extension Tagged where Tag == Pressure, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var poundsForcePerSquareInch: Tagged<Pressure.PoundsForcePerSquareInch, RawValue> { .init(rawValue / 6894.76) }
 }

@@ -20,7 +20,7 @@ where Value.FloatLiteralType == Double {}
 extension RoadMeasurementUsage: MeasurementUsage {
     // swiftlint:disable:next missing_docs
     public func measure(for baseValue: Tagged<Length, Value>) -> Tagged<PrefixedUnit<Kilo, Length.Meters>, Value> {
-        .init(baseValue.converted(to: .kilo, .meters).rawValue.rounded())
+        .init(baseValue.converted(to: .kilo, \.meters).rawValue.rounded())
     }
 }
 

@@ -20,7 +20,7 @@ extension BarometricMeasurementUsage: MeasurementUsage {
     public func measure(
         for baseValue: Tagged<Pressure, Value>
     ) -> Tagged<PrefixedUnit<Milli, Pressure.Bars>, Value> {
-        baseValue.converted(to: .milli, .bars)
+        baseValue.converted(to: .milli, \.bars)
     }
 }
 

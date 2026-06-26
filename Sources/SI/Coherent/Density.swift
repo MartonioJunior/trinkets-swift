@@ -6,12 +6,17 @@
 //
 
 import Notation
+import Tagged
 import TrinketsUnits
 
 public enum Density: Dimension {
     public typealias BaseUnit = KilogramsPerCubicMeter
 
     public static let dimensionality: Dimensionality = [Mass.self: 1, Length.self: -3]
+}
+
+public extension Tagged where Tag == Fraction<Mass, Volume> {
+    var asDensity: Tagged<Density, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.KilogramsPerCubicMeter
@@ -31,12 +36,12 @@ public extension Density.KilogramsPerCubicMeter {
 }
 #endif
 
-public extension StaticConverter where Origin == Density.KilogramsPerCubicMeter, Target == Density, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Density.KilogramsPerCubicMeter, RawValue: Numeric {
+    var density: Tagged<Density, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Density, Target == Density.KilogramsPerCubicMeter, Value: Numeric {
-    static var kilogramsPerCubicMeter: Self { .init { $0 } }
+public extension Tagged where Tag == Density, RawValue: Numeric {
+    var kilogramsPerCubicMeter: Tagged<Density.KilogramsPerCubicMeter, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.GramsPerLiter
@@ -54,12 +59,12 @@ public extension Density.GramsPerLiter {
 }
 #endif
 
-public extension StaticConverter where Origin == Density.GramsPerLiter, Target == Density, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Density.GramsPerLiter, RawValue: Numeric {
+    var density: Tagged<Density, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Density, Target == Density.GramsPerLiter, Value: Numeric {
-    static var gramsPerLiter: Self { .init { $0 } }
+public extension Tagged where Tag == Density, RawValue: Numeric {
+    var gramsPerLiter: Tagged<Density.GramsPerLiter, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.MilligramsPerDeciliter
@@ -77,12 +82,12 @@ public extension Density.MilligramsPerDeciliter {
 }
 #endif
 
-public extension StaticConverter where Origin == Density.MilligramsPerDeciliter, Target == Density, Value: Numeric & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 0.01 } }
+public extension Tagged where Tag == Density.MilligramsPerDeciliter, RawValue: Numeric & ExpressibleByFloatLiteral {
+    var density: Tagged<Density, RawValue> { .init(rawValue * 0.01) }
 }
 
-public extension StaticConverter where Origin == Density, Target == Density.MilligramsPerDeciliter, Value: Numeric {
-    static var milligramsPerDeciliter: Self { .init { $0 * 100 } }
+public extension Tagged where Tag == Density, RawValue: Numeric {
+    var milligramsPerDeciliter: Tagged<Density.MilligramsPerDeciliter, RawValue> { .init(rawValue * 100) }
 }
 
 // MARK: Self.MillimolesPerLiter
@@ -99,10 +104,10 @@ public extension Density {
 }
 
 public extension Density.MillimolesPerLiter {
-    func density<Value: Numeric & ExpressibleByFloatLiteral>(
-        in _: Value.Type = Value.self
-    ) -> Tagged<Density, Value> where Value.FloatLiteralType == Double {
-        .init(Value(floatLiteral: 18 * gramsPerMole))
+    func density<RawValue: Numeric & ExpressibleByFloatLiteral>(
+        in _: RawValue.Type = RawValue.self
+    ) -> Tagged<Density, RawValue> where RawValue.FloatLiteralType == Double {
+        .init(RawValue(floatLiteral: 18 * gramsPerMole))
     }
 }
 
@@ -117,7 +122,7 @@ public extension Density.MillimolesPerLiter {
 #endif
 
 public extension Measurement where UnitType == Density.MillimolesPerLiter, Value: FloatingPoint & ExpressibleByFloatLiteral, Value.FloatLiteralType == Double {
-    var baseValue: Tagged<Density, Value> { unit.density() * .init(value) }
+    var baseRawValue: Tagged<Density, Value> { unit.density() * .init(value) }
 }
 
 public extension Tagged where Tag == Density, RawValue: FloatingPoint & ExpressibleByFloatLiteral, RawValue.FloatLiteralType == Double {
@@ -131,23 +136,4 @@ public extension Tagged where Tag == Density, RawValue: FloatingPoint & Expressi
 // MARK: Mass (EX)
 public extension Mass {
     typealias Concentration = Density
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == Density, RawValue == Density.KilogramsPerCubicMeter.Type {
-    static var kilogramsPerCubicMeter: Self { .init(Density.KilogramsPerCubicMeter.self) }
-}
-
-public extension Tagged where Tag == Density, RawValue == Density.GramsPerLiter.Type {
-    static var gramsPerLiter: Self { .init(Density.GramsPerLiter.self) }
-}
-
-public extension Tagged where Tag == Density, RawValue == Density.MilligramsPerDeciliter.Type {
-    static var milligramsPerDeciliter: Self { .init(Density.MilligramsPerDeciliter.self) }
-}
-
-public extension Tagged where Tag == Fraction<Mass, Volume> {
-    var asDensity: Tagged<Density, RawValue> { .init(rawValue) }
 }

@@ -6,6 +6,7 @@
 //
 
 import Notation
+import Tagged
 import TrinketsUnits
 
 public enum SolidAngle: Dimension {
@@ -31,17 +32,10 @@ public extension SolidAngle.Steradians {
 }
 #endif
 
-public extension StaticConverter where Origin == SolidAngle.Steradians, Target == SolidAngle, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == SolidAngle.Steradians, RawValue: AdditiveArithmetic {
+    var solidAngle: Tagged<SolidAngle, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == SolidAngle, Target == SolidAngle.Steradians, Value: Numeric {
-    static var steradians: Self { .init { $0 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == SolidAngle, RawValue == SolidAngle.Steradians.Type {
-    static var steradians: Self { .init(SolidAngle.Steradians.self) }
+public extension Tagged where Tag == SolidAngle, RawValue: AdditiveArithmetic {
+    var steradians: Tagged<SolidAngle.Steradians, RawValue> { .init(rawValue) }
 }
