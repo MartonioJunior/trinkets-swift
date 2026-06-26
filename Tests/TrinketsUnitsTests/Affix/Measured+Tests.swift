@@ -45,7 +45,7 @@ struct MeasuredTests {
             Measured(wrappedValue: -3, in: RPGMoney.Constant(value: 23), .base, .converter)
         )
     ])
-    func setValue(_ sut:  Measured<RPGMoney.Constant, Int>, expected:  Measured<RPGMoney.Constant, Int>) {
+    func setValue(_ sut:  Measured<RPGMoney.Constant, Int>, expected: Measured<RPGMoney.Constant, Int>) {
         var resultA = sut
         resultA.wrappedValue = Measurement(12, .init(value: 8))
         #expect(resultA == expected)
@@ -59,7 +59,7 @@ struct MeasuredTests {
         #expect(resultC == expected)
 
         var resultD = sut
-        resultD.setValue(Tagged<RPGMoney.Gil, Int>(20), .to)
+        resultD.setValue(Tagged<RPGMoney.Gil, Int>(20), \.rpgMoney)
         #expect(resultD == expected)
     }
 }

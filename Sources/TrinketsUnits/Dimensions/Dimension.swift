@@ -66,7 +66,7 @@ public extension Dimension {
 // MARK: Tagged (EX)
 import Tagged
 
-public extension Dimension {
+public extension Tagged where Tag: Dimension {
     /// Static unit from the dimension to be used.
     /// - Parameter unit: Reference to the static unit's type.
     /// - Returns: Static unit as a type.
@@ -74,36 +74,27 @@ public extension Dimension {
     /// Works as an easy DotSyntax accessor for the static units of a given dimension:
     /// 
     /// ```swift
-    /// let unit = Time.in(.seconds)
+    /// let unit = Tagged<Time, Double>.in(\.seconds)
     /// ```
-    static func `in`<Unit: StaticUnit>(
-        _ unit: Tagged<Self, Unit.Type>
-    ) -> Unit.Type where Self == Unit.Base {
-        unit.rawValue
+    static func `in`<Unit: StaticUnit, T>(
+        _: KeyPath<Self, Tagged<Unit, T>>
+    ) -> Tagged<Unit, T>.Type {
+        Tagged<Unit, T>.self
     }
-    /// Measures an object to obtain a tagged value in this dimension using a static unit.
-    /// - Parameters:
-    ///   - value: Function that measures the quantity.
-    ///
-    /// - Returns: A function that receives an object and outputs it's tagged value,
-    static func measure<T, Unit: StaticUnit, Value>(
-        _: T.Type = T.self,
-        in _: Tagged<Self, Unit.Type>,
-        f value: @escaping (T) -> Value
-    ) -> (T) -> Tagged<Unit, Value> {
-        Unit.measure(f: value)
-    }
+}
+
+public extension Dimension {
     /// Defines a tagged value in the given dimension.
     /// - Parameter value: Quantity for the measure.
     /// - Returns: A new tagged measure in the given dimension.
     /// 
     /// Example:
     /// ```swift
-    /// let oneMeter = Length.of(1, .meter)
+    /// let oneMeter = Length.of(1, \.meter)
     /// ```
     static func of<Unit: StaticUnit, Value>(
         _ value: Value,
-        _: Tagged<Self, Unit.Type>
+        _: KeyPath<Tagged<Self, Value>, Tagged<Unit, Value>>
     ) -> Tagged<Unit, Value> where Unit.Base == Self {
         .init(value)
     }

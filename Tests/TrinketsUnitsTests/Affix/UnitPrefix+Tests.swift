@@ -16,8 +16,8 @@ struct UnitPrefixTests {
         #expect(type(of: RPGMoney.in(.tubular, RPGMoney.Constant(value: 7))) == PrefixedUnit<SlangPrefix.Tubular, RPGMoney.Constant>.self)
         #expect(type(of: RPGMoney.of(25, .whoa, RPGMoney.Constant(value: 7))) == Measurement<PrefixedUnit<SlangPrefix.Whoa, RPGMoney.Constant>, Int>.self)
 
-        #expect(type(of: RPGMoney.in(.tubular, .zeni)) == PrefixedUnit<SlangPrefix.Tubular, RPGMoney.Zeni>.Type.self)
-        #expect(type(of: RPGMoney.of(25, .whoa, .zero)) == Tagged<PrefixedUnit<SlangPrefix.Whoa, RPGMoney.Zero>, Int>.self)
+        #expect(type(of: Tagged<_, Double>.in(.tubular, \.zeni)) == Tagged<PrefixedUnit<SlangPrefix.Tubular, RPGMoney.Zeni>, Double>.Type.self)
+        #expect(type(of: RPGMoney.of(25, .whoa, \.zero)) == Tagged<PrefixedUnit<SlangPrefix.Whoa, RPGMoney.Zero>, Int>.self)
     }
 
     // MARK: Default Implementation

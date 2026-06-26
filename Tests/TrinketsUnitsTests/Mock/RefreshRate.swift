@@ -5,6 +5,7 @@
 //  Created by Martônio Júnior on 27/08/2025.
 //
 
+import Tagged
 import TrinketsUnits
 
 public enum RefreshRate {}
@@ -17,12 +18,12 @@ public extension RefreshRate {
     }
 }
 
-public extension StaticConverter where Origin == RefreshRate.Cinema, Target == RefreshRate, Value: Numeric {
-    static var to: Self { .init { $0 * 24 } }
+public extension Tagged where Tag == RefreshRate.Cinema, RawValue: Numeric {
+    var refreshRate: Tagged<RefreshRate, RawValue> { .init(rawValue * 24) }
 }
 
-public extension StaticConverter where Origin == RefreshRate, Target == RefreshRate.Cinema, Value: FloatingPoint {
-    static var cinema: Self { .init { $0 / 24 } }
+public extension Tagged where Tag == RefreshRate, RawValue: FloatingPoint {
+    var cinema: Tagged<RefreshRate.Cinema, RawValue> { .init(rawValue / 24) }
 }
 
 // MARK: Self.FPS
@@ -47,10 +48,3 @@ extension RefreshRate: Dimension {
 
 // MARK: Self: Sendable
 extension RefreshRate: Sendable {}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == RefreshRate, RawValue == RefreshRate.Cinema.Type {
-    static var cinema: Self { .init(RefreshRate.Cinema.self) }
-}

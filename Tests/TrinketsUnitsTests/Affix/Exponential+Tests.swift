@@ -18,24 +18,22 @@ struct ExponentialTests {
     @Test("Evaluates use cases for the type")
     func syntax() {
         let dynamicUnit = RPGMoney.Constant(value: 12)
-        let staticUnit: Tagged<RPGMoney, RPGMoney.Zeni.Type> = .zeni
 
-        #expect(type(of: dynamicUnit.squared) == Square<RPGMoney.Constant>.self)
-        #expect(type(of: dynamicUnit.cubic) == Cubic<RPGMoney.Constant>.self)
+        #expect(type(of: Exponential.square(dynamicUnit)) == Square<RPGMoney.Constant>.self)
+        #expect(type(of: Exponential.cubic(dynamicUnit)) == Cubic<RPGMoney.Constant>.self)
         #expect(type(of: Exponential<_, 6>(dynamicUnit)) == Exponential<RPGMoney.Constant, 6>.self)
-        #expect(type(of: RPGMoney.in(.square(), staticUnit)) == Square<RPGMoney.Zeni>.Type.self)
-        #expect(type(of: RPGMoney.in(.cubic(), staticUnit)) == Cubic<RPGMoney.Zeni>.Type.self)
-        #expect(type(of: Exponential<_, 4>.in(staticUnit)) == Exponential<RPGMoney.Zeni, 4>.Type.self)
+        #expect(type(of: Tagged<_, Double>.square(\.zeni)) == Tagged<Square<RPGMoney.Zeni>, Double>.Type.self)
+        #expect(type(of: Tagged<_, Double>.cubic(\.zeni)) == Tagged<Cubic<RPGMoney.Zeni>, Double>.Type.self)
+        #expect(type(of: Tagged<Exponential<_, 4>, Double>.in(\.zeni)) == Tagged<Exponential<RPGMoney.Zeni, 4>, Double>.Type.self)
 
         #expect(type(of: Measurement(25, dynamicUnit.squared)) == Measurement<Square<RPGMoney.Constant>, Int>.self)
         #expect(type(of: Measurement(25, dynamicUnit.cubic)) == Measurement<Cubic<RPGMoney.Constant>, Int>.self)
         #expect(type(of: Measurement(25, Exponential<_, 6>(dynamicUnit))) == Measurement<Exponential<RPGMoney.Constant, 6>, Int>.self)
-        #expect(type(of: RPGMoney.of(25, .square(), .zeni)) == Tagged<Exponential<RPGMoney.Zeni, 2>, Int>.self)
-        #expect(type(of: RPGMoney.of(25, .cubic(), .zeni)) == Tagged<Exponential<RPGMoney.Zeni, 3>, Int>.self)
-        #expect(type(of: Exponential<_, 4>.of(25, .zeni)) == Tagged<Exponential<RPGMoney.Zeni, 4>, Int>.self)
+        #expect(type(of: Exponential.of(25, \.squared, \.zeni)) == Tagged<Exponential<RPGMoney.Zeni, 2>, Double>.self)
+        #expect(type(of: Exponential.of(25, \.cubic, \.zeni)) == Tagged<Exponential<RPGMoney.Zeni, 3>, Double>.self)
+        #expect(type(of: Exponential<_, 4>.of(25, \.zeni)) == Tagged<Exponential<RPGMoney.Zeni, 4>, Double>.self)
 
         #expect(type(of: Tagged<RPGMoney.Zeni, Int>.E<4>(25)) == Tagged<Exponential<RPGMoney.Zeni, 4>, Int>.self)
-        #expect(type(of: RPGMoney.Zeni.E<4>.of(25)) == Tagged<Exponential<RPGMoney.Zeni, 4>, Int>.self)
     }
 
     // MARK: Initializers
@@ -47,16 +45,6 @@ struct ExponentialTests {
         let result = Exponential<RPGMoney.Constant, 3>(unit)
         #expect(result.base == unit)
         #expect(result.exponent == 3)
-    }
-
-    // MARK: DotSyntax
-    @available(macOS 26.0, *)
-    @Test("Creates a new exponential from a static unit", arguments: [
-        (Tagged<RPGMoney, RPGMoney.Gil.Type>(RPGMoney.Gil.self), Exponential<RPGMoney.Gil, 6>.self)
-    ])
-    func `in`(_ sut: Tagged<RPGMoney, RPGMoney.Gil.Type>, expected: Exponential<RPGMoney.Gil, 6>.Type) {
-        let result = Exponential<_, 6>.in(sut)
-        #expect(result == expected)
     }
 
     // MARK: N == 0
@@ -127,17 +115,17 @@ extension ExponentialTests {
     @available(macOS 26.0, *)
     @Test("Returns a dimension elevated to the 2nd power")
     func square() {
-        let result = Tagged.square(RPGMoney.Zero.self)
-        let expected = Tagged<Square<RPGMoney.Zero>, Square<RPGMoney.Zero>.Type>(Square<RPGMoney.Zero>.self)
-        #expect(result.rawValue == expected.rawValue)
+        let result = Tagged<_, Double>.square(\.zero)
+        let expected = Tagged<Square<RPGMoney.Zero>, Double>.self
+        #expect(result == expected)
     }
 
     @available(macOS 26.0, *)
     @Test("Returns a dimension elevated to the 3nd power")
     func cubic() {
-        let result = Tagged.square(RPGMoney.Zero.self)
-        let expected = Tagged<Square<RPGMoney.Zero>, Square<RPGMoney.Zero>.Type>(Square<RPGMoney.Zero>.self)
-        #expect(result.rawValue == expected.rawValue)
+        let result = Tagged<_, Double>.cubic(\.zero)
+        let expected = Tagged<Cubic<RPGMoney.Zero>, Double>.self
+        #expect(result == expected)
     }
 
     @available(macOS 26.0, *)
@@ -157,16 +145,16 @@ extension ExponentialTests {
     @Test("Returns base amount from exponential unit")
     func powConverter() {
         let a = Tagged<Square<RPGMoney.Gil>, Double>(10)
-        #expect(a.pow(.to) == Tagged<RPGMoney, Double>(100))
+        #expect(a.pow(\.rpgMoney) == Tagged<RPGMoney, Double>(100))
 
         let b = Tagged<Square<RPGMoney.Gil>, Double>(-4)
-        #expect(b.pow(.to) == Tagged<RPGMoney, Double>(16))
+        #expect(b.pow(\.rpgMoney) == Tagged<RPGMoney, Double>(16))
 
         let c = Tagged<Square<RPGMoney.Zeni>, Double>(5)
-        #expect(c.pow(.to) == Tagged<RPGMoney, Double>(225))
+        #expect(c.pow(\.rpgMoney) == Tagged<RPGMoney, Double>(225))
 
         let d = Tagged<Square<RPGMoney.Linen>, Double>(13)
-        #expect(d.pow(.to) == Tagged<RPGMoney, Double>(1089))
+        #expect(d.pow(\.rpgMoney) == Tagged<RPGMoney, Double>(1089))
     }
 
     @available(macOS 26.0, *)
@@ -186,12 +174,12 @@ extension ExponentialTests {
     @Test("Defines exponential amount from base amount")
     func rootConverter() {
         let a = Tagged<RPGMoney, Double>(49)
-        #expect(a.root(.gil) == Tagged<Square<RPGMoney.Gil>, Double>(7))
+        #expect(a.root(\.gil) == Tagged<Square<RPGMoney.Gil>, Double>(7))
 
         let b = Tagged<RPGMoney, Double>(225)
-        #expect(b.root(.zeni) == Tagged<Square<RPGMoney.Zeni>, Double>(5))
+        #expect(b.root(\.zeni) == Tagged<Square<RPGMoney.Zeni>, Double>(5))
 
         let c = Tagged<RPGMoney, Double>(64)
-        #expect(c.root(.gil) == Tagged<Cubic<RPGMoney.Gil>, Double>(4))
+        #expect(c.root(\.gil) == Tagged<Cubic<RPGMoney.Gil>, Double>(4))
     }
 }

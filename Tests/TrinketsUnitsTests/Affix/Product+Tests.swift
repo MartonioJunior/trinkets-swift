@@ -13,16 +13,18 @@ struct ProductTests {
     // MARK: Syntax
     @Test("Evaluates use cases for the type")
     func syntax() {
-        #expect(type(of: Product(RPGMoney.Constant(value: 3), RefreshRate.FPS(refreshRate: 60))) == Product<RPGMoney.Constant, RefreshRate.FPS>.self)
+        typealias MoneyFrames<T> = Tagged<Product<RPGMoney, RefreshRate>, T>
 
-        #expect(type(of: Product.of(.zeni, .cinema)) == Product<RPGMoney.Zeni, RefreshRate.Cinema>.Type.self)
-        #expect(type(of: Tagged.product(.zeni, .cinema)) == Tagged<Product<RPGMoney, RefreshRate>, Product<RPGMoney.Zeni, RefreshRate.Cinema>.Type>.self)
-        #expect(type(of: RPGMoney.in(.zeni) | .cinema) == Tagged<Product<RPGMoney, RefreshRate>, Product<RPGMoney.Zeni, RefreshRate.Cinema>.Type>.self)
-        #expect(type(of: RPGMoney.Zeni.self | .cinema) == Tagged<Product<RPGMoney, RefreshRate>, Product<RPGMoney.Zeni, RefreshRate.Cinema>.Type>.self)
-        #expect(type(of: RPGMoney.Zeni.self | RefreshRate.self) == Tagged<Product<RPGMoney, RefreshRate>, Product<RPGMoney.Zeni, RefreshRate>.Type>.self)
-        #expect(type(of: RPGMoney.in(.zeni) | RefreshRate.self) == Tagged<Product<RPGMoney, RefreshRate>, Product<RPGMoney.Zeni, RefreshRate>.Type>.self)
-        #expect(type(of: RPGMoney.self | .cinema) == Tagged<Product<RPGMoney, RefreshRate>, Product<RPGMoney, RefreshRate.Cinema>.Type>.self)
-        #expect(type(of: RPGMoney.self | RefreshRate.self) == Product<RPGMoney, RefreshRate>.Type.self)
+        #expect(type(of: Product(RPGMoney.Constant(value: 3), RefreshRate.FPS(refreshRate: 60))) == Product<RPGMoney.Constant, RefreshRate.FPS>.self)
+        #expect(type(of: MoneyFrames<Double>.in(\.zeni, \.cinema)) == Tagged<Product<RPGMoney.Zeni, RefreshRate.Cinema>, Double>.Type.self)
+        #expect(type(of: Product.of(25, \.zeni, \.cinema)) == Tagged<Product<RPGMoney.Zeni, RefreshRate.Cinema>, Double>.self)
+        #expect(type(of: Tagged<RPGMoney, Double>.in(\.zeni).times(\.cinema)) == Tagged<Product<RPGMoney.Zeni, RefreshRate.Cinema>, Double>.Type.self)
+        #expect(type(of: Tagged<_, Double>.in(\.zeni, \.cinema)) == Tagged<Product<RPGMoney.Zeni, RefreshRate.Cinema>, Double>.Type.self)
+        #expect(type(of: RPGMoney.Zeni.times(RefreshRate.Cinema.self)) == Product<RPGMoney.Zeni, RefreshRate.Cinema>.Type.self)
+        #expect(type(of: RPGMoney.Zeni.times(RefreshRate.self)) == Product<RPGMoney.Zeni, RefreshRate>.Type.self)
+        #expect(type(of: Tagged<_, Double>.in(\.zeni).times(RefreshRate.self)) == Tagged<Product<RPGMoney.Zeni, RefreshRate>, Double>.Type.self)
+        #expect(type(of: RPGMoney.times(RefreshRate.Cinema.self)) == Product<RPGMoney, RefreshRate.Cinema>.Type.self)
+        #expect(type(of: RPGMoney.times(RefreshRate.self)) == Product<RPGMoney, RefreshRate>.Type.self)
     }
 
     // MARK: Initializers
@@ -83,38 +85,38 @@ struct ProductTests {
     @Test("Returns base value using left, then right factors")
     func baseValue() {
         let a = Tagged<Product<RPGMoney.Zeni, RefreshRate.Cinema>, Double>(5)
-        #expect(a.baseValue(.rightFirst(.to, then: .to)) == 360)
-        #expect(a.baseValue(.leftFirst(.to, then: .to)) == 360)
+        #expect(a.second(\.refreshRate, then: \.rpgMoney) == 360)
+        #expect(a.first(\.rpgMoney, then: \.refreshRate) == 360)
 
         let b = Tagged<Product<RPGMoney.Gil, RefreshRate.Cinema>, Double>(0)
-        #expect(b.baseValue(.rightFirst(.to, then: .to)) == 0)
-        #expect(b.baseValue(.leftFirst(.to, then: .to)) == 0)
+        #expect(b.second(\.refreshRate, then: \.rpgMoney) == 0)
+        #expect(b.first(\.rpgMoney, then: \.refreshRate) == 0)
 
         let c = Tagged<Product<RPGMoney.Linen, RefreshRate.Cinema>, Double>(-6)
-        #expect(c.baseValue(.rightFirst(.to, then: .to)) == -281)
-        #expect(c.baseValue(.leftFirst(.to, then: .to)) == -120)
+        #expect(c.second(\.refreshRate, then: \.rpgMoney) == -281)
+        #expect(c.first(\.rpgMoney, then: \.refreshRate) == -120)
 
         let d = Tagged<Product<RPGMoney.Linen, RefreshRate.Cinema>, Double>(0)
-        #expect(d.baseValue(.rightFirst(.to, then: .to)) == 7)
-        #expect(d.baseValue(.leftFirst(.to, then: .to)) == 168)
+        #expect(d.second(\.refreshRate, then: \.rpgMoney) == 7)
+        #expect(d.first(\.rpgMoney, then: \.refreshRate) == 168)
     }
 
     @Test("Converts base value using right, then left factors")
     func converted() {
         let a = Tagged<Product<RPGMoney, RefreshRate>, Double>(180)
-        #expect(a.converted(to: .rightFirst(.cinema, then: .zeni)) == 2.5)
-        #expect(a.converted(to: .leftFirst(.zeni, then: .cinema)) == 2.5)
+        #expect(a.second(\.cinema, then: \.zeni) == 2.5)
+        #expect(a.first(\.zeni, then: \.cinema) == 2.5)
 
         let b = Tagged<Product<RPGMoney, RefreshRate>, Double>(0)
-        #expect(b.converted(to: .rightFirst(.cinema, then: .gil)) == 0)
-        #expect(b.converted(to: .leftFirst(.gil, then: .cinema)) == 0)
+        #expect(b.second(\.cinema, then: \.gil) == 0)
+        #expect(b.first(\.gil, then: \.cinema) == 0)
 
         let c = Tagged<Product<RPGMoney, RefreshRate>, Double>(60)
-        #expect(c.converted(to: .rightFirst(.cinema, then: .zero)) == 0)
-        #expect(c.converted(to: .leftFirst(.zero, then: .cinema)) == 0)
+        #expect(c.second(\.cinema, then: \.zero) == 0)
+        #expect(c.first(\.zero, then: \.cinema) == 0)
 
         let d = Tagged<Product<RPGMoney, RefreshRate>, Double>(0)
-        #expect(d.converted(to: .rightFirst(.cinema, then: .linen)) == -3.5)
-        #expect(d.converted(to: .leftFirst(.linen, then: .cinema)) == -0.14583333333333334)
+        #expect(d.second(\.cinema, then: \.linen) == -3.5)
+        #expect(d.first(\.linen, then: \.cinema) == -0.14583333333333334)
     }
 }

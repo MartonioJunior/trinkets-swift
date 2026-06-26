@@ -57,18 +57,6 @@ public extension Tagged where Tag: StaticUnit {
     ) -> Tagged<Tag.Base, RawValue> {
         .init(converter(.init(rawValue)).rawValue)
     }
-    /// Converts the tagged value to another static unit.
-    /// - Parameters:
-    ///   - base: Converter from current unit to base value.
-    ///   - converter: Converter from base value to target unit.
-    ///
-    /// - Returns: A new tagged value in the new unit.
-    func converted<T: StaticUnit>(
-        _ base: (Tagged<Tag, RawValue>) -> Tagged<Tag.Base, RawValue>,
-        _ converter: (Tagged<T.Base, RawValue>) -> Tagged<T, RawValue>
-    ) -> Tagged<T, RawValue> where Tag.Base == T.Base {
-        baseValue(base).converted(to: converter)
-    }
 }
 
 public extension Tagged {
