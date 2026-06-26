@@ -5,6 +5,7 @@
 //  Created by Martônio Júnior on 27/08/2025.
 //
 
+import Tagged
 import TrinketsUnits
 
 public enum ElectricPotentialDifference: Dimension {
@@ -28,17 +29,10 @@ public extension ElectricPotentialDifference.Volts {
 }
 #endif
 
-public extension StaticConverter where Origin == ElectricPotentialDifference.Volts, Target == ElectricPotentialDifference, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == ElectricPotentialDifference.Volts, RawValue: Numeric {
+    var electricPotentialDifference: Tagged<ElectricPotentialDifference, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == ElectricPotentialDifference, Target == ElectricPotentialDifference.Volts, Value: Numeric {
-    static var volts: Self { .init { $0 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == ElectricPotentialDifference, RawValue == ElectricPotentialDifference.Volts.Type {
-    static var volts: Self { .init(ElectricPotentialDifference.Volts.self) }
+public extension Tagged where Tag == ElectricPotentialDifference, RawValue: Numeric {
+    var volts: Tagged<ElectricPotentialDifference.Volts, RawValue> { .init(rawValue) }
 }

@@ -17,7 +17,7 @@ public struct VisibilityMeasurementUsage<Value: Numeric> {}
 extension VisibilityMeasurementUsage: MeasurementUsage {
     // swiftlint:disable:next missing_docs
     public func measure(for baseValue: Tagged<Length, Value>) -> Tagged<Length.Meters, Value> {
-        baseValue.converted(to: .meters)
+        baseValue.converted(to: \.meters)
     }
 }
 

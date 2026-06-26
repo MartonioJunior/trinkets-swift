@@ -20,7 +20,7 @@ extension SnowfallMeasurementUsage: MeasurementUsage {
     public func measure(
         for baseValue: Tagged<Length, Value>
     ) -> Tagged<PrefixedUnit<Centi, Length.Meters>, Value> {
-        baseValue.converted(to: .centi, .meters)
+        baseValue.converted(to: .centi, \.meters)
     }
 }
 

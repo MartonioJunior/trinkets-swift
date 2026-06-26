@@ -6,6 +6,7 @@
 //
 
 import Notation
+import Tagged
 import TrinketsUnits
 
 public enum Acceleration: Dimension {
@@ -31,12 +32,12 @@ public extension Acceleration.MetersPerSecondSquared {
 }
 #endif
 
-public extension StaticConverter where Origin == Acceleration.MetersPerSecondSquared, Target == Acceleration, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Acceleration.MetersPerSecondSquared, RawValue: Numeric {
+    var acceleration: Tagged<Acceleration, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Acceleration, Target == Acceleration.MetersPerSecondSquared, Value: Numeric {
-    static var metersPerSecondSquared: Self { .init { $0 } }
+public extension Tagged where Tag == Acceleration, RawValue: Numeric {
+    var metersPerSecondSquared: Tagged<Acceleration.MetersPerSecondSquared, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.Gravity
@@ -54,21 +55,10 @@ public extension Acceleration.Gravity {
 }
 #endif
 
-public extension StaticConverter where Origin == Acceleration.Gravity, Target == Acceleration, Value: Numeric & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 9.81 } }
+public extension Tagged where Tag == Acceleration.Gravity, RawValue: Numeric & ExpressibleByFloatLiteral {
+    var acceleration: Tagged<Acceleration, RawValue> { .init(rawValue * 9.81) }
 }
 
-public extension StaticConverter where Origin == Acceleration, Target == Acceleration.Gravity, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var gravity: Self { .init { $0 / 9.81 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == Acceleration, RawValue == Acceleration.MetersPerSecondSquared.Type {
-    static var metersPerSecondSquared: Self { .init(Acceleration.MetersPerSecondSquared.self) }
-}
-
-public extension Tagged where Tag == Acceleration, RawValue == Acceleration.Gravity.Type {
-    static var gravity: Self { .init(Acceleration.Gravity.self) }
+public extension Tagged where Tag == Acceleration, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var gravity: Tagged<Acceleration.Gravity, RawValue> { .init(rawValue / 9.81) }
 }

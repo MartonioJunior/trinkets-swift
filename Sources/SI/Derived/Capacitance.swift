@@ -5,6 +5,7 @@
 //  Created by Martônio Júnior on 27/08/2025.
 //
 
+import Tagged
 import TrinketsUnits
 
 public enum Capacitance: Dimension {
@@ -28,17 +29,10 @@ public extension Capacitance.Farad {
 }
 #endif
 
-public extension StaticConverter where Origin == Capacitance.Farad, Target == Capacitance, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Capacitance.Farad, RawValue: Numeric {
+    var capacitance: Tagged<Capacitance, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Capacitance, Target == Capacitance.Farad, Value: Numeric {
-    static var farad: Self { .init { $0 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == Capacitance, RawValue == Capacitance.Farad.Type {
-    static var farad: Self { .init(Capacitance.Farad.self) }
+public extension Tagged where Tag == Capacitance, RawValue: Numeric {
+    var farad: Tagged<Capacitance.Farad, RawValue> { .init(rawValue) }
 }

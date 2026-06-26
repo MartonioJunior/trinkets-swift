@@ -6,12 +6,29 @@
 //
 
 import Notation
+import Tagged
 import TrinketsUnits
 
 public enum Speed: Dimension {
     public typealias BaseUnit = MetersPerSecond
 
     public static let dimensionality: Dimensionality = [Length.self: 1, Time.self: -1]
+}
+
+public extension Tagged where Tag == Fraction<Length, Time> {
+    var asSpeed: Tagged<Speed, RawValue> { .init(rawValue) }
+}
+
+public extension Tagged where Tag == Product<Acceleration, Time> {
+    var asSpeed: Tagged<Speed, RawValue> { .init(rawValue) }
+}
+
+public extension Tagged where Tag == Product<Time, Acceleration> {
+    var asSpeed: Tagged<Speed, RawValue> { .init(rawValue) }
+}
+
+public extension Tagged where Tag == Fraction<Length.Meters, Time.Seconds> {
+    var asSpeed: Tagged<Speed.MetersPerSecond, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.MetersPerSecond
@@ -31,12 +48,12 @@ public extension Speed.MetersPerSecond {
 }
 #endif
 
-public extension StaticConverter where Origin == Speed.MetersPerSecond, Target == Speed, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Speed.MetersPerSecond, RawValue: Numeric {
+    var speed: Tagged<Speed, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Speed, Target == Speed.MetersPerSecond, Value: Numeric {
-    static var metersPerSecond: Self { .init { $0 } }
+public extension Tagged where Tag == Speed, RawValue: Numeric {
+    var metersPerSecond: Tagged<Speed.MetersPerSecond, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.KilometersPerHour
@@ -54,12 +71,12 @@ public extension Speed.KilometersPerHour {
 }
 #endif
 
-public extension StaticConverter where Origin == Speed.KilometersPerHour, Target == Speed, Value: Numeric & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 0.277778 } }
+public extension Tagged where Tag == Speed.KilometersPerHour, RawValue: Numeric & ExpressibleByFloatLiteral {
+    var speed: Tagged<Speed, RawValue> { .init(rawValue * 0.277778) }
 }
 
-public extension StaticConverter where Origin == Speed, Target == Speed.KilometersPerHour, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var kilometersPerHour: Self { .init { $0 / 0.277778 } }
+public extension Tagged where Tag == Speed, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var kilometersPerHour: Tagged<Speed.KilometersPerHour, RawValue> { .init(rawValue / 0.277778) }
 }
 
 // MARK: Self.MilesPerHour
@@ -77,12 +94,12 @@ public extension Speed.MilesPerHour {
 }
 #endif
 
-public extension StaticConverter where Origin == Speed.MilesPerHour, Target == Speed, Value: Numeric & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 0.44704 } }
+public extension Tagged where Tag == Speed.MilesPerHour, RawValue: Numeric & ExpressibleByFloatLiteral {
+    var speed: Tagged<Speed, RawValue> { .init(rawValue * 0.44704) }
 }
 
-public extension StaticConverter where Origin == Speed, Target == Speed.MilesPerHour, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var milesPerHour: Self { .init { $0 / 0.44704 } }
+public extension Tagged where Tag == Speed, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var milesPerHour: Tagged<Speed.MilesPerHour, RawValue> { .init(rawValue / 0.44704) }
 }
 
 // MARK: Self.Knots
@@ -102,45 +119,10 @@ public extension Speed.Knots {
 }
 #endif
 
-public extension StaticConverter where Origin == Speed.Knots, Target == Speed, Value: Numeric & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 0.514444 } }
+public extension Tagged where Tag == Speed.Knots, RawValue: Numeric & ExpressibleByFloatLiteral {
+    var speed: Tagged<Speed, RawValue> { .init(rawValue * 0.514444) }
 }
 
-public extension StaticConverter where Origin == Speed, Target == Speed.Knots, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var knots: Self { .init { $0 / 0.514444 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == Speed, RawValue == Speed.MetersPerSecond.Type {
-    static var metersPerSecond: Self { .init(Speed.MetersPerSecond.self) }
-}
-
-public extension Tagged where Tag == Speed, RawValue == Speed.KilometersPerHour.Type {
-    static var kilometersPerHour: Self { .init(Speed.KilometersPerHour.self) }
-}
-
-public extension Tagged where Tag == Speed, RawValue == Speed.MilesPerHour.Type {
-    static var milesPerHour: Self { .init(Speed.MilesPerHour.self) }
-}
-
-public extension Tagged where Tag == Speed, RawValue == Speed.Knots.Type {
-    static var knots: Self { .init(Speed.Knots.self) }
-}
-
-public extension Tagged where Tag == Fraction<Length, Time> {
-    var asSpeed: Tagged<Speed, RawValue> { .init(rawValue) }
-}
-
-public extension Tagged where Tag == Product<Acceleration, Time> {
-    var asSpeed: Tagged<Speed, RawValue> { .init(rawValue) }
-}
-
-public extension Tagged where Tag == Product<Time, Acceleration> {
-    var asSpeed: Tagged<Speed, RawValue> { .init(rawValue) }
-}
-
-public extension Tagged where Tag == Fraction<Length.Meters, Time.Seconds> {
-    var asSpeed: Tagged<Speed.MetersPerSecond, RawValue> { .init(rawValue) }
+public extension Tagged where Tag == Speed, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var knots: Tagged<Speed.Knots, RawValue> { .init(rawValue / 0.514444) }
 }

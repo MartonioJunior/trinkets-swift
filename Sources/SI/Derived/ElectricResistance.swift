@@ -5,6 +5,7 @@
 //  Created by Martônio Júnior on 27/08/2025.
 //
 
+import Tagged
 import TrinketsUnits
 
 public enum ElectricResistance: Dimension {
@@ -28,17 +29,10 @@ public extension ElectricResistance.Ohms {
 }
 #endif
 
-public extension StaticConverter where Origin == ElectricResistance.Ohms, Target == ElectricResistance, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == ElectricResistance.Ohms, RawValue: Numeric {
+    var electricResistance: Tagged<ElectricResistance, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == ElectricResistance, Target == ElectricResistance.Ohms, Value: Numeric {
-    static var ohms: Self { .init { $0 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == ElectricResistance, RawValue == ElectricResistance.Ohms.Type {
-    static var ohms: Self { .init(ElectricResistance.Ohms.self) }
+public extension Tagged where Tag == ElectricResistance, RawValue: Numeric {
+    var ohms: Tagged<ElectricResistance.Ohms, RawValue> { .init(rawValue) }
 }

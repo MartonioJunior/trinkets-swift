@@ -6,6 +6,7 @@
 //
 
 import Notation
+import Tagged
 import TrinketsUnits
 
 public enum Temperature: Dimension {
@@ -27,12 +28,14 @@ public extension Temperature.Kelvin {
 }
 #endif
 
-public extension StaticConverter where Origin == Temperature.Kelvin, Target == Temperature, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Temperature.Kelvin, RawValue: AdditiveArithmetic & ExpressibleByFloatLiteral {
+    var temperature: Tagged<Temperature, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Temperature, Target == Temperature.Kelvin, Value: Numeric {
-    static var kelvin: Self { .init { $0 } }
+public extension Tagged where Tag == Temperature, RawValue: AdditiveArithmetic & ExpressibleByFloatLiteral {
+    var kelvin: Tagged<Temperature.Kelvin, RawValue> {
+        .init(rawValue)
+    }
 }
 
 // MARK: Self.Celsius
@@ -52,12 +55,14 @@ public extension Temperature.Celsius {
 }
 #endif
 
-public extension StaticConverter where Origin == Temperature.Celsius, Target == Temperature, Value: Numeric & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 + 273.15 } }
+public extension Tagged where Tag == Temperature.Celsius, RawValue: AdditiveArithmetic & ExpressibleByFloatLiteral {
+    var temperature: Tagged<Temperature, RawValue> { .init(rawValue + 273.15) }
 }
 
-public extension StaticConverter where Origin == Temperature, Target == Temperature.Celsius, Value: Numeric & ExpressibleByFloatLiteral {
-    static var celsius: Self { .init { $0 - 273.15 } }
+public extension Tagged where Tag == Temperature, RawValue: AdditiveArithmetic & ExpressibleByFloatLiteral {
+    var celsius: Tagged<Temperature.Celsius, RawValue> {
+        .init(rawValue - 273.15)
+    }
 }
 
 // MARK: Self.Fahrenheit
@@ -77,25 +82,12 @@ public extension Temperature.Fahrenheit {
 }
 #endif
 
-public extension StaticConverter where Origin == Temperature.Fahrenheit, Target == Temperature, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var to: Self { .init { ($0 + 459.67) * 5 / 9 } }
+public extension Tagged where Tag == Temperature.Fahrenheit, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var temperature: Tagged<Temperature, RawValue> { .init((rawValue + 459.67) * 5 / 9) }
 }
 
-public extension StaticConverter where Origin == Temperature, Target == Temperature.Fahrenheit, Value: Numeric & ExpressibleByFloatLiteral {
-    static var fahrenheit: Self { .init { ($0 * 1.8) - 459.67 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == Temperature, RawValue == Temperature.Kelvin.Type {
-    static var kelvin: Self { .init(Temperature.Kelvin.self) }
-}
-
-public extension Tagged where Tag == Temperature, RawValue == Temperature.Celsius.Type {
-    static var celsius: Self { .init(Temperature.Celsius.self) }
-}
-
-public extension Tagged where Tag == Temperature, RawValue == Temperature.Fahrenheit.Type {
-    static var fahrenheit: Self { .init(Temperature.Fahrenheit.self) }
+public extension Tagged where Tag == Temperature, RawValue: Numeric & ExpressibleByFloatLiteral {
+    var fahrenheit: Tagged<Temperature.Fahrenheit, RawValue> {
+        .init((rawValue * 1.8) - 459.67)
+    }
 }

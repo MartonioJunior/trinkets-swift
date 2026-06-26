@@ -6,6 +6,7 @@
 //
 
 import Notation
+import Tagged
 import TrinketsUnits
 
 public typealias Work = Energy
@@ -15,6 +16,22 @@ public enum Energy: Dimension {
     public typealias BaseUnit = Joules
 
     public static let dimensionality: Dimensionality = [Mass.self: 1, Length.self: 2, Time.self: -2]
+}
+
+public extension Tagged where Tag == Product<Force, Length> {
+    var asEnergy: Tagged<Energy, RawValue> { .init(rawValue) }
+}
+
+public extension Tagged where Tag == Product<Length, Force> {
+    var asEnergy: Tagged<Energy, RawValue> { .init(rawValue) }
+}
+
+public extension Tagged where Tag == Product<Power, Time> {
+    var asEnergy: Tagged<Energy, RawValue> { .init(rawValue) }
+}
+
+public extension Tagged where Tag == Product<Time, Power> {
+    var asEnergy: Tagged<Energy, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.Joules
@@ -34,12 +51,12 @@ public extension Energy.Joules {
 }
 #endif
 
-public extension StaticConverter where Origin == Energy.Joules, Target == Energy, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Energy.Joules, RawValue: Numeric {
+    var energy: Tagged<Energy, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Energy, Target == Energy.Joules, Value: Numeric {
-    static var joules: Self { .init { $0 } }
+public extension Tagged where Tag == Energy, RawValue: Numeric {
+    var joules: Tagged<Energy.Joules, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.Calories
@@ -59,12 +76,12 @@ public extension Energy.Calories {
 }
 #endif
 
-public extension StaticConverter where Origin == Energy.Calories, Target == Energy, Value: Numeric & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 4.184 } }
+public extension Tagged where Tag == Energy.Calories, RawValue: Numeric & ExpressibleByFloatLiteral {
+    var energy: Tagged<Energy, RawValue> { .init(rawValue * 4.184) }
 }
 
-public extension StaticConverter where Origin == Energy, Target == Energy.Calories, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var calories: Self { .init { $0 / 4.184 } }
+public extension Tagged where Tag == Energy, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var calories: Tagged<Energy.Calories, RawValue> { .init(rawValue / 4.184) }
 }
 
 // MARK: Self.MilliwattHours
@@ -82,12 +99,12 @@ public extension Energy.MilliwattHours {
 }
 #endif
 
-public extension StaticConverter where Origin == Energy.MilliwattHours, Target == Energy, Value: Numeric & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 3.6 } }
+public extension Tagged where Tag == Energy.MilliwattHours, RawValue: Numeric & ExpressibleByFloatLiteral {
+    var energy: Tagged<Energy, RawValue> { .init(rawValue * 3.6) }
 }
 
-public extension StaticConverter where Origin == Energy, Target == Energy.MilliwattHours, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var milliwattHours: Self { .init { $0 / 3.6 } }
+public extension Tagged where Tag == Energy, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var milliwattHours: Tagged<Energy.MilliwattHours, RawValue> { .init(rawValue / 3.6) }
 }
 
 // MARK: Self.KilowattHours
@@ -105,45 +122,10 @@ public extension Energy.KilowattHours {
 }
 #endif
 
-public extension StaticConverter where Origin == Energy.KilowattHours, Target == Energy, Value: Numeric {
-    static var to: Self { .init { $0 * 3_600_000 } }
+public extension Tagged where Tag == Energy.KilowattHours, RawValue: Numeric {
+    var energy: Tagged<Energy, RawValue> { .init(rawValue * 3_600_000) }
 }
 
-public extension StaticConverter where Origin == Energy, Target == Energy.KilowattHours, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var kilowattHours: Self { .init { $0 / 3_600_000 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == Energy, RawValue == Energy.Joules.Type {
-    static var joules: Self { .init(Energy.Joules.self) }
-}
-
-public extension Tagged where Tag == Energy, RawValue == Energy.Calories.Type {
-    static var calories: Self { .init(Energy.Calories.self) }
-}
-
-public extension Tagged where Tag == Energy, RawValue == Energy.MilliwattHours.Type {
-    static var milliwattHours: Self { .init(Energy.MilliwattHours.self) }
-}
-
-public extension Tagged where Tag == Energy, RawValue == Energy.KilowattHours.Type {
-    static var kilowattHours: Self { .init(Energy.KilowattHours.self) }
-}
-
-public extension Tagged where Tag == Product<Force, Length> {
-    var asEnergy: Tagged<Energy, RawValue> { .init(rawValue) }
-}
-
-public extension Tagged where Tag == Product<Length, Force> {
-    var asEnergy: Tagged<Energy, RawValue> { .init(rawValue) }
-}
-
-public extension Tagged where Tag == Product<Power, Time> {
-    var asEnergy: Tagged<Energy, RawValue> { .init(rawValue) }
-}
-
-public extension Tagged where Tag == Product<Time, Power> {
-    var asEnergy: Tagged<Energy, RawValue> { .init(rawValue) }
+public extension Tagged where Tag == Energy, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var kilowattHours: Tagged<Energy.KilowattHours, RawValue> { .init(rawValue / 3_600_000) }
 }

@@ -6,12 +6,21 @@
 //
 
 import Notation
+import Tagged
 import TrinketsUnits
 
 public enum ElectricCharge: Dimension {
     public typealias BaseUnit = Coulombs
 
     public static let dimensionality: Dimensionality = [ElectricCurrent.self: 1, Time.self: 1]
+}
+
+public extension Tagged where Tag == Product<ElectricCharge, Time> {
+    var asElectricCharge: Tagged<ElectricCharge, RawValue> { .init(rawValue) }
+}
+
+public extension Tagged where Tag == Product<Time, ElectricCharge> {
+    var asElectricCharge: Tagged<ElectricCharge, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.Coulombs
@@ -31,12 +40,12 @@ public extension ElectricCharge.Coulombs {
 }
 #endif
 
-public extension StaticConverter where Origin == ElectricCharge.Coulombs, Target == ElectricCharge, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == ElectricCharge.Coulombs, RawValue: Numeric {
+    var electricCharge: Tagged<ElectricCharge, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == ElectricCharge, Target == ElectricCharge.Coulombs, Value: Numeric {
-    static var coulombs: Self { .init { $0 } }
+public extension Tagged where Tag == ElectricCharge, RawValue: Numeric {
+    var coulombs: Tagged<ElectricCharge.Coulombs, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.AmpereHours
@@ -54,29 +63,10 @@ public extension ElectricCharge.AmpereHours {
 }
 #endif
 
-public extension StaticConverter where Origin == ElectricCharge.AmpereHours, Target == ElectricCharge, Value: Numeric {
-    static var to: Self { .init { $0 * 3600 } }
+public extension Tagged where Tag == ElectricCharge.AmpereHours, RawValue: Numeric {
+    var electricCharge: Tagged<ElectricCharge, RawValue> { .init(rawValue * 3600) }
 }
 
-public extension StaticConverter where Origin == ElectricCharge, Target == ElectricCharge.AmpereHours, Value: FloatingPoint {
-    static var ampereHours: Self { .init { $0 / 3600 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == ElectricCharge, RawValue == ElectricCharge.Coulombs.Type {
-    static var coulombs: Self { .init(ElectricCharge.Coulombs.self) }
-}
-
-public extension Tagged where Tag == ElectricCharge, RawValue == ElectricCharge.AmpereHours.Type {
-    static var ampereHours: Self { .init(ElectricCharge.AmpereHours.self) }
-}
-
-public extension Tagged where Tag == Product<ElectricCharge, Time> {
-    var asElectricCharge: Tagged<ElectricCharge, RawValue> { .init(rawValue) }
-}
-
-public extension Tagged where Tag == Product<Time, ElectricCharge> {
-    var asElectricCharge: Tagged<ElectricCharge, RawValue> { .init(rawValue) }
+public extension Tagged where Tag == ElectricCharge, RawValue: FloatingPoint {
+    var ampereHours: Tagged<ElectricCharge.AmpereHours, RawValue> { .init(rawValue / 3600) }
 }

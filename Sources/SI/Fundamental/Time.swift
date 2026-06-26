@@ -5,89 +5,11 @@
 //  Created by Martônio Júnior on 17/06/2025.
 //
 
+import Tagged
 import TrinketsUnits
 
 public enum Time: Dimension {
     public typealias BaseUnit = Self.Seconds
-}
-
-// MARK: Self.Seconds
-public extension Time {
-    enum Seconds: StaticUnit {
-        public typealias Base = Time
-    }
-}
-
-public extension StaticConverter where Origin == Time.Seconds, Target == Time, Value: Numeric {
-    static var to: Self { .init { $0 } }
-}
-
-public extension StaticConverter where Origin == Time, Target == Time.Seconds, Value: Numeric {
-    static var degrees: Self { .init { $0 } }
-}
-
-// MARK: Self.Minutes
-public extension Time {
-    enum Minutes: StaticUnit {
-        public typealias Base = Time
-    }
-}
-
-public extension StaticConverter where Origin == Time.Minutes, Target == Time, Value: Numeric {
-    static var to: Self { .init { $0 * 60 } }
-}
-
-public extension StaticConverter where Origin == Time, Target == Time.Minutes, Value: FloatingPoint & ExpressibleByIntegerLiteral {
-    static var minutes: Self { .init { $0 / 60 } }
-}
-
-// MARK: Self.Hours
-public extension Time {
-    enum Hours: StaticUnit {
-        public typealias Base = Time
-    }
-}
-
-public extension StaticConverter where Origin == Time.Hours, Target == Time, Value: Numeric {
-    static var to: Self { .init { $0 * 3600 } }
-}
-
-public extension StaticConverter where Origin == Time, Target == Time.Hours, Value: FloatingPoint & ExpressibleByIntegerLiteral {
-    static var hours: Self { .init { $0 / 3600 } }
-}
-
-// MARK: Self.Days
-public extension Time {
-    enum Days: StaticUnit {
-        public typealias Base = Time
-    }
-}
-
-public extension StaticConverter where Origin == Time.Days, Target == Time, Value: Numeric {
-    static var to: Self { .init { $0 * 86400 } }
-}
-
-public extension StaticConverter where Origin == Time, Target == Time.Days, Value: FloatingPoint & ExpressibleByIntegerLiteral {
-    static var days: Self { .init { $0 / 86400 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == Time, RawValue == Time.Seconds.Type {
-    static var seconds: Self { .init(Time.Seconds.self) }
-}
-
-public extension Tagged where Tag == Time, RawValue == Time.Minutes.Type {
-    static var minutes: Self { .init(Time.Minutes.self) }
-}
-
-public extension Tagged where Tag == Time, RawValue == Time.Hours.Type {
-    static var hours: Self { .init(Time.Hours.self) }
-}
-
-public extension Tagged where Tag == Time, RawValue == Time.Days.Type {
-    static var days: Self { .init(Time.Days.self) }
 }
 
 public extension Tagged where Tag == Time, RawValue == Double {
@@ -99,4 +21,64 @@ public extension Tagged where Tag == Time, RawValue == Double {
     }
 
     var asDuration: Duration { .seconds(rawValue) }
+}
+
+// MARK: Self.Seconds
+public extension Time {
+    enum Seconds: StaticUnit {
+        public typealias Base = Time
+    }
+}
+
+public extension Tagged where Tag == Time.Seconds, RawValue: AdditiveArithmetic {
+    var time: Tagged<Time, RawValue> { .init(rawValue) }
+}
+
+public extension Tagged where Tag == Time, RawValue: AdditiveArithmetic {
+    var seconds: Tagged<Time.Seconds, RawValue> { .init(rawValue) }
+}
+
+// MARK: Self.Minutes
+public extension Time {
+    enum Minutes: StaticUnit {
+        public typealias Base = Time
+    }
+}
+
+public extension Tagged where Tag == Time.Minutes, RawValue: Numeric {
+    var time: Tagged<Time, RawValue> { .init(rawValue * 60) }
+}
+
+public extension Tagged where Tag == Time, RawValue: FloatingPoint & ExpressibleByIntegerLiteral {
+    var minutes: Tagged<Time.Minutes, RawValue> { .init(rawValue / 60) }
+}
+
+// MARK: Self.Hours
+public extension Time {
+    enum Hours: StaticUnit {
+        public typealias Base = Time
+    }
+}
+
+public extension Tagged where Tag == Time.Hours, RawValue: Numeric {
+    var time: Tagged<Time, RawValue> { .init(rawValue * 3600) }
+}
+
+public extension Tagged where Tag == Time, RawValue: FloatingPoint & ExpressibleByIntegerLiteral {
+    var hours: Tagged<Time.Hours, RawValue> { .init(rawValue / 3600) }
+}
+
+// MARK: Self.Days
+public extension Time {
+    enum Days: StaticUnit {
+        public typealias Base = Time
+    }
+}
+
+public extension Tagged where Tag == Time.Days, RawValue: Numeric {
+    var time: Tagged<Time, RawValue> { .init(rawValue * 86400) }
+}
+
+public extension Tagged where Tag == Time, RawValue: FloatingPoint & ExpressibleByIntegerLiteral {
+    var days: Tagged<Time.Days, RawValue> { .init(rawValue / 86400) }
 }

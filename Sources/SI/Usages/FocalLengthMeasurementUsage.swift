@@ -19,7 +19,7 @@ where Value.FloatLiteralType == Double {}
 extension FocalLengthMeasurementUsage: MeasurementUsage {
     // swiftlint:disable:next missing_docs
     public func measure(for baseValue: Tagged<Length, Value>) -> Tagged<PrefixedUnit<Milli, Length.Meters>, Value> {
-        baseValue.converted(to: .milli, .meters)
+        baseValue.converted(to: .milli, \.meters)
     }
 }
 

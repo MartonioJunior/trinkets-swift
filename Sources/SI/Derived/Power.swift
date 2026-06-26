@@ -6,6 +6,7 @@
 //
 
 import Notation
+import Tagged
 import TrinketsUnits
 
 public typealias RadiantFlux = Power
@@ -33,12 +34,12 @@ public extension Power.Watts {
 }
 #endif
 
-public extension StaticConverter where Origin == Power.Watts, Target == Power, Value: Numeric {
-    static var to: Self { .init { $0 } }
+public extension Tagged where Tag == Power.Watts, RawValue: Numeric {
+    var power: Tagged<Power, RawValue> { .init(rawValue) }
 }
 
-public extension StaticConverter where Origin == Power, Target == Power.Watts, Value: Numeric {
-    static var watts: Self { .init { $0 } }
+public extension Tagged where Tag == Power, RawValue: Numeric {
+    var watts: Tagged<Power.Watts, RawValue> { .init(rawValue) }
 }
 
 // MARK: Self.Horsepower
@@ -56,21 +57,10 @@ public extension Power.Horsepower {
 }
 #endif
 
-public extension StaticConverter where Origin == Power.Horsepower, Target == Power, Value: Numeric & ExpressibleByFloatLiteral {
-    static var to: Self { .init { $0 * 745.7 } }
+public extension Tagged where Tag == Power.Horsepower, RawValue: Numeric & ExpressibleByFloatLiteral {
+    var power: Tagged<Power, RawValue> { .init(rawValue * 745.7) }
 }
 
-public extension StaticConverter where Origin == Power, Target == Power.Horsepower, Value: FloatingPoint & ExpressibleByFloatLiteral {
-    static var horsepower: Self { .init { $0 / 745.7 } }
-}
-
-// MARK: Tagged (EX)
-import Tagged
-
-public extension Tagged where Tag == Power, RawValue == Power.Watts.Type {
-    static var watts: Self { .init(Power.Watts.self) }
-}
-
-public extension Tagged where Tag == Power, RawValue == Power.Horsepower.Type {
-    static var horsepower: Self { .init(Power.Horsepower.self) }
+public extension Tagged where Tag == Power, RawValue: FloatingPoint & ExpressibleByFloatLiteral {
+    var horsepower: Tagged<Power.Horsepower, RawValue> { .init(rawValue / 745.7) }
 }
