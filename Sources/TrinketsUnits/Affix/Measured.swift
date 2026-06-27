@@ -13,7 +13,7 @@ import Tagged
 /// 
 /// Example:
 /// ```swift
-/// @Measured(in: kilometers) var distance = 35 // 35 kilometers
+/// @Measured(in: .kilometers) var distance = 35 // 35 kilometers
 /// ```
 @propertyWrapper
 public struct Measured<UnitType: Convertible, Value> {
@@ -21,9 +21,9 @@ public struct Measured<UnitType: Convertible, Value> {
     /// Internal wrapped measurement.
     var measurement: Measurement<UnitType, Value>
     /// Converter from current unit towards base value.
-    var base: DynamicConverter<UnitType, UnitType.Base, Value>
+    var base: @Sendable (Measurement<UnitType, Value>) -> Tagged<UnitType.Base, Value>
     /// Converter from base value to a given unit.
-    var converter: DynamicConverter<UnitType, UnitType.Base, Value>
+    var converter: @Sendable (Tagged<UnitType.Base, Value>) -> Measurement<UnitType, Value>
     /// Returns the wrapped measurement in a given unit.
     public var wrappedValue: Measurement<UnitType, Value> {
         get { measurement }
@@ -40,8 +40,8 @@ public struct Measured<UnitType: Convertible, Value> {
     public init(
         wrappedValue value: Value,
         in unit: UnitType,
-        _ base: DynamicConverter<UnitType, UnitType.Base, Value>,
-        _ converter: DynamicConverter<UnitType, UnitType.Base, Value>
+        _ base: @escaping @Sendable (Measurement<UnitType, Value>) -> Tagged<UnitType.Base, Value>,
+        _ converter: @escaping @Sendable (Tagged<UnitType.Base, Value>) -> Measurement<UnitType, Value>
     ) where UnitType: Sendable {
         self.measurement = Measurement(value, unit)
         self.base = base
@@ -53,23 +53,15 @@ public struct Measured<UnitType: Convertible, Value> {
     public mutating func setValue(
         _ newValue: Measurement<UnitType, Value>
     ) where UnitType: Convertible {
-        measurement = newValue.converted(to: measurement.unit, base, converter)
+        measurement = converter(base(newValue))
     }
     /// Sets the value to be the same as a tagged measure.
     /// - Parameters:
     ///   - tagged: Tagged measure.
-    ///   - toBase: Converter used to get to base value.
-    public mutating func setValue<T: StaticUnit>(
-        _ tagged: Tagged<T, Value>,
-        _ toBase: (Tagged<T, Value>) -> Tagged<T.Base, Value>
-    ) where UnitType.Base == T.Base {
-        setValue(tagged.baseValue(toBase))
-    }
-    /// Sets the value to be the same as a base value.
-    /// - Parameters:
-    ///   - tagged: Base value.
-    public mutating func setValue(_ tagged: Tagged<UnitType.Base, Value>) {
-        measurement = tagged.converted(to: measurement.unit, converter)
+    public mutating func setValue<T: Domain>(
+        _ tagged: Tagged<T, Value>
+    ) where UnitType.Base == T {
+        measurement = converter(tagged)
     }
 }
 

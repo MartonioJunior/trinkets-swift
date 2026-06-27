@@ -114,18 +114,12 @@ extension RPGMoney.Constant: Formattable {}
 
 extension RPGMoney.Constant: Equatable, Sendable {}
 
-public extension DynamicConverter where Unit == RPGMoney.Constant, Reference == RPGMoney, Value: AdditiveArithmetic & ExpressibleByIntegerLiteral, Value.IntegerLiteralType == Int {
-    static var base: Self { .init { Value(integerLiteral: $0.value) + $1 } }
-    static var converter: Self { .init { $1 - Value(integerLiteral: $0.value) } }
-}
-
 public extension Measurement where UnitType == RPGMoney.Constant, Value: AdditiveArithmetic & ExpressibleByIntegerLiteral, Value.IntegerLiteralType == Int {
-    var baseValue: Tagged<RPGMoney, Value> { baseValue(.base) }
+    var rpgMoney: Tagged<RPGMoney, Value> { .init(Value(integerLiteral: unit.value) + value) }
 }
 
-// MARK: Tagged (EX)
-public extension Tagged where Tag == RPGMoney, RawValue: FloatingPoint {
+public extension Tagged where Tag == RPGMoney, RawValue: AdditiveArithmetic & ExpressibleByIntegerLiteral, RawValue.IntegerLiteralType == Int {
     func constant(_ value: Int) -> Measurement<RPGMoney.Constant, RawValue> {
-        .init(rawValue, .init(value: value))
+        .init(rawValue - RawValue(integerLiteral: value), .init(value: value))
     }
 }

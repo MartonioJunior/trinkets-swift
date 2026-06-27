@@ -49,17 +49,9 @@ extension PrefixedUnit: StaticUnit where Unit: StaticUnit {}
 
 // MARK: Measurement (EX)
 public extension Measurement where Value: Numeric & ExpressibleByFloatLiteral, Value.FloatLiteralType == Double {
-    /// Obtains the base value for a measurement with a prefixed unit.
-    /// - Parameter converter: Converter from the wrapped unit to the base value. 
-    /// - Returns: A new tagged base value.
-    func baseValue<Prefix: UnitPrefix, T: Convertible>(
-        _ converter: DynamicConverter<T, T.Base, Value>
-    ) -> Tagged<T.Base, Value> where UnitType == PrefixedUnit<Prefix, T> {
-        unwrapPrefix().baseValue(converter)
-    }
     /// Removes the prefix from the unit.
     /// - Returns: A new measurement in the non-prefixed unit.
-    func unwrapPrefix<
+    func unprefixed<
         Prefix: UnitPrefix,
         Unit: Measurable
     >() -> Measurement<Unit, Value> where UnitType == PrefixedUnit<Prefix, Unit> {
@@ -71,10 +63,23 @@ public extension Measurement where UnitType: Measurable,
 Value: FloatingPoint & ExpressibleByFloatLiteral, Value.FloatLiteralType == Double {
     /// Attaches a prefix to a unit
     /// - Returns: A new measurement under the prefixed unit.
-    func setPrefix<Prefix: UnitPrefix>(
-        _: Tagged<Prefix.Base, Prefix.Type>
+    func prefixed<Prefix: UnitPrefix>(
+        with _: Tagged<Prefix.Base, Prefix.Type>
     ) -> Measurement<PrefixedUnit<Prefix, UnitType>, Value> {
         .init(value / Value(floatLiteral: Prefix.multiplier), PrefixedUnit(Prefix.self, unit))
+    }
+    /// Changes the prefix used in the measurement.
+    /// - Parameter newPrefix: New prefix for the measurement
+    /// - Returns: A new tagged value in the non-prefixed unit.
+    func reprefixed<
+        A: UnitPrefix,
+        B: UnitPrefix,
+        Unit: Measurable
+    >(
+        to newPrefix: Tagged<B.Base, B.Type>
+    ) -> Measurement<PrefixedUnit<B, Unit>, Value> where UnitType == PrefixedUnit<A, Unit> {
+        unprefixed().prefixed(with: newPrefix)
+        // .init(rawValue * RawValue(floatLiteral: A.multiplier))
     }
 }
 
@@ -82,17 +87,9 @@ Value: FloatingPoint & ExpressibleByFloatLiteral, Value.FloatLiteralType == Doub
 import Tagged
 
 public extension Tagged where RawValue: Numeric & ExpressibleByFloatLiteral, RawValue.FloatLiteralType == Double {
-    /// Obtains the base value for a tagged value with a prefixed unit.
-    /// - Parameter converter: Converter from the wrapped unit to the base value. 
-    /// - Returns: A new tagged base value.
-    func baseValue<Prefix: UnitPrefix, Unit: StaticUnit>(
-        _ converter: (Tagged<Unit, RawValue>) -> Tagged<Unit.Base, RawValue>
-    ) -> Tagged<Unit.Base, RawValue> where Tag == PrefixedUnit<Prefix, Unit> {
-        unwrapPrefix().baseValue(converter)
-    }
     /// Removes the prefix from the unit.
     /// - Returns: A new tagged value in the non-prefixed unit.
-    func unwrapPrefix<
+    func unprefixed<
         Prefix: UnitPrefix,
         Unit: StaticUnit
     >() -> Tagged<Unit, RawValue> where Tag == PrefixedUnit<Prefix, Unit> {
@@ -100,42 +97,44 @@ public extension Tagged where RawValue: Numeric & ExpressibleByFloatLiteral, Raw
     }
 }
 
-public extension Tagged where Tag: StaticUnit,
-RawValue: FloatingPoint & ExpressibleByFloatLiteral, RawValue.FloatLiteralType == Double {
-    /// Attaches a prefix to a unit
-    /// - Returns: A new tagged value under the prefixed unit.
-    func setPrefix<Prefix: UnitPrefix>(
-        _: Tagged<Prefix.Base, Prefix.Type>
-    ) -> Tagged<PrefixedUnit<Prefix, Tag>, RawValue> {
-        .init(rawValue / RawValue(floatLiteral: Prefix.multiplier))
-    }
-}
-
-// TODO: Add methods for direct conversion from one prefix to another.
-public extension Tagged where RawValue: FloatingPoint & ExpressibleByFloatLiteral, RawValue.FloatLiteralType == Double {
+public extension Tagged where Tag: Domain, RawValue: FloatingPoint & ExpressibleByFloatLiteral, RawValue.FloatLiteralType == Double {
     /// Converts base value to a prefixed unit.
     /// - Parameters:
     ///   - prefix: Prefix used.
     ///   - converter: Converter from base value to non-prefixed unit.
     ///
     /// - Returns: A new tagged value under the prefixed unit.
+    /// 
+    /// Example:
+    /// ```swift
+    /// let barometricValue = pressure.converted(to: .milli, \.bars)
+    /// ```
     func converted<Prefix: UnitPrefix, T: StaticUnit>(
         to prefix: Tagged<Prefix.Base, Prefix.Type>,
         _ converter: (Tagged<Tag, RawValue>) -> Tagged<T, RawValue>
     ) -> Tagged<PrefixedUnit<Prefix, T>, RawValue> {
-        converted(to: converter).setPrefix(prefix)
+        converter(self).prefixed(with: prefix)
     }
-    /// Converts base value to a prefixed unit.
-    /// - Parameters:
-    ///   - prefix: Prefix used.
-    ///   - converter: Converter from base value to non-prefixed unit.
-    ///
-    /// - Returns: A new measurement under the prefixed unit.
-    func converted<Prefix: UnitPrefix, T: Convertible>(
-        to prefix: Tagged<Prefix.Base, Prefix.Type>,
-        _ unit: T,
-        converter: DynamicConverter<T, Tag, RawValue>
-    ) -> Measurement<PrefixedUnit<Prefix, T>, RawValue> where Tag == T.Base {
-        converted(to: unit, converter).setPrefix(prefix)
+}
+
+public extension Tagged where Tag: StaticUnit, RawValue: FloatingPoint & ExpressibleByFloatLiteral, RawValue.FloatLiteralType == Double {
+    /// Attaches a prefix to a unit
+    /// - Returns: A new tagged value under the prefixed unit.
+    func prefixed<Prefix: UnitPrefix>(
+        with _: Tagged<Prefix.Base, Prefix.Type>
+    ) -> Tagged<PrefixedUnit<Prefix, Tag>, RawValue> {
+        .init(rawValue / RawValue(floatLiteral: Prefix.multiplier))
+    }
+    /// Changes the prefix used in the measurement.
+    /// - Parameter newPrefix: New prefix for the measurement
+    /// - Returns: A new tagged value in the non-prefixed unit.
+    func reprefixed<
+        A: UnitPrefix,
+        B: UnitPrefix,
+        Unit: StaticUnit
+    >(
+        to newPrefix: Tagged<B.Base, B.Type>
+    ) -> Tagged<PrefixedUnit<B, Unit>, RawValue> where Tag == PrefixedUnit<A, Unit> {
+        unprefixed().prefixed(with: newPrefix)
     }
 }
