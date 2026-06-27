@@ -33,17 +33,16 @@ public struct Measured<UnitType: Convertible, Value> {
     /// Creates a new `@Measured` instance for a given unit.
     /// - Parameters:
     ///   - value: Quantity in the given unit.
-    ///   - unit: Unit of reference.
     ///   - base: Converter used to obtain the base value.
     ///   - converter: Converter used to derive quantity from the base value.
     ///
+    /// Note: This initializer does not treat `value` as a raw representation, but the actual quantity of the unit
     public init(
         wrappedValue value: Value,
-        in unit: UnitType,
         _ base: @escaping @Sendable (Measurement<UnitType, Value>) -> Tagged<UnitType.Base, Value>,
         _ converter: @escaping @Sendable (Tagged<UnitType.Base, Value>) -> Measurement<UnitType, Value>
     ) where UnitType: Sendable {
-        self.measurement = Measurement(value, unit)
+        self.measurement = Measurement(value, converter(.init(value)).unit)
         self.base = base
         self.converter = converter
     }
