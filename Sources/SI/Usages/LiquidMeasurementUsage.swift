@@ -17,7 +17,7 @@ public struct LiquidMeasurementUsage<Value: FloatingPoint> {}
 extension LiquidMeasurementUsage: MeasurementUsage {
     // swiftlint:disable:next missing_docs
     public func measure(for baseValue: Tagged<Volume, Value>) -> Tagged<Volume.Liters, Value> {
-        baseValue.converted(to: \.liters)
+        baseValue.liters
     }
 }
 

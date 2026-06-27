@@ -22,7 +22,7 @@ struct ConvertibleTests {
             to newUnit: RPGMoney.Constant,
             expected: Measurement<RPGMoney.Constant, Int>
         ) {
-            let result = measurement.converted(to: newUnit, .base, .converter)
+            let result = measurement.rpgMoney.constant(newUnit.value)
             #expect(result == expected)
         }
     }
@@ -32,13 +32,13 @@ struct ConvertibleTests {
         @Test("Uses static converter to change units")
         func converted() {
             let a = Tagged<RPGMoney.Zeni, Double>(15)
-            #expect(a.converted(to: \.rpgMoney.gil) == Tagged<RPGMoney.Gil, Double>(45) )
+            #expect(a.rpgMoney.gil == Tagged<RPGMoney.Gil, Double>(45) )
 
             let b = Tagged<RPGMoney.Linen, Double>(9)
-            #expect(b.converted(to: \.rpgMoney.gil) == Tagged<RPGMoney.Gil, Double>(25))
+            #expect(b.rpgMoney.gil == Tagged<RPGMoney.Gil, Double>(25))
 
             let c = Tagged<RPGMoney.Zero, Double>(9)
-            #expect(c.converted(to: \.rpgMoney.gil) == Tagged<RPGMoney.Gil, Double>(0))
+            #expect(c.rpgMoney.gil == Tagged<RPGMoney.Gil, Double>(0))
         }
     }
 }

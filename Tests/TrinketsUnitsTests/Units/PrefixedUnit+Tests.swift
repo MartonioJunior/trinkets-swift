@@ -15,10 +15,10 @@ struct PrefixedUnitTests {
     func syntax() {
         let dynamicUnit = RPGMoney.Constant(value: 1)
         #expect(type(of: PrefixedUnit(.whoa, dynamicUnit)) == PrefixedUnit<SlangPrefix.Whoa, RPGMoney.Constant>.self)
-        #expect(type(of: Measurement(25.0, dynamicUnit).setPrefix(.whoa)) == Measurement<PrefixedUnit<SlangPrefix.Whoa, RPGMoney.Constant>, Double>.self)
+        #expect(type(of: Measurement(25.0, dynamicUnit).prefixed(with: .whoa)) == Measurement<PrefixedUnit<SlangPrefix.Whoa, RPGMoney.Constant>, Double>.self)
 
         let staticMeasure = Tagged<Material.Cloth, Double>(10)
-        #expect(type(of: staticMeasure.setPrefix(.tubular)) == Tagged<PrefixedUnit<SlangPrefix.Tubular, Material.Cloth>, Double>.self)
+        #expect(type(of: staticMeasure.prefixed(with: .tubular)) == Tagged<PrefixedUnit<SlangPrefix.Tubular, Material.Cloth>, Double>.self)
     }
 
     // MARK: Initializer

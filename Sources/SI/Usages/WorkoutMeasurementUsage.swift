@@ -17,7 +17,7 @@ public struct WorkoutMeasurementUsage<Value: FloatingPoint & ExpressibleByFloatL
 extension WorkoutMeasurementUsage: MeasurementUsage {
     // swiftlint:disable:next missing_docs
     public func measure(for baseValue: Tagged<Energy, Value>) -> Tagged<Energy.Calories, Value> {
-        baseValue.converted(to: \.calories)
+        baseValue.calories
     }
 }
 

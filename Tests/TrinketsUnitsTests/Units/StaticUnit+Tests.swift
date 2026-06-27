@@ -13,7 +13,7 @@ struct StaticUnitTests {
     @Test("Describes use cases for the type")
     func syntax() {
         let staticMeasure = Tagged<RPGMoney.Zeni, Double>(40)
-        #expect(type(of: staticMeasure.converted(to: \.rpgMoney.linen)) == Tagged<RPGMoney.Linen, Double>.self)
+        #expect(type(of: staticMeasure.rpgMoney.linen) == Tagged<RPGMoney.Linen, Double>.self)
         #expect(type(of: RPGMoney.of(25, \.gil)) == Tagged<RPGMoney.Gil, Int>.self)
         #expect(type(of: RPGMoney.Linen.self) == RPGMoney.Linen.Type.self)
 
