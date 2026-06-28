@@ -66,7 +66,7 @@ public extension RangeReplaceableCollection where Self: MutableCollection {
     ///   - supply: Stock to be added in.
     ///   - stacking: Indicates whether to stack into an existing entry or create a new one.
     ///
-    mutating func allocate<Item: Measurable & Equatable, Value: AdditiveArithmetic>(
+    mutating func allocate<Item: Quantifiable & Equatable, Value: AdditiveArithmetic>(
         _ supply: Element,
         stacking: Bool
     ) where Element == Measurement<Item, Value> {
@@ -86,7 +86,7 @@ public extension Sequence {
     /// Use this method after filtering out to only the essential values.
     /// - Parameter tally: Quantity to be evaluated against.
     /// - Returns: `true` when there's enough stock, `false` otherwise.
-    func has<Item: Measurable>(
+    func has<Item: Quantifiable>(
         _ tally: Tally
     ) -> Bool where Element == Measurement<Item, Tally> {
         switch tally {
@@ -100,13 +100,13 @@ public extension Sequence {
     }
     /// Tally values from this sequence.
     /// - Returns: List of tally values.
-    func tally<Item: Measurable>() -> [Tally] where Element == Measurement<Item, Tally> {
+    func tally<Item: Quantifiable>() -> [Tally] where Element == Measurement<Item, Tally> {
         map(\.value)
     }
     /// Transforms tallied values into a new array.
     /// - Parameter transform: Transformation function.
     /// - Returns: An array of `T` instances.
-    func tally<Item: Measurable, T: AdditiveArithmetic>(
+    func tally<Item: Quantifiable, T: AdditiveArithmetic>(
         _ transform: (Tally) -> T,
     ) -> [T] where Element == Measurement<Item, Tally> {
         map { transform($0.value) }

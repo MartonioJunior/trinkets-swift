@@ -1,5 +1,5 @@
 //
-//  Measurable+Tests.swift
+//  Quantifiable+Tests.swift
 //  Trinkets
 //
 //  Created by Martônio Júnior on 01/05/2026.
@@ -9,7 +9,7 @@ import Tagged
 import Testing
 @testable import TrinketsUnits
 
-struct MeasurableTests {
+struct QuantifiableTests {
     // MARK: Syntax
     @Test("Evaluates use cases for the type")
     func syntax() {

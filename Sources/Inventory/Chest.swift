@@ -23,7 +23,7 @@ import TrinketsUnits
 /// 
 /// Can also be used as a building block with `@ItemBuilder` and `@InventoryBuilder`,
 /// which allows for nested declarations.
-public struct Chest<Item: Measurable & Equatable, Value: AdditiveArithmetic> {
+public struct Chest<Item: Quantifiable & Equatable, Value: AdditiveArithmetic> {
     // MARK: Variables
     /// List of contents.
     var items: [Measurement<Item, Value>]

@@ -13,7 +13,7 @@ import TrinketsUnits
 /// Concrete implementations are responsible for handling allocation of items.
 public protocol Depot<Item> {
     /// Type of item accepted by this depot.
-    associatedtype Item: Measurable
+    associatedtype Item: Quantifiable
     /// Stores items for later use.
     /// - Parameter content: How many items to add to storage.
     /// - Returns: The remaining amount that was not collected, `nil` if all items got added.

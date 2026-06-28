@@ -27,7 +27,7 @@ import TrinketsUnits
 /// - An `Inventory`
 /// - A list of measurements.
 @resultBuilder
-public enum ItemBuilder<Item: Measurable> {
+public enum ItemBuilder<Item: Quantifiable> {
     // MARK: Preprocessing
     /// Extracts contents from an inventory.
     /// - Parameter expression: Inventory.
@@ -147,7 +147,7 @@ extension ItemBuilder.Supply: Equatable where Item: Equatable {}
 extension ItemBuilder.Supply: Sendable where Item: Sendable {}
 
 // MARK: Self.Item: Measurable
-public extension ItemBuilder where Item: Measurable {
+public extension ItemBuilder where Item: Quantifiable {
     /// Transforms an item into a supply.
     /// - Parameter expression: Item to be referenced.
     /// - Returns: Supply with a single item.

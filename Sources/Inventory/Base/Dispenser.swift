@@ -12,7 +12,7 @@ import TrinketsUnits
 /// Can be a slot, container or a feature of the inventory.
 public protocol Dispenser<Item> {
     /// Type of item that can be released.
-    associatedtype Item: Measurable
+    associatedtype Item: Quantifiable
     /// Removes items from the storage.
     /// - Parameter content: How many items to remove from storage
     /// - Returns: The remaining amount that was not discarded, `nil` if all items got removed

@@ -24,13 +24,13 @@ public struct Product<A, B> {
     ///   - lhs: An unit.
     ///   - rhs: Another unit.
     ///
-    public init(_ lhs: A, _ rhs: B) where A: Measurable, B: Measurable {
+    public init(_ lhs: A, _ rhs: B) where A: Quantifiable, B: Quantifiable {
         self.lhs = lhs
         self.rhs = rhs
     }
 }
 
-public extension Product where A: Measurable, B: Measurable {
+public extension Product where A: Quantifiable, B: Quantifiable {
     /// Flips a product around. This does not change the overall result of the operation, just it's type definition.
     var flipped: Flipped { .init(rhs, lhs) }
 }
@@ -67,8 +67,8 @@ extension Product: Equatable where A: Equatable, B: Equatable {}
 // MARK: Self: Hashable
 extension Product: Hashable where A: Hashable, B: Hashable {}
 
-// MARK: Self: Measurable
-extension Product: Measurable where A: Measurable, B: Measurable {}
+// MARK: Self: Quantifiable
+extension Product: Quantifiable where A: Quantifiable, B: Quantifiable {}
 
 // MARK: Self: Sendable
 extension Product: Sendable where A: Sendable, B: Sendable {}
@@ -80,11 +80,11 @@ extension Product: SendableMetatype {}
 extension Product: StaticUnit where A: StaticUnit, B: StaticUnit {}
 
 // MARK: Measurement (EX)
-public extension Measurement where UnitType: Measurable, Value: Numeric {
+public extension Measurement where UnitType: Quantifiable, Value: Numeric {
     /// Multiplies the measure with another.
     /// - Parameter other: A measurement.
     /// - Returns: A new `Measurement` with the product of quantities associated to a `Product` of units.
-    func multiply<T: Measurable>(by other: Measurement<T, Value>) -> Measurement<Product<UnitType, T>, Value> {
+    func multiply<T: Quantifiable>(by other: Measurement<T, Value>) -> Measurement<Product<UnitType, T>, Value> {
         .init(value * other.value, .init(unit, other.unit))
     }
     /// Multiplies the measure with another.
@@ -92,7 +92,7 @@ public extension Measurement where UnitType: Measurable, Value: Numeric {
     ///   - lhs: A measurement.
     ///   - rhs: Another measurement.
     /// - Returns: A new `Measurement` with the product of quantities associated to a `Product` of units.
-    static func * <T: Measurable>(lhs: Self, rhs: Measurement<T, Value>) -> Measurement<Product<UnitType, T>, Value> {
+    static func * <T: Quantifiable>(lhs: Self, rhs: Measurement<T, Value>) -> Measurement<Product<UnitType, T>, Value> {
         lhs.multiply(by: rhs)
     }
 }

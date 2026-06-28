@@ -5,7 +5,7 @@
 //  Created by Martônio Júnior on 09/02/25.
 //
 
-/// Data structure representing a quantified measure.
+/// Data structure representing a quantified measure in a given unit.
 /// 
 /// 
 /// - UnitType: Domain where this measure exists.
@@ -27,7 +27,7 @@ public struct Measurement<UnitType, Value> {
     ///   - value: Quantity associated with the unit.
     ///   - unit: Unit that defines the measure.
     ///
-    public init(_ value: Value, _ unit: UnitType) where UnitType: Measurable {
+    public init(_ value: Value, _ unit: UnitType) where UnitType: Quantifiable {
         self.init(value: value, unit: unit)
     }
     /// Creates a new measurement for a static unit.
@@ -69,7 +69,7 @@ public extension Measurement where Value: AdditiveArithmetic {
     static func zero(
         _ unit: UnitType,
         valueType _: Value.Type = Value.self
-    ) -> Self where UnitType: Measurable {
+    ) -> Self where UnitType: Quantifiable {
         .init(.zero, unit)
     }
     /// Adds a value to the measure.

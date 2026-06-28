@@ -15,7 +15,7 @@ public struct AnyUnit {
     // MARK: Initializers
     /// Erases a dynamic unit.
     /// - Parameter unit: Dynamic unit.
-    public init<M: Measurable>(_ unit: M) {
+    public init<M: Quantifiable>(_ unit: M) {
         self.unit = unit
     }
     /// Erases a static unit.
@@ -26,7 +26,7 @@ public struct AnyUnit {
     // MARK: Methods
     /// Unwraps the stored value as a dynamic unit.
     /// - Returns: Dynamic unit, `nil` otherwise.
-    public func asDynamic<M: Measurable>(_: M.Type) -> M? {
+    public func asDynamic<M: Quantifiable>(_: M.Type) -> M? {
         unit as? M
     }
     /// Unwraps the stored value as a static unit.
@@ -42,15 +42,15 @@ extension AnyUnit: CustomStringConvertible {
     public var description: String { String(describing: unit) }
 }
 
-// MARK: Self: Measurable
-extension AnyUnit: Measurable {}
+// MARK: Self: Quantifiable
+extension AnyUnit: Quantifiable {}
 
 // MARK: Measurement (EX)
 public extension Measurement where UnitType == AnyUnit {
     /// Unwraps the dynamic unit.
     /// - Parameter type: Target type.
     /// - Returns: A measurement with the unwrapped dynamic unit, `nil` otherwise.
-    func asDynamic<M: Measurable>(_ type: M.Type) -> Measurement<M, Value>? {
+    func asDynamic<M: Quantifiable>(_ type: M.Type) -> Measurement<M, Value>? {
         guard let dynamicUnit = unit.asDynamic(type) else { return nil }
 
         return .init(value, dynamicUnit)

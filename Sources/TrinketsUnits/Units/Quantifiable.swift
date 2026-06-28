@@ -1,5 +1,5 @@
 //
-//  Measurable.swift
+//  Quantifiable.swift
 //  Trinkets
 //
 //  Created by Martônio Júnior on 31/08/2025.
@@ -14,11 +14,11 @@
 /// - Dynamic units, using the instance as the unit.
 /// 
 /// If you want to create a static unit only, conform the type to `StaticUnit` instead
-/// and declare it as a non-instanceable type.
-public protocol Measurable {}
+/// and declare it as a non-instantiable type.
+public protocol Quantifiable {}
 
 // MARK: Default Implementation
-public extension Measurable {
+public extension Quantifiable {
     /// Creates a new measurement.
     /// - Parameter value: Quantity associated with the aspect.
     /// - Returns: A new measurement.
@@ -79,7 +79,7 @@ public extension Measurable {
 // MARK: Tagged (EX)
 import Tagged
 
-public extension Measurable {
+public extension Quantifiable {
     /// Creates a new static measurement.
     /// - Parameter value: Quantity associated with the aspect.
     /// - Returns: A new tagged value.
