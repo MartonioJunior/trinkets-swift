@@ -7,7 +7,6 @@
 
 /// Data structure representing a quantified measure in a given unit.
 /// 
-/// 
 /// - UnitType: Domain where this measure exists.
 /// - Value: Type representing the quantity associated with the measure.
 public struct Measurement<UnitType, Value> {
@@ -55,6 +54,16 @@ extension Measurement: Formattable {}
 
 // MARK: Self: Hashable
 extension Measurement: Hashable where UnitType: Hashable, Value: Hashable {}
+
+// MARK: Self: Measurable
+extension Measurement: Measurable where UnitType: Quantifiable {
+    // swiftlint:disable:next missing_docs
+    public typealias Unit = UnitType
+    // swiftlint:disable:next missing_docs
+    public typealias Quantity = Value
+    // swiftlint:disable:next missing_docs
+    public var quantity: Value { value }
+}
 
 // MARK: Self: Sendable
 extension Measurement: Sendable where UnitType: Sendable, Value: Sendable {}
