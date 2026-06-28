@@ -15,3 +15,16 @@ extension Tagged: Measurable where Tag: StaticUnit {
     // swiftlint:disable:next missing_docs
     public var quantity: RawValue { rawValue }
 }
+
+// MARK: Self.RawValue: FloatingPoint
+public extension Tagged where Tag: StaticUnit, RawValue: FloatingPoint {
+    /// Divides a measure by another.
+    /// - Parameters:
+    ///   - lhs: A measure.
+    ///   - rhs: Another measure.
+    ///
+    /// - Returns: A new measure that divides the numerator value by the denominator.
+    static func / (lhs: Self, rhs: Self) -> RawValue {
+        lhs.rawValue / rhs.rawValue
+    }
+}
