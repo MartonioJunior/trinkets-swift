@@ -32,7 +32,7 @@ import TrinketsUnits
 /// ```
 public protocol ItemCollection {
     /// Type of item accepted.
-    associatedtype Item: Measurable
+    associatedtype Item: Quantifiable
     /// Instances the storage with an existing list of contents.
     /// - Parameter contents: Contents of the inventory.
     init(_ contents: some Sequence<Measurement<Item, Tally>>)

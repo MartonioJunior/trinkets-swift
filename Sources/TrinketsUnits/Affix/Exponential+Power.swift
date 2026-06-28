@@ -28,7 +28,7 @@ public extension Tagged {
 public extension Measurement {
     /// Unwraps the measure as is.
     /// - Returns: Measurement with the unwrapped unit.
-    func unwrapMeasure<T: Measurable>(_: T.Type = T.self) -> Measurement<T, Value> where UnitType == Linear<T> {
+    func unwrapMeasure<T: Quantifiable>(_: T.Type = T.self) -> Measurement<T, Value> where UnitType == Linear<T> {
         .init(value, unit.base)
     }
 }
@@ -59,13 +59,13 @@ public extension Exponential where N == 2 {
     /// Creates a squared unit.
     /// - Parameter unit: Base unit.
     /// - Returns: A new `Exponential` with `N` == 2.
-    static func square(_ unit: T) -> Self where T: Measurable {
+    static func square(_ unit: T) -> Self where T: Quantifiable {
         .init(unit)
     }
 }
 
 @available(macOS 26.0, *)
-public extension Measurement where UnitType: Measurable & Equatable, Value: Numeric {
+public extension Measurement where UnitType: Quantifiable & Equatable, Value: Numeric {
     /// Attempts to multiply two measurements together.
     /// - Parameters:
     ///   - lhs: A measure.
@@ -119,13 +119,13 @@ public extension Exponential where N == 3 {
     /// Creates a cubic unit.
     /// - Parameter unit: Base unit.
     /// - Returns: A new `Exponential` with `N` == 3.
-    static func cubic(_ unit: T) -> Self where T: Measurable {
+    static func cubic(_ unit: T) -> Self where T: Quantifiable {
         .init(unit)
     }
 }
 
 @available(macOS 26.0, *)
-public extension Measurement where UnitType: Measurable & Equatable, Value: Numeric {
+public extension Measurement where UnitType: Quantifiable & Equatable, Value: Numeric {
     /// Attempts to multiply a squared measure with a measurement.
     /// - Parameters:
     ///   - lhs: A measurement.

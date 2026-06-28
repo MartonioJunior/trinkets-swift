@@ -22,13 +22,13 @@ public struct Fraction<A, B> {
     ///   - numerator: Unit on top.
     ///   - denominator: Unit on bottom.
     ///
-    public init(_ numerator: A, per denominator: B) where A: Measurable, B: Measurable {
+    public init(_ numerator: A, per denominator: B) where A: Quantifiable, B: Quantifiable {
         self.numerator = numerator
         self.denominator = denominator
     }
 }
 
-public extension Fraction where A: Measurable, B: Measurable {
+public extension Fraction where A: Quantifiable, B: Quantifiable {
     /// Fraction that swaps numerator and denominator around.
     var flipped: Flipped { .init(denominator, per: numerator) }
 }
@@ -62,8 +62,8 @@ extension Fraction: Dimension where A: Dimension, B: Dimension {
 // MARK: Self: Equatable
 extension Fraction: Equatable where A: Equatable, B: Equatable {}
 
-// MARK: Self: Measurable
-extension Fraction: Measurable where A: Measurable, B: Measurable {}
+// MARK: Self: Quantifiable
+extension Fraction: Quantifiable where A: Quantifiable, B: Quantifiable {}
 
 // MARK: Self: Hashable
 extension Fraction: Hashable where A: Hashable, B: Hashable {}
@@ -78,11 +78,11 @@ extension Fraction: SendableMetatype {}
 extension Fraction: StaticUnit where A: StaticUnit, B: StaticUnit {}
 
 // MARK: Measurement (EX)
-public extension Measurement where UnitType: Measurable, Value: FloatingPoint {
+public extension Measurement where UnitType: Quantifiable, Value: FloatingPoint {
     /// Divides a measure by another.
     /// - Parameter denominator: Divisor measurement.
     /// - Returns: A new `Measurement` with the division of quantities associated to a `Fraction` of units.
-    func per<T: Measurable>(_ denominator: Measurement<T, Value>) -> Measurement<Fraction<UnitType, T>, Value> {
+    func per<T: Quantifiable>(_ denominator: Measurement<T, Value>) -> Measurement<Fraction<UnitType, T>, Value> {
         .init(value / denominator.value, .init(unit, per: denominator.unit))
     }
     /// Divides a measure by another.
@@ -90,7 +90,7 @@ public extension Measurement where UnitType: Measurable, Value: FloatingPoint {
     ///   - lhs: A measurement.
     ///   - rhs: Divisor measurement.
     /// - Returns: A new `Measurement` with the division of quantities associated to a `Fraction` of units.
-    static func / <T: Measurable>(lhs: Self, rhs: Measurement<T, Value>) -> Measurement<Fraction<UnitType, T>, Value> {
+    static func / <T: Quantifiable>(lhs: Self, rhs: Measurement<T, Value>) -> Measurement<Fraction<UnitType, T>, Value> {
         lhs.per(rhs)
     }
 }

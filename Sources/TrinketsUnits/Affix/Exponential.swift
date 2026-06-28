@@ -31,7 +31,7 @@ public struct Exponential<T, let N: Int> {
     // MARK: Initializers
     /// Creates a new exponential instance with a base unit.
     /// - Parameter base: Dynamic unit.
-    public init(_ base: T) where T: Measurable {
+    public init(_ base: T) where T: Quantifiable {
         self.base = base
     }
 }
@@ -70,9 +70,9 @@ extension Exponential: Dimension where T: Dimension {
 @available(macOS 26.0, *)
 extension Exponential: Equatable where T: Equatable {}
 
-// MARK: Self: Measurable
+// MARK: Self: Quantifiable
 @available(macOS 26.0, *)
-extension Exponential: Measurable where T: Measurable {}
+extension Exponential: Quantifiable where T: Quantifiable {}
 
 // MARK: Self: Sendable
 @available(macOS 26.0, *)
@@ -88,7 +88,7 @@ extension Exponential: StaticUnit where T: StaticUnit {}
 
 // MARK: Measurable (EX)
 @available(macOS 26.0, *)
-public extension Measurable {
+public extension Quantifiable {
     /// Short alias for an exponential unit.
     typealias E<let N: Int> = Exponential<Self, N>
     /// Squared version of the unit.

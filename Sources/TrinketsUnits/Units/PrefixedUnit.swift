@@ -17,14 +17,14 @@ public struct PrefixedUnit<Prefix: UnitPrefix, Unit> {
     /// - Parameters:
     ///   - unit: Base unit.
     ///
-    public init(_: Prefix.Type = Prefix.self, _ unit: Unit) where Unit: Measurable {
+    public init(_: Prefix.Type = Prefix.self, _ unit: Unit) where Unit: Quantifiable {
         self.unit = unit
     }
     /// Creates a new dynamic prefixed unit instance.
     /// - Parameters:
     ///   - unit: Base unit.
     ///
-    public init(_: Tagged<Prefix.Base, Prefix.Type>, _ unit: Unit) where Unit: Measurable {
+    public init(_: Tagged<Prefix.Base, Prefix.Type>, _ unit: Unit) where Unit: Quantifiable {
         self.unit = unit
     }
 }
@@ -41,8 +41,8 @@ extension PrefixedUnit: CustomStringConvertible {
     public var description: String { "\(Prefix.self)\(unit)" }
 }
 
-// MARK: Self: Measurable
-extension PrefixedUnit: Measurable where Unit: Measurable {}
+// MARK: Self: Quantifiable
+extension PrefixedUnit: Quantifiable where Unit: Quantifiable {}
 
 // MARK: Self: StaticUnit
 extension PrefixedUnit: StaticUnit where Unit: StaticUnit {}
@@ -53,13 +53,13 @@ public extension Measurement where Value: Numeric & ExpressibleByFloatLiteral, V
     /// - Returns: A new measurement in the non-prefixed unit.
     func unprefixed<
         Prefix: UnitPrefix,
-        Unit: Measurable
+        Unit: Quantifiable
     >() -> Measurement<Unit, Value> where UnitType == PrefixedUnit<Prefix, Unit> {
         .init(value * Value(floatLiteral: Prefix.multiplier), unit.unit)
     }
 }
 
-public extension Measurement where UnitType: Measurable,
+public extension Measurement where UnitType: Quantifiable,
 Value: FloatingPoint & ExpressibleByFloatLiteral, Value.FloatLiteralType == Double {
     /// Attaches a prefix to a unit
     /// - Returns: A new measurement under the prefixed unit.
@@ -74,7 +74,7 @@ Value: FloatingPoint & ExpressibleByFloatLiteral, Value.FloatLiteralType == Doub
     func reprefixed<
         A: UnitPrefix,
         B: UnitPrefix,
-        Unit: Measurable
+        Unit: Quantifiable
     >(
         to newPrefix: Tagged<B.Base, B.Type>
     ) -> Measurement<PrefixedUnit<B, Unit>, Value> where UnitType == PrefixedUnit<A, Unit> {

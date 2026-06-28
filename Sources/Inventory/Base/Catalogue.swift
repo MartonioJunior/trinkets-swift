@@ -10,7 +10,7 @@ import TrinketsUnits
 /// Type that can query information about items.
 public protocol Catalogue {
     /// Type of item that can be queried.
-    associatedtype Item: Measurable
+    associatedtype Item: Quantifiable
     /// Fetches the stock entries into a well-defined type.
     /// - Parameter transform: Transformation function of a stock into `T`.
     /// - Returns: Results of the query, as a `[T]` instance.

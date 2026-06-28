@@ -30,8 +30,8 @@ extension MockItem: Equatable {}
 // MARK: Self: Identifiable
 extension MockItem: Identifiable {}
 
-// MARK: Self: Measurable
-extension MockItem: Measurable {}
+// MARK: Self: Quantifiable
+extension MockItem: Quantifiable {}
 
 // MARK: Self: Sendable
 extension MockItem: Sendable {}
