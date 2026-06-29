@@ -15,11 +15,11 @@ public enum Force: Dimension {
     public static let dimensionality: Dimensionality = [Mass.self: 1, Length.self: 1, Time.self: -2]
 }
 
-public extension Tagged where Tag == Product<Acceleration, Mass> {
+public extension Tagged where Tag == ProductUnit<Acceleration, Mass> {
     var asForce: Tagged<Force, RawValue> { .init(rawValue) }
 }
 
-public extension Tagged where Tag == Product<Mass, Acceleration> {
+public extension Tagged where Tag == ProductUnit<Mass, Acceleration> {
     var asForce: Tagged<Force, RawValue> { .init(rawValue) }
 }
 

@@ -18,19 +18,19 @@ public enum Energy: Dimension {
     public static let dimensionality: Dimensionality = [Mass.self: 1, Length.self: 2, Time.self: -2]
 }
 
-public extension Tagged where Tag == Product<Force, Length> {
+public extension Tagged where Tag == ProductUnit<Force, Length> {
     var asEnergy: Tagged<Energy, RawValue> { .init(rawValue) }
 }
 
-public extension Tagged where Tag == Product<Length, Force> {
+public extension Tagged where Tag == ProductUnit<Length, Force> {
     var asEnergy: Tagged<Energy, RawValue> { .init(rawValue) }
 }
 
-public extension Tagged where Tag == Product<Power, Time> {
+public extension Tagged where Tag == ProductUnit<Power, Time> {
     var asEnergy: Tagged<Energy, RawValue> { .init(rawValue) }
 }
 
-public extension Tagged where Tag == Product<Time, Power> {
+public extension Tagged where Tag == ProductUnit<Time, Power> {
     var asEnergy: Tagged<Energy, RawValue> { .init(rawValue) }
 }
 
@@ -86,7 +86,7 @@ public extension Tagged where Tag == Energy, RawValue: FloatingPoint & Expressib
 
 // MARK: Self.MilliwattHours
 public extension Energy {
-    typealias MilliwattHours = Product<PrefixedUnit<Milli, Power.Watts>, Time.Hours>
+    typealias MilliwattHours = ProductUnit<PrefixedUnit<Milli, Power.Watts>, Time.Hours>
 }
 
 #if LocalizedSymbols
@@ -109,7 +109,7 @@ public extension Tagged where Tag == Energy, RawValue: FloatingPoint & Expressib
 
 // MARK: Self.KilowattHours
 public extension Energy {
-    typealias KilowattHours = Product<PrefixedUnit<Kilo, Power.Watts>, Time.Hours>
+    typealias KilowattHours = ProductUnit<PrefixedUnit<Kilo, Power.Watts>, Time.Hours>
 }
 
 #if LocalizedSymbols

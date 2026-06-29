@@ -15,7 +15,7 @@ public enum Density: Dimension {
     public static let dimensionality: Dimensionality = [Mass.self: 1, Length.self: -3]
 }
 
-public extension Tagged where Tag == Fraction<Mass, Volume> {
+public extension Tagged where Tag == FractionUnit<Mass, Volume> {
     var asDensity: Tagged<Density, RawValue> { .init(rawValue) }
 }
 
@@ -46,7 +46,7 @@ public extension Tagged where Tag == Density, RawValue: Numeric {
 
 // MARK: Self.GramsPerLiter
 public extension Density {
-    typealias GramsPerLiter = Fraction<Mass.Grams, Volume.Liters>
+    typealias GramsPerLiter = FractionUnit<Mass.Grams, Volume.Liters>
 }
 
 #if LocalizedSymbols
@@ -69,7 +69,7 @@ public extension Tagged where Tag == Density, RawValue: Numeric {
 
 // MARK: Self.MilligramsPerDeciliter
 public extension Density {
-    typealias MilligramsPerDeciliter = Fraction<PrefixedUnit<Milli, Mass.Grams>, PrefixedUnit<Deci, Volume.Liters>>
+    typealias MilligramsPerDeciliter = FractionUnit<PrefixedUnit<Milli, Mass.Grams>, PrefixedUnit<Deci, Volume.Liters>>
 }
 
 #if LocalizedSymbols
