@@ -11,11 +11,11 @@ import Tagged
 public extension FractionUnit {
     /// Creates a new fraction between units.
     /// - Returns: Fraction of a static unit by another.
-    static func of<Value>(
+    static func of<Value, Da: Domain, Db: Domain>(
         _ value: Value,
-        _: KeyPath<Tagged<A.Base, Value>, Tagged<A, Value>>,
-        per _: KeyPath<Tagged<B.Base, Value>, Tagged<B, Value>>
-    ) -> Tagged<FractionUnit<A, B>, Value> where A: StaticUnit, B: StaticUnit {
+        _: KeyPath<Tagged<Da, Value>, Tagged<A, Value>>,
+        per _: KeyPath<Tagged<Db, Value>, Tagged<B, Value>>
+    ) -> Tagged<FractionUnit<A, B>, Value> where A: StaticQuantifiable, B: StaticQuantifiable {
         .init(value)
     }
 }
@@ -23,70 +23,41 @@ public extension FractionUnit {
 public extension Tagged {
     /// Creates a new fraction between units.
     /// - Returns: Fraction of a static unit by another.
-    static func `in`<A: StaticUnit, B: StaticUnit, T>(
-        _: KeyPath<Tagged<A.Base, RawValue>, Tagged<A, T>>,
-        per _: KeyPath<Tagged<B.Base, RawValue>, Tagged<B, T>>
-    ) -> Tagged<FractionUnit<A, B>, T>.Type where Tag == FractionUnit<A.Base, B.Base> {
-        Tagged<FractionUnit<A, B>, T>.self
+    static func `in`<A: StaticQuantifiable, B: StaticQuantifiable, Da: Domain, Db: Domain, Value>(
+        _: KeyPath<Tagged<Da, RawValue>, Tagged<A, Value>>,
+        per _: KeyPath<Tagged<Db, RawValue>, Tagged<B, Value>>
+    ) -> Tagged<FractionUnit<A, B>, Value>.Type where Tag == FractionUnit<Da, Db> {
+        Tagged<FractionUnit<A, B>, Value>.self
     }
     /// Creates a fraction by dividing the current tag by a static unit.
     /// - Returns: Reference to a `Fraction` type of the given tag by a static unit.
-    static func per<S: StaticUnit, T>(
-        _: KeyPath<Tagged<S.Base, RawValue>, Tagged<S, T>>
+    static func per<D: Domain, S: StaticQuantifiable, T>(
+        _: (Tagged<D, RawValue>) -> Tagged<S, T>
     ) -> Tagged<FractionUnit<Tag, S>, T>.Type {
         Tagged<FractionUnit<Tag, S>, T>.self
     }
-    /// Creates a domain fraction by dividing the current tag by a domain.
-    /// - Returns: Reference to a `Fraction` type of the given tag and domain.
-    static func per<D: Domain>(
-        _: D.Type
-    ) -> Tagged<FractionUnit<Tag, D>, RawValue>.Type where Tag: StaticUnit {
-        Tagged<FractionUnit<Tag, D>, RawValue>.self
+    /// Creates a fraction of static units.
+    /// - Returns: Reference to a `Fraction` type of the given static units.
+    static func per<S: StaticQuantifiable>(_: S.Type) -> Tagged<FractionUnit<Tag, S>, RawValue>.Type {
+        Tagged<FractionUnit<Tag, S>, RawValue>.self
     }
 }
 
-// MARK: Domain (EX)
-public extension Domain {
-    /// Creates a domain fraction by dividing the current domain by a reference to another.
-    /// - Returns: Reference to a `Fraction` type of the given domains.
-    static func per<D: Domain>(
-        _: D.Type
-    ) -> FractionUnit<Self, D>.Type {
-        FractionUnit<Self, D>.self
-    }
-    /// Creates a domain fraction by dividing the current domain by a reference to a static unit.
-    /// - Returns: Reference to a `Fraction` type of the given domain and static unit.
-    static func per<S: StaticUnit>(
-        _: S.Type
-    ) -> FractionUnit<Self, S>.Type {
-        FractionUnit<Self, S>.self
-    }
-}
-
-// MARK: StaticUnit (EX)
-public extension StaticUnit {
-    /// Creates a fraction by dividing the current static unit by a domain.
-    /// - Returns: Reference to a `Fraction` type of the given static unit by the domain.
-    static func per<D: Domain>(
-        _: D.Type
-    ) -> FractionUnit<Self, D>.Type {
-        FractionUnit<Self, D>.self
-    }
-    /// Creates a domain fraction by dividing the current domain by a reference to a static unit.
-    /// - Returns: Reference to a `Fraction` type of the given domain and static unit.
-    static func per<S: StaticUnit>(
-        _: S.Type
-    ) -> FractionUnit<Self, S>.Type {
+// MARK: StaticQuantifiable (EX)
+public extension StaticQuantifiable {
+    /// Creates a fraction of static units.
+    /// - Returns: Reference to a `Fraction` type of the given static units.
+    static func per<S: StaticQuantifiable>(_: S.Type) -> FractionUnit<Self, S>.Type {
         FractionUnit<Self, S>.self
     }
 }
 
 // MARK: Tagged (EX)
-public extension Tagged where Tag: StaticUnit, RawValue: FloatingPoint {
+public extension Tagged where Tag: StaticQuantifiable, RawValue: FloatingPoint {
     /// Divides a tagged value by another.
     /// - Parameter denominator: A tagged value.
     /// - Returns: A new tagged value with the division of quantities associated to a `Fraction` tag.
-    func per<T: StaticUnit>(_ denominator: Tagged<T, RawValue>) -> Tagged<FractionUnit<Tag, T>, RawValue> {
+    func per<S: StaticQuantifiable>(_ denominator: Tagged<S, RawValue>) -> Tagged<FractionUnit<Tag, S>, RawValue> {
         .init(rawValue / denominator.rawValue)
     }
     /// Divides a tagged value by another.
@@ -94,29 +65,15 @@ public extension Tagged where Tag: StaticUnit, RawValue: FloatingPoint {
     ///   - lhs: A tagged value
     ///   - rhs: Another tagged value.
     /// - Returns: A new tagged value with the division of quantities associated to a `Fraction` tag.
-    static func / <T: StaticUnit>(lhs: Self, rhs: Tagged<T, RawValue>) -> Tagged<FractionUnit<Tag, T>, RawValue> {
+    static func / <S: StaticQuantifiable>(
+        lhs: Self,
+        rhs: Tagged<S, RawValue>
+    ) -> Tagged<FractionUnit<Tag, S>, RawValue> {
         lhs.per(rhs)
     }
 }
 
-public extension Tagged where Tag: Domain, RawValue: FloatingPoint {
-    /// Divides a tagged value by a domain tagged value.
-    /// - Parameter denominator: A tagged domain value.
-    /// - Returns: A new tagged value with the division of quantities associated to a `Fraction` tag.
-    func per<T: Domain>(_ denominator: Tagged<T, RawValue>) -> Tagged<FractionUnit<Tag, T>, RawValue> {
-        .init(rawValue / denominator.rawValue)
-    }
-    /// Divides a tagged value by a domain tagged value.
-    /// - Parameters:
-    ///   - lhs: A tagged value.
-    ///   - rhs: Another tagged value.
-    /// - Returns: A new tagged value with the division of quantities associated to a `Fraction` tag.
-    static func / <T: Domain>(lhs: Self, rhs: Tagged<T, RawValue>) -> Tagged<FractionUnit<Tag, T>, RawValue> {
-        lhs.per(rhs)
-    }
-}
-
-public extension Tagged {
+public extension Tagged where Tag: StaticQuantifiable {
     /// Transforms a tagged value to another fraction by converting it's numerator.
     /// - Parameter converter: Static converter for the numerator.
     /// - Returns: A new tagged value with the converted quantity.
@@ -139,7 +96,7 @@ public extension Tagged {
     ///   - rhs: Another static converter for the numerator.
     ///
     /// - Returns: Converted value.
-    func denominator<A, B, C, D>(
+    func denominator<A, B, C: StaticQuantifiable, D: StaticQuantifiable>(
         _ rhs: (Tagged<B, RawValue>) -> Tagged<D, RawValue>,
         then lhs: (Tagged<A, RawValue>) -> Tagged<C, RawValue>
     ) -> Tagged<FractionUnit<C, D>, RawValue> where Tag == FractionUnit<A, B> {
@@ -151,7 +108,7 @@ public extension Tagged {
     ///   - rhs: Another static converter, for the denominator.
     ///
     /// - Returns: Converted value.
-    func numerator<A, B, C, D>(
+    func numerator<A, B, C: StaticQuantifiable, D: StaticQuantifiable>(
         _ lhs: (Tagged<A, RawValue>) -> Tagged<C, RawValue>,
         then rhs: (Tagged<B, RawValue>) -> Tagged<D, RawValue>
     ) -> Tagged<FractionUnit<C, D>, RawValue> where Tag == FractionUnit<A, B> {

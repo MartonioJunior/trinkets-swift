@@ -94,7 +94,7 @@ public extension Tagged where RawValue: Numeric & ExpressibleByFloatLiteral, Raw
     /// - Returns: A new tagged value in the non-prefixed unit.
     func unprefixed<
         Prefix: UnitPrefix,
-        Unit: StaticUnit
+        Unit: StaticQuantifiable
     >() -> Tagged<Unit, RawValue> where Tag == PrefixedUnit<Prefix, Unit> {
         .init(rawValue * RawValue(floatLiteral: Prefix.multiplier))
     }
@@ -112,7 +112,7 @@ public extension Tagged where Tag: Domain, RawValue: FloatingPoint & Expressible
     /// ```swift
     /// let barometricValue = pressure.converted(to: .milli, \.bars)
     /// ```
-    func converted<Prefix: UnitPrefix, T: StaticUnit>(
+    func converted<Prefix: UnitPrefix, T: StaticQuantifiable>(
         to prefix: Tagged<Prefix.Base, Prefix.Type>,
         _ converter: (Tagged<Tag, RawValue>) -> Tagged<T, RawValue>
     ) -> Tagged<PrefixedUnit<Prefix, T>, RawValue> {
@@ -120,7 +120,7 @@ public extension Tagged where Tag: Domain, RawValue: FloatingPoint & Expressible
     }
 }
 
-public extension Tagged where Tag: StaticUnit, RawValue: FloatingPoint & ExpressibleByFloatLiteral, RawValue.FloatLiteralType == Double {
+public extension Tagged where Tag: StaticQuantifiable, RawValue: FloatingPoint & ExpressibleByFloatLiteral, RawValue.FloatLiteralType == Double {
     /// Attaches a prefix to a unit
     /// - Returns: A new tagged value under the prefixed unit.
     func prefixed<Prefix: UnitPrefix>(
@@ -134,7 +134,7 @@ public extension Tagged where Tag: StaticUnit, RawValue: FloatingPoint & Express
     func reprefixed<
         A: UnitPrefix,
         B: UnitPrefix,
-        Unit: StaticUnit
+        Unit: StaticQuantifiable
     >(
         to newPrefix: Tagged<B.Base, B.Type>
     ) -> Tagged<PrefixedUnit<B, Unit>, RawValue> where Tag == PrefixedUnit<A, Unit> {
