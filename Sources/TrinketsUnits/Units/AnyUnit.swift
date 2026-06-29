@@ -20,7 +20,7 @@ public struct AnyUnit {
     }
     /// Erases a static unit.
     /// - Parameter unitType: Static unit.
-    public init<S: StaticUnit>(_ unitType: S.Type) {
+    public init<S: StaticQuantifiable>(_ unitType: S.Type) {
         self.unit = unitType
     }
     // MARK: Methods
@@ -31,7 +31,7 @@ public struct AnyUnit {
     }
     /// Unwraps the stored value as a static unit.
     /// - Returns: Static unit, `nil` otherwise.
-    public func asStatic<S: StaticUnit>(_: S.Type) -> S.Type? {
+    public func asStatic<S: StaticQuantifiable>(_: S.Type) -> S.Type? {
         unit as? S.Type
     }
 }
@@ -58,7 +58,7 @@ public extension Measurement where UnitType == AnyUnit {
     /// Unwraps the static unit.
     /// - Parameter type: Target type.
     /// - Returns: A tagged value with the unwrapped static unit, `nil` otherwise.
-    func asStatic<S: StaticUnit>(_ type: S.Type) -> Tagged<S, Value>? {
+    func asStatic<S: StaticQuantifiable>(_ type: S.Type) -> Tagged<S, Value>? {
         guard unit.asStatic(type) != nil else { return nil }
 
         return .init(value)

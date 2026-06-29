@@ -18,10 +18,10 @@ public extension ExponentialUnit {
     /// ```swift
     /// let oneSquareMeter = Exponential<Length, 2>.of(1, \.meter)
     /// ```
-    static func of<Value>(
+    static func of<Value, D: Domain>(
         _ value: Value,
-        _: KeyPath<Tagged<T.Base, Value>, Tagged<T, Value>>
-    ) -> Tagged<ExponentialUnit<T, N>, Value> where T: StaticUnit {
+        _: KeyPath<Tagged<D, Value>, Tagged<T, Value>>
+    ) -> Tagged<ExponentialUnit<T, N>, Value> where T: StaticQuantifiable {
         .init(value)
     }
     /// Defines an exponential tagged value in the given dimension.
@@ -34,11 +34,11 @@ public extension ExponentialUnit {
     /// ```swift
     /// let oneSquareMeter = Length.of(1, square, meter)
     /// ```
-    static func of<Value>(
+    static func of<Value, D: Domain>(
         _ value: Value,
         _: KeyPath<T, ExponentialUnit<T, N>>,
-        _: KeyPath<Tagged<T.Base, Value>, Tagged<T, Value>>
-    ) -> Tagged<ExponentialUnit<T, N>, Value> where T: StaticUnit {
+        _: KeyPath<Tagged<D, Value>, Tagged<T, Value>>
+    ) -> Tagged<ExponentialUnit<T, N>, Value> where T: StaticQuantifiable {
         .init(value)
     }
 }
@@ -48,16 +48,16 @@ public extension ExponentialUnit {
 public extension Tagged {
     /// Creates a squared static unit.
     /// - Returns: Tagged reference to a squared static unit type.
-    static func square(
-        _: KeyPath<Tagged<Tag.Base, RawValue>, Tagged<Tag, RawValue>>
-    ) -> Tagged<Square<Tag>, RawValue>.Type where Tag: StaticUnit {
+    static func square<D: Domain>(
+        _: KeyPath<Tagged<D, RawValue>, Tagged<Tag, RawValue>>
+    ) -> Tagged<Square<Tag>, RawValue>.Type where Tag: StaticQuantifiable {
         Tagged<Square<Tag>, RawValue>.self
     }
     /// Creates a cubic static unit.
     /// - Returns: Tagged reference to a cubic static unit type.
-    static func cubic(
-        _: KeyPath<Tagged<Tag.Base, RawValue>, Tagged<Tag, RawValue>>
-    ) -> Tagged<Cubic<Tag>, RawValue>.Type where Tag: StaticUnit {
+    static func cubic<D: Domain>(
+        _: KeyPath<Tagged<D, RawValue>, Tagged<Tag, RawValue>>
+    ) -> Tagged<Cubic<Tag>, RawValue>.Type where Tag: StaticQuantifiable {
         Tagged<Cubic<Tag>, RawValue>.self
     }
     /// Static unit from the dimension to be used.
@@ -76,16 +76,16 @@ public extension Tagged {
 }
 
 @available(macOS 26.0, *)
-public extension Tagged where Tag: StaticUnit {
+public extension Tagged where Tag: StaticQuantifiable {
     /// Short alias for an exponential tagged value.
     typealias E<let power: Int> = Tagged<ExponentialUnit<Tag, power>, RawValue>
 }
 
 @available(macOS 26.0, *)
-public extension Tagged where RawValue: BinaryFloatingPoint {
+public extension Tagged where Tag: StaticQuantifiable, RawValue: BinaryFloatingPoint {
     /// Automatically converts an exponential value to a base unit.
     ///
-    /// - Returns: Tagged base value that applies all of the exponentials.
+    /// - Returns: Tagged base value that applies all of the exponents.
     /// 
     /// Works as an easy way to let the compiler infer the power for the type based on the target type.
     func pow<T, let power: Int>() -> Tagged<T, RawValue> where Tag == ExponentialUnit<T, power> {

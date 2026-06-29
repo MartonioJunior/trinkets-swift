@@ -8,7 +8,7 @@
 import Foundation
 
 /// Domain that defines a common base value for a set of units.
-public protocol Dimension: Domain {
+public protocol Dimension: Domain, StaticQuantifiable {
     /// Type representing the base unit of the conversion system
     associatedtype BaseUnit: Convertible where BaseUnit.Base == Self
     /// Correlation exponents in relation to other dimensions.
@@ -76,7 +76,7 @@ public extension Tagged where Tag: Dimension {
     /// ```swift
     /// let unit = Tagged<Time, Double>.in(\.seconds)
     /// ```
-    static func `in`<Unit: StaticUnit, T>(
+    static func `in`<Unit: StaticQuantifiable, T>(
         _: KeyPath<Self, Tagged<Unit, T>>
     ) -> Tagged<Unit, T>.Type {
         Tagged<Unit, T>.self

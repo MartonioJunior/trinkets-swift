@@ -80,20 +80,7 @@ public extension Measurement where UnitType: Quantifiable & Equatable, Value: Nu
 }
 
 @available(macOS 26.0, *)
-public extension Tagged where Tag: Domain, RawValue: Numeric {
-    /// Multiplies the two tagged values together.
-    /// - Parameters:
-    ///   - lhs: A tagged value.
-    ///   - rhs: Another tagged value.
-    ///
-    /// - Returns: A new tagged value with the square tag.
-    static func * (lhs: Self, rhs: Self) -> Tagged<Square<Tag>, RawValue> {
-        .init(lhs.rawValue * rhs.rawValue)
-    }
-}
-
-@available(macOS 26.0, *)
-public extension Tagged where Tag: StaticUnit, RawValue: Numeric {
+public extension Tagged where Tag: StaticQuantifiable, RawValue: Numeric {
     /// Multiplies the two tagged values together.
     /// - Parameters:
     ///   - lhs: A tagged value.
@@ -151,7 +138,7 @@ public extension Measurement where UnitType: Quantifiable & Equatable, Value: Nu
 }
 
 @available(macOS 26.0, *)
-public extension Tagged where Tag: StaticUnit, RawValue: Numeric {
+public extension Tagged where Tag: StaticQuantifiable, RawValue: Numeric {
     /// Attempts to multiply a squared tagged value with a tagged value.
     /// - Parameters:
     ///   - lhs: A tagged value.

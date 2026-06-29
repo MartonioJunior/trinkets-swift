@@ -97,7 +97,7 @@ public extension Tagged where Tag: Dimension {
     /// ```swift
     /// let unit = Tagged<Time, Double>.in(.milli, \.seconds)
     /// ```
-    static func `in`<Prefix: UnitPrefix, Unit: StaticUnit, T>(
+    static func `in`<Prefix: UnitPrefix, Unit: StaticQuantifiable, T>(
         _: Tagged<Prefix.Base, Prefix.Type>,
         _: KeyPath<Self, Tagged<Unit, T>>
     ) -> Tagged<PrefixedUnit<Prefix, Unit>, T>.Type {

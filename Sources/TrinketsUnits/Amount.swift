@@ -34,8 +34,8 @@ public struct Amount {
     }
 }
 
-// MARK: Self: Quantifiable
-extension Amount: Quantifiable {}
+// MARK: Self: StaticQuantifiable
+extension Amount: StaticQuantifiable {}
 
 // MARK: Self: Equatable
 extension Amount: Equatable {}
