@@ -74,6 +74,9 @@ extension FractionUnit: Sendable where A: Sendable, B: Sendable {}
 // MARK: Self: Sendable
 extension FractionUnit: SendableMetatype {}
 
+// MARK: Self: StaticQuantifiable
+extension FractionUnit: StaticQuantifiable where A: StaticQuantifiable, B: StaticQuantifiable {}
+
 // MARK: Self: StaticUnit
 extension FractionUnit: StaticUnit where A: StaticUnit, B: StaticUnit {}
 
@@ -90,7 +93,10 @@ public extension Measurement where UnitType: Quantifiable, Value: FloatingPoint 
     ///   - lhs: A measurement.
     ///   - rhs: Divisor measurement.
     /// - Returns: A new `Measurement` with the division of quantities associated to a `Fraction` of units.
-    static func / <T: Quantifiable>(lhs: Self, rhs: Measurement<T, Value>) -> Measurement<FractionUnit<UnitType, T>, Value> {
+    static func / <T: Quantifiable>(
+        lhs: Self,
+        rhs: Measurement<T, Value>
+    ) -> Measurement<FractionUnit<UnitType, T>, Value> {
         lhs.per(rhs)
     }
 }

@@ -14,7 +14,7 @@ struct MeasuredTests {
     @Test("Allows using it using the following syntax")
     func syntax() {
         @Measured(\.rpgMoney, in: { $0.constant(6) }) var money = 30
-        #expect(type(of: money) == Measurement<RPGMoney.Constant, Int>.self)
+        #expect(type(of: money) == Int.self)
     }
 
     // MARK: Initializers
@@ -27,12 +27,9 @@ struct MeasuredTests {
     }
 
     @Test("Returns value of Measurement", arguments: [
-        (
-            Measured(wrappedValue: 13, \.rpgMoney) { Tagged<RPGMoney, Int>.constant($0)(23) },
-            Measurement(13, RPGMoney.Constant(value: 23))
-        )
+        (Measured(wrappedValue: 13, \.rpgMoney) { Tagged<RPGMoney, Int>.constant($0)(23) }, 13)
     ])
-    func wrappedValueGet(_ sut: Measured<RPGMoney.Constant, Int>, expected: Measurement<RPGMoney.Constant, Int>) {
+    func wrappedValueGet(_ sut: Measured<RPGMoney.Constant, Int>, expected: Int) {
         let result = sut.wrappedValue
         #expect(result == expected)
     }
@@ -46,7 +43,7 @@ struct MeasuredTests {
     ])
     func setValue(_ sut: Measured<RPGMoney.Constant, Int>, expected: Measured<RPGMoney.Constant, Int>) {
         var resultA = sut
-        resultA.wrappedValue = Measurement(12, .init(value: 8))
+        resultA.setValue(Measurement(12, .init(value: 8)))
         #expect(resultA == expected)
 
         var resultB = sut
