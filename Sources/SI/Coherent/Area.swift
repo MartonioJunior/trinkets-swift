@@ -16,15 +16,15 @@ public enum Area: Dimension {
 }
 
 @available(macOS 26.0, *)
-public extension Tagged where Tag == Exponential<Length, 2> {
+public extension Tagged where Tag == ExponentialUnit<Length, 2> {
     var asArea: Tagged<Area, RawValue> { .init(rawValue) }
 }
 
-public extension Tagged where Tag == Fraction<Volume, Length> {
+public extension Tagged where Tag == FractionUnit<Volume, Length> {
     var asArea: Tagged<Area, RawValue> { .init(rawValue) }
 }
 
-public extension Tagged where Tag == Product<Length, Length> {
+public extension Tagged where Tag == ProductUnit<Length, Length> {
     var asArea: Tagged<Area, RawValue> { .init(rawValue) }
 }
 

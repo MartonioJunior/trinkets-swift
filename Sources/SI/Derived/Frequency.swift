@@ -15,7 +15,7 @@ public enum Frequency: Dimension {
 }
 
 @available(macOS 26.0, *)
-public extension Tagged where Tag == Exponential<Time, -1> {
+public extension Tagged where Tag == ExponentialUnit<Time, -1> {
     var asFrequency: Tagged<Frequency, RawValue> { .init(rawValue) }
 }
 

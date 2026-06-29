@@ -15,11 +15,11 @@ public enum ElectricCharge: Dimension {
     public static let dimensionality: Dimensionality = [ElectricCurrent.self: 1, Time.self: 1]
 }
 
-public extension Tagged where Tag == Product<ElectricCharge, Time> {
+public extension Tagged where Tag == ProductUnit<ElectricCharge, Time> {
     var asElectricCharge: Tagged<ElectricCharge, RawValue> { .init(rawValue) }
 }
 
-public extension Tagged where Tag == Product<Time, ElectricCharge> {
+public extension Tagged where Tag == ProductUnit<Time, ElectricCharge> {
     var asElectricCharge: Tagged<ElectricCharge, RawValue> { .init(rawValue) }
 }
 
@@ -50,7 +50,7 @@ public extension Tagged where Tag == ElectricCharge, RawValue: Numeric {
 
 // MARK: Self.AmpereHours
 public extension ElectricCharge {
-    typealias AmpereHours = Product<ElectricCurrent.Amperes, Time.Hours>
+    typealias AmpereHours = ProductUnit<ElectricCurrent.Amperes, Time.Hours>
 }
 
 #if LocalizedSymbols

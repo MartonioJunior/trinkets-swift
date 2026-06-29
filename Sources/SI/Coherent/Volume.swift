@@ -15,21 +15,21 @@ public enum Volume: Dimension {
     public static let dimensionality: Dimensionality = [Length.self: 3]
 }
 
-public extension Tagged where Tag == Product<Area, Length> {
+public extension Tagged where Tag == ProductUnit<Area, Length> {
     var asVolume: Tagged<Volume, RawValue> { .init(rawValue) }
 }
 
-public extension Tagged where Tag == Product<Length, Area> {
-    var asVolume: Tagged<Volume, RawValue> { .init(rawValue) }
-}
-
-@available(macOS 26.0, *)
-public extension Tagged where Tag == Exponential<Length, 3> {
+public extension Tagged where Tag == ProductUnit<Length, Area> {
     var asVolume: Tagged<Volume, RawValue> { .init(rawValue) }
 }
 
 @available(macOS 26.0, *)
-public extension Tagged where Tag == Exponential<Length.Meters, 3> {
+public extension Tagged where Tag == ExponentialUnit<Length, 3> {
+    var asVolume: Tagged<Volume, RawValue> { .init(rawValue) }
+}
+
+@available(macOS 26.0, *)
+public extension Tagged where Tag == ExponentialUnit<Length.Meters, 3> {
     var asVolume: Tagged<Volume.CubicMeters, RawValue> { .init(rawValue) }
 }
 

@@ -15,19 +15,19 @@ public enum Speed: Dimension {
     public static let dimensionality: Dimensionality = [Length.self: 1, Time.self: -1]
 }
 
-public extension Tagged where Tag == Fraction<Length, Time> {
+public extension Tagged where Tag == FractionUnit<Length, Time> {
     var asSpeed: Tagged<Speed, RawValue> { .init(rawValue) }
 }
 
-public extension Tagged where Tag == Product<Acceleration, Time> {
+public extension Tagged where Tag == ProductUnit<Acceleration, Time> {
     var asSpeed: Tagged<Speed, RawValue> { .init(rawValue) }
 }
 
-public extension Tagged where Tag == Product<Time, Acceleration> {
+public extension Tagged where Tag == ProductUnit<Time, Acceleration> {
     var asSpeed: Tagged<Speed, RawValue> { .init(rawValue) }
 }
 
-public extension Tagged where Tag == Fraction<Length.Meters, Time.Seconds> {
+public extension Tagged where Tag == FractionUnit<Length.Meters, Time.Seconds> {
     var asSpeed: Tagged<Speed.MetersPerSecond, RawValue> { .init(rawValue) }
 }
 
@@ -58,7 +58,7 @@ public extension Tagged where Tag == Speed, RawValue: Numeric {
 
 // MARK: Self.KilometersPerHour
 public extension Speed {
-    typealias KilometersPerHour = Fraction<PrefixedUnit<Kilo, Length.Meters>, Time.Hours>
+    typealias KilometersPerHour = FractionUnit<PrefixedUnit<Kilo, Length.Meters>, Time.Hours>
 }
 
 #if LocalizedSymbols
@@ -81,7 +81,7 @@ public extension Tagged where Tag == Speed, RawValue: FloatingPoint & Expressibl
 
 // MARK: Self.MilesPerHour
 public extension Speed {
-    typealias MilesPerHour = Fraction<Length.Miles, Time.Hours>
+    typealias MilesPerHour = FractionUnit<Length.Miles, Time.Hours>
 }
 
 #if LocalizedSymbols

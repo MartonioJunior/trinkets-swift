@@ -17,7 +17,7 @@ public enum Pressure: Dimension {
     public static let dimensionality: Dimensionality = [Mass.self: 1, Length.self: -1, Time.self: -2]
 }
 
-public extension Tagged where Tag == Fraction<Force, Area> {
+public extension Tagged where Tag == FractionUnit<Force, Area> {
     var asPressure: Tagged<Pressure, RawValue> { .init(rawValue) }
 }
 
@@ -48,7 +48,7 @@ public extension Tagged where Tag == Pressure, RawValue: Numeric {
 
 // MARK: Self.NewtonsPerMetersSquared
 public extension Pressure {
-    typealias NewtonsPerMetersSquared = Fraction<Force.Newtons, Area.SquareMeters>
+    typealias NewtonsPerMetersSquared = FractionUnit<Force.Newtons, Area.SquareMeters>
 }
 
 #if LocalizedSymbols
