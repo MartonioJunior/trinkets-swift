@@ -1,5 +1,5 @@
 //
-//  Exponential+Power.swift
+//  ExponentialUnit+Power.swift
 //  Trinkets
 //
 //  Created by Martônio Júnior on 14/05/2026.
@@ -43,11 +43,11 @@ public extension Tagged {
 }
 
 @available(macOS 26.0, *)
-public extension Exponential where N == 1 {}
+public extension ExponentialUnit where N == 1 {}
 
 // MARK: N == 2
 @available(macOS 26.0, *)
-public extension Exponential where N == 2 {
+public extension ExponentialUnit where N == 2 {
     #if LocalizedSymbols
     /// Symbol for a squared unit.
     static var symbol: UnitRepresentation {
@@ -107,7 +107,7 @@ public extension Tagged where Tag: StaticUnit, RawValue: Numeric {
 
 // MARK: N == 3
 @available(macOS 26.0, *)
-public extension Exponential where N == 3 {
+public extension ExponentialUnit where N == 3 {
     #if LocalizedSymbols
     /// Symbol for a cubic unit.
     static var symbol: UnitRepresentation {

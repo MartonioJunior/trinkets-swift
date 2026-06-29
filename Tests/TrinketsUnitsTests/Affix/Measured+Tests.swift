@@ -13,7 +13,7 @@ struct MeasuredTests {
     // MARK: Syntax
     @Test("Allows using it using the following syntax")
     func syntax() {
-        @Measured(\.rpgMoney, { $0.constant(6) }) var money = 30
+        @Measured(\.rpgMoney, in: { $0.constant(6) }) var money = 30
         #expect(type(of: money) == Measurement<RPGMoney.Constant, Int>.self)
     }
 

@@ -1,5 +1,5 @@
 //
-//  Exponential.swift
+//  ExponentialUnit.swift
 //  Trinkets
 //
 //  Created by Martônio Júnior on 27/06/2025.
@@ -7,22 +7,22 @@
 
 /// Modifier that negates a unit's dimensionality.
 @available(macOS 26.0, *)
-public typealias Unitless<T> = Exponential<T, 0>
+public typealias Unitless<T> = ExponentialUnit<T, 0>
 /// Modifier that keeps an unit as is.
 @available(macOS 26.0, *)
-public typealias Linear<T> = Exponential<T, 1>
+public typealias Linear<T> = ExponentialUnit<T, 1>
 /// Modifier that elevates a unit to it's second power.
 @available(macOS 26.0, *)
-public typealias Square<T> = Exponential<T, 2>
+public typealias Square<T> = ExponentialUnit<T, 2>
 /// Modifier that elevates a unit to it's third power.
 @available(macOS 26.0, *)
-public typealias Cubic<T> = Exponential<T, 3>
+public typealias Cubic<T> = ExponentialUnit<T, 3>
 
 /// Modifier that applies a power to a given unit.
 /// - T: Type representing the unit.
 /// - N: Exponent it is raised to.
 @available(macOS 26.0, *)
-public struct Exponential<T, let N: Int> {
+public struct ExponentialUnit<T, let N: Int> {
     // MARK: Variables
     /// Unit used as the base.
     public var base: T
@@ -38,61 +38,61 @@ public struct Exponential<T, let N: Int> {
 
 // MARK: Self: Convertible
 @available(macOS 26.0, *)
-extension Exponential: Convertible where T: Convertible {
+extension ExponentialUnit: Convertible where T: Convertible {
     // swiftlint:disable:next missing_docs
-    public typealias Base = Exponential<T.Base, N>
+    public typealias Base = ExponentialUnit<T.Base, N>
 }
 
 // MARK: Self: CustomStringConvertible
 @available(macOS 26.0, *)
-extension Exponential: CustomStringConvertible {
+extension ExponentialUnit: CustomStringConvertible {
     // swiftlint:disable:next missing_docs
     public var description: String { "\(base)^\(N)" }
 }
 
 // MARK: Self: Domain
 @available(macOS 26.0, *)
-extension Exponential: Domain where T: Domain {
+extension ExponentialUnit: Domain where T: Domain {
     // swiftlint:disable:next missing_docs
     public typealias Symbol = String
 }
 
 // MARK: Self: Dimension
 @available(macOS 26.0, *)
-extension Exponential: Dimension where T: Dimension {
+extension ExponentialUnit: Dimension where T: Dimension {
     // swiftlint:disable:next missing_docs
-    public typealias BaseUnit = Exponential<T.BaseUnit, N>
+    public typealias BaseUnit = ExponentialUnit<T.BaseUnit, N>
     // swiftlint:disable:next missing_docs
     public static var dimensionality: Dimensionality { T.dimensionality * N }
 }
 
 // MARK: Self: Equatable
 @available(macOS 26.0, *)
-extension Exponential: Equatable where T: Equatable {}
+extension ExponentialUnit: Equatable where T: Equatable {}
 
 // MARK: Self: Quantifiable
 @available(macOS 26.0, *)
-extension Exponential: Quantifiable where T: Quantifiable {}
+extension ExponentialUnit: Quantifiable where T: Quantifiable {}
 
 // MARK: Self: Sendable
 @available(macOS 26.0, *)
-extension Exponential: Sendable where T: Sendable {}
+extension ExponentialUnit: Sendable where T: Sendable {}
 
 // MARK: Self: SendableMetatype
 @available(macOS 26.0, *)
-extension Exponential: SendableMetatype {}
+extension ExponentialUnit: SendableMetatype {}
 
 // MARK: Self: StaticUnit
 @available(macOS 26.0, *)
-extension Exponential: StaticUnit where T: StaticUnit {}
+extension ExponentialUnit: StaticUnit where T: StaticUnit {}
 
 // MARK: Measurable (EX)
 @available(macOS 26.0, *)
 public extension Quantifiable {
     /// Short alias for an exponential unit.
-    typealias E<let N: Int> = Exponential<Self, N>
+    typealias E<let N: Int> = ExponentialUnit<Self, N>
     /// Squared version of the unit.
-    var squared: Exponential<Self, 2> { .init(self) }
+    var squared: ExponentialUnit<Self, 2> { .init(self) }
     /// Cubic version of the unit.
-    var cubic: Exponential<Self, 3> { .init(self) }
+    var cubic: ExponentialUnit<Self, 3> { .init(self) }
 }
