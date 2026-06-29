@@ -1,5 +1,5 @@
 //
-//  Fraction.swift
+//  FractionUnit.swift
 //  Trinkets
 //
 //  Created by Martônio Júnior on 09/02/25.
@@ -8,9 +8,9 @@
 /// Division between two units.
 /// - A: Numerator unit.
 /// - B: Denominator unit.
-public struct Fraction<A, B> {
+public struct FractionUnit<A, B> {
     /// Fraction that swaps numerator and denominator types around.
-    public typealias Flipped = Fraction<B, A>
+    public typealias Flipped = FractionUnit<B, A>
     // MARK: Variables
     /// Numerator unit.
     public var numerator: A
@@ -28,61 +28,61 @@ public struct Fraction<A, B> {
     }
 }
 
-public extension Fraction where A: Quantifiable, B: Quantifiable {
+public extension FractionUnit where A: Quantifiable, B: Quantifiable {
     /// Fraction that swaps numerator and denominator around.
     var flipped: Flipped { .init(denominator, per: numerator) }
 }
 
 // MARK: Self: Convertible
-extension Fraction: Convertible where A: Convertible, B: Convertible {
+extension FractionUnit: Convertible where A: Convertible, B: Convertible {
     // swiftlint:disable:next missing_docs
-    public typealias Base = Fraction<A.Base, B.Base>
+    public typealias Base = FractionUnit<A.Base, B.Base>
 }
 
 // MARK: Self: CustomStringConvertible
-extension Fraction: CustomStringConvertible {
+extension FractionUnit: CustomStringConvertible {
     // swiftlint:disable:next missing_docs
     public var description: String { "\(numerator)/\(denominator)" }
 }
 
 // MARK: Self: Domain
-extension Fraction: Domain where A: Domain, B: Domain {
+extension FractionUnit: Domain where A: Domain, B: Domain {
     // swiftlint:disable:next missing_docs
     public typealias Symbol = String
 }
 
 // MARK: Self: Dimension
-extension Fraction: Dimension where A: Dimension, B: Dimension {
+extension FractionUnit: Dimension where A: Dimension, B: Dimension {
     // swiftlint:disable:next missing_docs
-    public typealias BaseUnit = Fraction<A.BaseUnit, B.BaseUnit>
+    public typealias BaseUnit = FractionUnit<A.BaseUnit, B.BaseUnit>
     // swiftlint:disable:next missing_docs
     public static var dimensionality: Dimensionality { A.dimensionality - B.dimensionality }
 }
 
 // MARK: Self: Equatable
-extension Fraction: Equatable where A: Equatable, B: Equatable {}
+extension FractionUnit: Equatable where A: Equatable, B: Equatable {}
 
 // MARK: Self: Quantifiable
-extension Fraction: Quantifiable where A: Quantifiable, B: Quantifiable {}
+extension FractionUnit: Quantifiable where A: Quantifiable, B: Quantifiable {}
 
 // MARK: Self: Hashable
-extension Fraction: Hashable where A: Hashable, B: Hashable {}
+extension FractionUnit: Hashable where A: Hashable, B: Hashable {}
 
 // MARK: Self: Sendable
-extension Fraction: Sendable where A: Sendable, B: Sendable {}
+extension FractionUnit: Sendable where A: Sendable, B: Sendable {}
 
 // MARK: Self: Sendable
-extension Fraction: SendableMetatype {}
+extension FractionUnit: SendableMetatype {}
 
 // MARK: Self: StaticUnit
-extension Fraction: StaticUnit where A: StaticUnit, B: StaticUnit {}
+extension FractionUnit: StaticUnit where A: StaticUnit, B: StaticUnit {}
 
 // MARK: Measurement (EX)
 public extension Measurement where UnitType: Quantifiable, Value: FloatingPoint {
     /// Divides a measure by another.
     /// - Parameter denominator: Divisor measurement.
     /// - Returns: A new `Measurement` with the division of quantities associated to a `Fraction` of units.
-    func per<T: Quantifiable>(_ denominator: Measurement<T, Value>) -> Measurement<Fraction<UnitType, T>, Value> {
+    func per<T: Quantifiable>(_ denominator: Measurement<T, Value>) -> Measurement<FractionUnit<UnitType, T>, Value> {
         .init(value / denominator.value, .init(unit, per: denominator.unit))
     }
     /// Divides a measure by another.
@@ -90,7 +90,7 @@ public extension Measurement where UnitType: Quantifiable, Value: FloatingPoint 
     ///   - lhs: A measurement.
     ///   - rhs: Divisor measurement.
     /// - Returns: A new `Measurement` with the division of quantities associated to a `Fraction` of units.
-    static func / <T: Quantifiable>(lhs: Self, rhs: Measurement<T, Value>) -> Measurement<Fraction<UnitType, T>, Value> {
+    static func / <T: Quantifiable>(lhs: Self, rhs: Measurement<T, Value>) -> Measurement<FractionUnit<UnitType, T>, Value> {
         lhs.per(rhs)
     }
 }
