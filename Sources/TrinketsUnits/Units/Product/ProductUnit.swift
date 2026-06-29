@@ -76,6 +76,9 @@ extension ProductUnit: Sendable where A: Sendable, B: Sendable {}
 // MARK: Self: SendableMetatype
 extension ProductUnit: SendableMetatype {}
 
+// MARK: Self: StaticQuantifiable
+extension ProductUnit: StaticQuantifiable where A: StaticQuantifiable, B: StaticQuantifiable {}
+
 // MARK: Self: StaticUnit
 extension ProductUnit: StaticUnit where A: StaticUnit, B: StaticUnit {}
 

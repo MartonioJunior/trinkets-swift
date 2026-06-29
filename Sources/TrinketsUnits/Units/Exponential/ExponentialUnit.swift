@@ -82,6 +82,10 @@ extension ExponentialUnit: Sendable where T: Sendable {}
 @available(macOS 26.0, *)
 extension ExponentialUnit: SendableMetatype {}
 
+// MARK: Self: StaticQuantifiable
+@available(macOS 26.0, *)
+extension ExponentialUnit: StaticQuantifiable where T: StaticQuantifiable {}
+
 // MARK: Self: StaticUnit
 @available(macOS 26.0, *)
 extension ExponentialUnit: StaticUnit where T: StaticUnit {}

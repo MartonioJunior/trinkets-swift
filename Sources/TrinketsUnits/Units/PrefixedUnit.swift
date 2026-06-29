@@ -44,6 +44,9 @@ extension PrefixedUnit: CustomStringConvertible {
 // MARK: Self: Quantifiable
 extension PrefixedUnit: Quantifiable where Unit: Quantifiable {}
 
+// MARK: Self: StaticQuantifiable
+extension PrefixedUnit: StaticQuantifiable where Unit: StaticQuantifiable {}
+
 // MARK: Self: StaticUnit
 extension PrefixedUnit: StaticUnit where Unit: StaticUnit {}
 
