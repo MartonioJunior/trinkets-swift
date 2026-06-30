@@ -8,9 +8,11 @@
 import Tagged
 import TrinketsUnits
 
+/// Prefix representing 10^-24 power for a given value.
 public enum Yocto: UnitPrefix {
+    // swiftlint:disable:next missing_docs
     public typealias Base = MetricPrefix
-
+    // swiftlint:disable:next missing_docs
     public static var exponent: Int { -24 }
 }
 

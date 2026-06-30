@@ -8,9 +8,11 @@
 import Tagged
 import TrinketsUnits
 
+/// Prefix representing 10^-15 power for a given value.
 public enum Femto: UnitPrefix {
+    // swiftlint:disable:next missing_docs
     public typealias Base = MetricPrefix
-
+    // swiftlint:disable:next missing_docs
     public static var exponent: Int { -15 }
 }
 
