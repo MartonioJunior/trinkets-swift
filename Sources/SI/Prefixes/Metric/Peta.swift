@@ -8,10 +8,12 @@
 import Tagged
 import TrinketsUnits
 
+/// Prefix representing 10^15 power for a given value.
 public enum Peta: UnitPrefix {
-    public typealias Base = MetricPrefix
-
+    // swiftlint:disable:next missing_docs
     public static var exponent: Int { 15 }
+    // swiftlint:disable:next missing_docs
+    public typealias Base = MetricPrefix
 }
 
 public extension Tagged where Tag == MetricPrefix, RawValue == Peta.Type {
