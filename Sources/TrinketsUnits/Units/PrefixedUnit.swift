@@ -9,7 +9,7 @@
 /// 
 /// This allows for better value precision to a given context when compared to using an unit as is,
 /// except in cases where the quantity is already close to the base.
-public struct PrefixedUnit<Prefix: UnitPrefix, Unit> {
+public struct PrefixedUnit<Prefix: UnitPrefix, Unit: Quantifiable> {
     /// Unit used as the base.
     var unit: Unit
     // MARK: Initializers
@@ -17,14 +17,14 @@ public struct PrefixedUnit<Prefix: UnitPrefix, Unit> {
     /// - Parameters:
     ///   - unit: Base unit.
     ///
-    public init(_: Prefix.Type = Prefix.self, _ unit: Unit) where Unit: Quantifiable {
+    public init(_: Prefix.Type = Prefix.self, _ unit: Unit) {
         self.unit = unit
     }
     /// Creates a new dynamic prefixed unit instance.
     /// - Parameters:
     ///   - unit: Base unit.
     ///
-    public init(_: Tagged<Prefix.Base, Prefix.Type>, _ unit: Unit) where Unit: Quantifiable {
+    public init(_: Tagged<Prefix.Base, Prefix.Type>, _ unit: Unit) {
         self.unit = unit
     }
 }
@@ -40,6 +40,9 @@ extension PrefixedUnit: CustomStringConvertible {
     // swiftlint:disable:next missing_docs
     public var description: String { "\(Prefix.self)\(unit)" }
 }
+
+// MARK: Self: Equatable
+extension PrefixedUnit: Equatable where Unit: Equatable {}
 
 // MARK: Self: Quantifiable
 extension PrefixedUnit: Quantifiable where Unit: Quantifiable {}
@@ -100,7 +103,8 @@ public extension Tagged where RawValue: Numeric & ExpressibleByFloatLiteral, Raw
     }
 }
 
-public extension Tagged where Tag: Domain, RawValue: FloatingPoint & ExpressibleByFloatLiteral, RawValue.FloatLiteralType == Double {
+public extension Tagged where Tag: Domain, RawValue: FloatingPoint & ExpressibleByFloatLiteral,
+RawValue.FloatLiteralType == Double {
     /// Converts base value to a prefixed unit.
     /// - Parameters:
     ///   - prefix: Prefix used.
