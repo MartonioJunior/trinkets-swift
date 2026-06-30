@@ -11,6 +11,6 @@ import TrinketsUnits
 public enum MetricPrefix {}
 
 // MARK: Self: PrefixBase
-extension MetricPrefix: PrefixBase {
+extension MetricPrefix: UnitPrefixSystem {
     public static var base: Int { 10 }
 }
