@@ -7,7 +7,7 @@
 
 import TrinketsUnits
 
-public enum SlangPrefix: PrefixBase {
+public enum SlangPrefix: UnitPrefixSystem {
     public static var base: Int { 4 }
 }
 

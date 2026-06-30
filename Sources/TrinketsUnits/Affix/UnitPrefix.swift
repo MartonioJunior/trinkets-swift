@@ -7,8 +7,8 @@
 
 import Numerics
 
-/// A description
-public protocol UnitPrefix: Convertible where Base: PrefixBase {
+/// Defines a prefix for quantifiable parameters.
+public protocol UnitPrefix: Convertible where Base: UnitPrefixSystem {
     /// Exponent applied to the base prefix.
     static var exponent: Int { get }
 }
