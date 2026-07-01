@@ -8,4 +8,4 @@
 import Collectables
 import TrinketsUnits
 
-extension Token: Measurable {}
+extension Token: Quantifiable {}
