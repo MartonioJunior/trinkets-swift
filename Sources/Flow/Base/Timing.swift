@@ -39,17 +39,6 @@ public struct Timing<Interval> {
     ) -> Instant where Instant.Stride == Interval {
         instant.advanced(by: coyote)
     }
-    /// Indicates the expiration of a grace period.
-    /// - Parameters:
-    ///   - instant: Instant where the grace period starts.
-    ///   - delta: Formula used for offsetting the instant.
-    /// - Returns: Instant of the expiration.
-    func expiration<Instant>(
-        startingFrom instant: Instant,
-        delta: (Instant, Interval) -> Instant
-    ) -> Instant {
-        delta(instant, coyote)
-    }
     /// Defines a Quick-Time Event (QTE).
     /// - Parameters:
     ///   - instant: Start instant of the quick-time event.
@@ -60,19 +49,6 @@ public struct Timing<Interval> {
         startingFrom instant: Instant
     ) -> PartialRangeThrough<Instant> where Instant.Stride == Interval {
         ...expiration(startingFrom: instant)
-    }
-    /// Defines a Quick-Time Event (QTE).
-    /// - Parameters:
-    ///   - instant: Start instant of the quick-time event.
-    ///   - delta: Formula used for offsetting the start instant.
-    /// - Returns: Window of activation for a quick-time event.
-    /// 
-    /// Activating after this window results in a late miss.
-    func quickTimeEvent<Instant>(
-        startingFrom instant: Instant,
-        delta: (Instant, Interval) -> Instant
-    ) -> PartialRangeThrough<Instant> {
-        ...expiration(startingFrom: instant, delta: delta)
     }
     /// Calculates the timing window for a given instant.
     /// - Parameter instant: Reference instant.
@@ -106,27 +82,6 @@ public extension Timing where Interval: AdditiveArithmetic {
     func window<G: Gamut>(gamut: G) -> G? where G.Bound == Interval, Interval: Comparable {
         let start = gamut.lowerBound - carry
         let end = gamut.upperBound + coyote
-
-        guard start <= end else { return nil }
-
-        return .init(from: start, to: end)
-    }
-}
-
-// MARK: Self.Interval: SignedNumeric
-public extension Timing where Interval: SignedNumeric {
-    /// Calculates the timing window for a given instant.
-    /// - Parameters:
-    ///   - instant: Reference instant.
-    ///   - delta: Formula used for offsetting the instant.
-    /// - Returns: Timing window for an activation, `nil` when the window is malformed or
-    /// impossible to be activated (i.e. when the start instant is after the end instant)
-    func window<Instant>(
-        at instant: Instant,
-        delta: (Instant, Interval) -> Instant
-    ) -> ClosedRange<Instant>? {
-        let start = delta(instant, -carry)
-        let end = delta(instant, coyote)
 
         guard start <= end else { return nil }
 

@@ -26,31 +26,25 @@ struct TimingTests {
     }
 
     // // MARK: Methods
-    // @Test("Calculates expiration instant", arguments: [
-    //     (Timing<Int>(carry: 5, coyote: 2), 12, 14),
-    //     (Timing<Int>(carry: 5, coyote: 0), 13, 13),
-    //     (Timing<Int>(carry: 5, coyote: -6), 14, 8)
-    // ])
-    // func expiration(_ sut: Timing<Int>, startingFrom instant: Int, expected: Int) {
-    //     let resultA = sut.expiration(startingFrom: instant)
-    //     #expect(resultA == expected)
+    @Test("Calculates expiration instant", arguments: [
+        (Timing<Int>(carry: 5, coyote: 2), 12, 14),
+        (Timing<Int>(carry: 5, coyote: 0), 13, 13),
+        (Timing<Int>(carry: 5, coyote: -6), 14, 8)
+    ])
+    func expiration(_ sut: Timing<Int>, startingFrom instant: Int, expected: Int) {
+        let result = sut.expiration(startingFrom: instant)
+        #expect(result == expected)
+    }
 
-    //     let resultB = sut.expiration(startingFrom: instant) { $0.advanced(by: $1) }
-    //     #expect(resultB == expected)
-    // }
-
-    // @Test("Calculates Quick-Time Event Window", arguments: [
-    //     (Timing<Int>(carry: 5, coyote: 2), 12, ...14),
-    //     (Timing<Int>(carry: 5, coyote: 0), 13, ...13),
-    //     (Timing<Int>(carry: 5, coyote: -6), 14, ...8)
-    // ])
-    // func quickTimeEvent(_ sut: Timing<Int>, startingFrom instant: Int, expected: PartialRangeThrough<Int>) {
-    //     let resultA = sut.quickTimeEvent(startingFrom: instant)
-    //     #expect(resultA.upperBound == expected.upperBound)
-
-    //     let resultB = sut.quickTimeEvent(startingFrom: instant) { $0.advanced(by: $1) }
-    //     #expect(resultB.upperBound == expected.upperBound)
-    // }
+    @Test("Calculates Quick-Time Event Window", arguments: [
+        (Timing<Int>(carry: 5, coyote: 2), 12, ...14),
+        (Timing<Int>(carry: 5, coyote: 0), 13, ...13),
+        (Timing<Int>(carry: 5, coyote: -6), 14, ...8)
+    ])
+    func quickTimeEvent(_ sut: Timing<Int>, startingFrom instant: Int, expected: PartialRangeThrough<Int>) {
+        let result = sut.quickTimeEvent(startingFrom: instant)
+        #expect(result.upperBound == expected.upperBound)
+    }
 
     @Test("Calculates timing window for instant", arguments: [
         (Timing<Int>(carry: 5, coyote: 2), 12, 7...14),
@@ -64,11 +58,8 @@ struct TimingTests {
         (Timing<Int>(carry: -1, coyote: -6), 14, ClosedRange<Int>?.none)
     ])
     func window(_ sut: Timing<Int>, at instant: Int, expected: ClosedRange<Int>?) {
-        let resultA = sut.window(at: instant)
-        #expect(resultA == expected)
-
-        let resultB = sut.window(at: instant) { $0.advanced(by: $1) }
-        #expect(resultB == expected)
+        let result = sut.window(at: instant)
+        #expect(result == expected)
     }
 
     @Test("Calculates timing window for gamut", arguments: [
