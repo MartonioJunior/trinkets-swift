@@ -182,13 +182,10 @@ struct TempoTests {
     // MARK: Sequence (EX)
     struct SequenceTests {
         @Test("Array with resized elements based on tempo", arguments: [
-            ([1, 3], Tempo<UInt>(3), [1, 1, 1, 3, 3, 3]),
-            ([1, 3], Tempo<UInt>(1), [1, 3]),
-            ([1, 3], Tempo<UInt>(0), [Int]()),
-            ([Int](), Tempo<UInt>(4), [Int]())
+            ([1, 3], Tempo<UInt>(3), RepeatSequence<[Int]>([1, 3], by: 3))
         ])
-        func resize(_ sut: [Int], in tempo: Tempo<UInt>, expected: [Int]) {
-            let result = sut.resize(in: tempo)
+        func scale(_ sut: [Int], by tempo: Tempo<UInt>, expected: RepeatSequence<[Int]>) {
+            let result = sut.scale(by: tempo)
             #expect(result == expected)
         }
     }
