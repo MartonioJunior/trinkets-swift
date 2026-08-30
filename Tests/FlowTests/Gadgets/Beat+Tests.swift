@@ -18,18 +18,15 @@ struct BeatTests {
         #expect(result.timing == timing)
     }
 
-    @Test("Indicates next beat", arguments: [
+    // MARK: Methods
+    @Test("Beat with same timing, but a different instant", arguments: [
         (
             BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
-            Cooldown<Int>(22), BeatOf<Int>(.init(epoch: 25), timing: .init(carry: 1, coyote: 2))
-        ),
-        (
-            BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
-            Cooldown<Int>(22), BeatOf<Int>(.init(epoch: 22), timing: .init(carry: 1, coyote: 2))
+            24, BeatOf<Int>(.init(epoch: 24), timing: .init(carry: 1, coyote: 2))
         )
     ])
-    func nextBeat(_ sut: Beat<Int, Int>, after cooldown: Cooldown<Int>, expected: Beat<Int, Int>) {
-        let result = sut.nextBeat(after: cooldown)
+    func repositioned(_ sut: BeatOf<Int>, at instant: Int, expected: BeatOf<Int>) {
+        let result = sut.repositioned(at: instant)
         #expect(result == expected)
     }
 
@@ -156,6 +153,17 @@ struct BeatTests {
         ])
         func canTrigger(_ sut: Beat<Int, Int>, at instant: Int, expected: Bool) {
             let result = sut.canTrigger(at: instant)
+            #expect(result == expected)
+        }
+
+        @Test("Indicates next beat", arguments: [
+            (
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
+                Cooldown<Int>(22), BeatOf<Int>(.init(epoch: 34), timing: .init(carry: 1, coyote: 2))
+            )
+        ])
+        func nextBeat(_ sut: Beat<Int, Int>, after cooldown: Cooldown<Int>, expected: Beat<Int, Int>) {
+            let result = sut.nextBeat(after: cooldown)
             #expect(result == expected)
         }
     }
