@@ -24,6 +24,12 @@ public struct Beat<Instant: Comparable, Interval> {
         self.calendar = calendar
         self.timing = timing
     }
+    /// Defines a beat with the same timing, repositioned into a new instant.
+    /// - Parameter instant: New instant.
+    /// - Returns: Repositioned beat.
+    public func repositioned(at instant: Instant) -> Self {
+        .init(.init(epoch: instant), timing: timing)
+    }
 }
 
 // MARK: Self: Comparable
@@ -75,7 +81,7 @@ public extension Beat where Instant: Strideable, Instant.Stride == Interval {
     /// - Parameter cooldown: Interval until recovery.
     /// - Returns: Next beat.
     func nextBeat(after cooldown: Cooldown<Interval>) -> Self {
-        .init(.init(epoch: cooldown.recovery(after: calendar.epoch)), timing: timing)
+        repositioned(at: cooldown.recovery(after: calendar.epoch))
     }
 }
 
