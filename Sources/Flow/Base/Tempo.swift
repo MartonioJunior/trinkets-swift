@@ -205,8 +205,8 @@ public extension Sequence {
     /// Creates an array that resizes the given sequence of elements.
     /// - Parameter tempo: Multiplier used to rescale the sequence.
     /// - Returns: Array with the elements appearing N times.
-    func resize(in tempo: Tempo<UInt>) -> [Element] {
-        flatMap { repeatElement($0, count: Int(tempo.multiplier)) }
+    func scale(by tempo: Tempo<UInt>) -> RepeatSequence<Self> {
+        `repeat`(tempo.multiplier)
     }
 }
 
