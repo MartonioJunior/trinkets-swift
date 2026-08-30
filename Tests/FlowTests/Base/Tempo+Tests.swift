@@ -180,6 +180,18 @@ struct TempoTests {
     }
 
     // MARK: Sequence (EX)
+    struct SequenceTests {
+        @Test("Array with resized elements based on tempo", arguments: [
+            ([1, 3], Tempo<UInt>(3), [1, 1, 1, 3, 3, 3]),
+            ([1, 3], Tempo<UInt>(1), [1, 3]),
+            ([1, 3], Tempo<UInt>(0), [Int]()),
+            ([Int](), Tempo<UInt>(4), [Int]())
+        ])
+        func resize(_ sut: [Int], in tempo: Tempo<UInt>, expected: [Int]) {
+            let result = sut.resize(in: tempo)
+            #expect(result == expected)
+        }
+    }
 
     // MARK: Strideable (EX)
     struct StrideableTests {
