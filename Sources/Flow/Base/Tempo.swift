@@ -200,6 +200,16 @@ public extension Tempo where Value: SignedNumeric {
     }
 }
 
+// MARK: Sequence (EX)
+public extension Sequence {
+    /// Creates an array that resizes the given sequence of elements.
+    /// - Parameter tempo: Multiplier used to rescale the sequence.
+    /// - Returns: Array with the elements appearing N times.
+    func resize(in tempo: Tempo<UInt>) -> [Element] {
+        flatMap { repeatElement($0, count: Int(tempo.multiplier)) }
+    }
+}
+
 // MARK: Strideable (EX)
 public extension Strideable {
     /// Applies a pacing transformation to the advancing value.
