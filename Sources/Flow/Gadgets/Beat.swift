@@ -71,11 +71,11 @@ public extension Beat where Instant: Strideable, Instant.Stride == Interval {
     func canTrigger(at instant: Instant) -> Bool {
         timing.window(at: calendar.epoch)?.contains(instant) ?? false
     }
-    /// Indicates when the next beat can happen after an activation.
-    /// - Parameter instant: Instant where it was last consumed.
+    /// Next beat after a given cooldown interval.
+    /// - Parameter cooldown: Interval until recovery.
     /// - Returns: Next beat.
-    func nextBeat(after instant: Instant) -> Self {
-        .init(.init(epoch: timing.recovery(after: instant)), timing: timing)
+    func nextBeat(after cooldown: Cooldown<Interval>) -> Self {
+        .init(.init(epoch: cooldown.recovery(after: calendar.epoch)), timing: timing)
     }
 }
 
