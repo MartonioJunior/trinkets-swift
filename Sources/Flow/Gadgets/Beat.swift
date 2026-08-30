@@ -24,18 +24,6 @@ public struct Beat<Instant: Comparable, Interval> {
         self.calendar = calendar
         self.timing = timing
     }
-    // MARK: Methods
-    /// Indicates when the next beat can happen after a successful activation.
-    /// - Parameters:
-    ///   - activation: Instant where it was last consumed.
-    ///   - delta: Formula used for offsetting the instant.
-    /// - Returns: Next beat.
-    func nextBeat(
-        after activation: Instant,
-        delta: (Instant, Interval) -> Instant
-    ) -> Self {
-        .init(.init(epoch: timing.recovery(after: activation, delta: delta)), timing: timing)
-    }
 }
 
 // MARK: Self: Comparable
@@ -88,23 +76,6 @@ public extension Beat where Instant: Strideable, Instant.Stride == Interval {
     /// - Returns: Next beat.
     func nextBeat(after instant: Instant) -> Self {
         .init(.init(epoch: timing.recovery(after: instant)), timing: timing)
-    }
-}
-
-// MARK: Self.Interval: SignedNumeric
-public extension Beat where Interval: SignedNumeric, Instant: Comparable {
-    /// Checks whether a beat can be activated at the given instant.
-    /// - Parameters:
-    ///   - instant: Instant of activation.
-    ///   - delta: Formula used for offsetting the instant.
-    /// - Returns: `true` when the beat can be triggered, `false` otherwise.
-    func canTrigger(
-        at instant: Instant,
-        delta: (Instant, Interval) -> Instant
-    ) -> Bool {
-        guard let window = timing.window(at: calendar.epoch, delta: delta) else { return false }
-
-        return window.contains(instant)
     }
 }
 
