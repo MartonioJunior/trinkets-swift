@@ -10,7 +10,7 @@ import Testing
 
 struct BeatTests {
     @Test("Creates new beat", arguments: [
-        (Calendar<Int>(epoch: 9), Timing(carry: 1, coyote: 2, cooldown: 3))
+        (Calendar<Int>(epoch: 9), Timing(carry: 1, coyote: 2))
     ])
     func initializer(_ calendar: Calendar<Int>, timing: Timing<Int>) {
         let result = Beat(calendar, timing: timing)
@@ -20,37 +20,34 @@ struct BeatTests {
 
     @Test("Indicates next beat", arguments: [
         (
-            BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
-            22, BeatOf<Int>(.init(epoch: 25), timing: .init(carry: 1, coyote: 2, cooldown: 3))
+            BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
+            22, BeatOf<Int>(.init(epoch: 25), timing: .init(carry: 1, coyote: 2))
         ),
         (
-            BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: .zero)),
-            22, BeatOf<Int>(.init(epoch: 22), timing: .init(carry: 1, coyote: 2, cooldown: .zero))
+            BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
+            22, BeatOf<Int>(.init(epoch: 22), timing: .init(carry: 1, coyote: 2))
         )
     ])
     func nextBeat(_ sut: Beat<Int, Int>, after activation: Int, expected: Beat<Int, Int>) {
-        let resultA = sut.nextBeat(after: activation)
-        #expect(resultA == expected)
-
-        let resultB = sut.nextBeat(after: activation) { $0.advanced(by: $1) }
-        #expect(resultB == expected)
+        let result = sut.nextBeat(after: activation)
+        #expect(result == expected)
     }
 
     // MARK: Self: Comparable
     struct ConformsToComparable {
         @Test("Compares two beats based on calendar", arguments: [
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
-                BeatOf<Int>(.init(epoch: 19), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
+                BeatOf<Int>(.init(epoch: 19), timing: .init(carry: 1, coyote: 2)),
                 true
             ),
             (
-                BeatOf<Int>(.init(epoch: 19), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
-                BeatOf<Int>(.init(epoch: 19), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
+                BeatOf<Int>(.init(epoch: 19), timing: .init(carry: 1, coyote: 2)),
+                BeatOf<Int>(.init(epoch: 19), timing: .init(carry: 1, coyote: 2)),
                 false
             ),
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 10, coyote: 20, cooldown: 30)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 10, coyote: 20)),
                 BeatOf<Int>(.init(epoch: 6), timing: .zero),
                 false
             )
@@ -65,15 +62,15 @@ struct BeatTests {
     struct ConformsToSelectable {
         @Test("Describes how range can select beats", arguments: [
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 10, coyote: 20, cooldown: 30)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 10, coyote: 20)),
                 4...28, true
             ),
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 10, coyote: 20, cooldown: 30)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 10, coyote: 20)),
                 4...8, false
             ),
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 10, coyote: 20, cooldown: 30)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 10, coyote: 20)),
                 35...44, false
             )
         ])
@@ -87,8 +84,8 @@ struct BeatTests {
     struct ConformsToStrideable {
         @Test("Moves beat by an interval", arguments: [
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
-                22, BeatOf<Int>(.init(epoch: 34), timing: .init(carry: 1, coyote: 2, cooldown: 3))
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
+                22, BeatOf<Int>(.init(epoch: 34), timing: .init(carry: 1, coyote: 2))
             )
         ])
         func advanced(_ sut: Beat<Int, Int>, by n: Int, expected: Beat<Int, Int>) {
@@ -98,13 +95,13 @@ struct BeatTests {
 
         @Test("Measures distance between beats", arguments: [
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
-                BeatOf<Int>(.init(epoch: 34), timing: .init(carry: 4, coyote: 5, cooldown: 6)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
+                BeatOf<Int>(.init(epoch: 34), timing: .init(carry: 4, coyote: 5)),
                 22
             ),
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 4, coyote: 5, cooldown: 6)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 4, coyote: 5)),
                 0
             )
         ])
@@ -118,15 +115,15 @@ struct BeatTests {
     struct InstantConformsToStrideable {
         @Test("Timing window for the beat", arguments: [
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
                 11...14
             ),
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: -4, coyote: 9, cooldown: 3)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: -4, coyote: 9)),
                 16...21
             ),
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: -4, coyote: 2, cooldown: 3)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: -4, coyote: 2)),
                 ClosedRange<Int>?.none
             )
         ])
@@ -137,23 +134,23 @@ struct BeatTests {
 
         @Test("Can trigger beat at instant", arguments: [
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
                 12, true
             ),
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
                 14, true
             ),
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
                 11, true
             ),
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
                 6, false
             ),
             (
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
                 20, false
             )
         ])
@@ -167,30 +164,30 @@ struct BeatTests {
     struct SequenceTests {
         @Test("Filters beat based on activation instant", arguments: [
             ([
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
-                BeatOf<Int>(.init(epoch: 18), timing: .init(carry: 4, coyote: 5, cooldown: 6))
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
+                BeatOf<Int>(.init(epoch: 18), timing: .init(carry: 4, coyote: 5))
             ], 12, [
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3))
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2))
             ]),
             ([
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
-                BeatOf<Int>(.init(epoch: 18), timing: .init(carry: 4, coyote: 5, cooldown: 6))
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
+                BeatOf<Int>(.init(epoch: 18), timing: .init(carry: 4, coyote: 5))
             ], 14, [
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
-                BeatOf<Int>(.init(epoch: 18), timing: .init(carry: 4, coyote: 5, cooldown: 6))
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
+                BeatOf<Int>(.init(epoch: 18), timing: .init(carry: 4, coyote: 5))
             ]),
             ([
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
-                BeatOf<Int>(.init(epoch: 18), timing: .init(carry: 4, coyote: 5, cooldown: 6))
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
+                BeatOf<Int>(.init(epoch: 18), timing: .init(carry: 4, coyote: 5))
             ], 20, [
-                BeatOf<Int>(.init(epoch: 18), timing: .init(carry: 4, coyote: 5, cooldown: 6))
+                BeatOf<Int>(.init(epoch: 18), timing: .init(carry: 4, coyote: 5))
             ]),
             ([
-                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2, cooldown: 3)),
-                BeatOf<Int>(.init(epoch: 18), timing: .init(carry: 4, coyote: 5, cooldown: 6))
+                BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
+                BeatOf<Int>(.init(epoch: 18), timing: .init(carry: 4, coyote: 5))
             ], 24, [Beat<Int, Int>]())
         ])
-        func beats(_ sut: [Beat<Int, Int>], triggerableAt instant: Int, expected: [Beat<Int, Int>]) async throws {
+        func beats(_ sut: [Beat<Int, Int>], triggerableAt instant: Int, expected: [Beat<Int, Int>]) {
             let result = sut.beats(triggerableAt: instant)
             #expect(result == expected)
         }
