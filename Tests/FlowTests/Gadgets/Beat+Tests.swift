@@ -21,15 +21,15 @@ struct BeatTests {
     @Test("Indicates next beat", arguments: [
         (
             BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
-            22, BeatOf<Int>(.init(epoch: 25), timing: .init(carry: 1, coyote: 2))
+            Cooldown<Int>(22), BeatOf<Int>(.init(epoch: 25), timing: .init(carry: 1, coyote: 2))
         ),
         (
             BeatOf<Int>(.init(epoch: 12), timing: .init(carry: 1, coyote: 2)),
-            22, BeatOf<Int>(.init(epoch: 22), timing: .init(carry: 1, coyote: 2))
+            Cooldown<Int>(22), BeatOf<Int>(.init(epoch: 22), timing: .init(carry: 1, coyote: 2))
         )
     ])
-    func nextBeat(_ sut: Beat<Int, Int>, after activation: Int, expected: Beat<Int, Int>) {
-        let result = sut.nextBeat(after: activation)
+    func nextBeat(_ sut: Beat<Int, Int>, after cooldown: Cooldown<Int>, expected: Beat<Int, Int>) {
+        let result = sut.nextBeat(after: cooldown)
         #expect(result == expected)
     }
 
