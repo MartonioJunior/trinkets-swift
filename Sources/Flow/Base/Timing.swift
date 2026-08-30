@@ -12,8 +12,6 @@ public struct Timing<Interval> {
     /// 
     /// Setting this to a negative value turns it into a delayed activation.
     var carry: Interval
-    /// Interval required from the last successful activation until attaining recovery.
-    var cooldown: Interval
     /// Grace interval offered to perform an activation.
     /// 
     /// Setting this to a negative value turns it into an earlier expiration.
@@ -22,42 +20,16 @@ public struct Timing<Interval> {
     /// Creates a new timing window.
     /// - Parameters:
     ///   - carry: Minimum interval to carry over.
-    ///   - cooldown: Interval until attaining recovery.
     ///   - coyote: Grace period to perform an activation.
     ///
     public init(
         carry: Interval,
-        coyote: Interval,
-        cooldown: Interval
+        coyote: Interval
     ) {
         self.carry = carry
-        self.cooldown = cooldown
         self.coyote = coyote
     }
     // MARK: Methods
-    /// Cooldown window after an activation.
-    /// Parameter activation: Instant where it was last consumed.
-    /// - Returns: Window of activation after the recovery.
-    /// 
-    /// Activating before this window results in an early miss.
-    func cooldown<Instant: Strideable>(
-        after activation: Instant
-    ) -> PartialRangeFrom<Instant> where Instant.Stride == Interval {
-        recovery(after: activation)...
-    }
-    /// Cooldown window after an activation.
-    /// - Parameters:
-    ///   - activation: Instant where it was last consumed.
-    ///   - delta: Formula used for offsetting the activation.
-    /// - Returns: Window of activation after the recovery.
-    /// 
-    /// Activating before this window results in an early miss.
-    func cooldown<Instant: Comparable>(
-        after activation: Instant,
-        delta: (Instant, Interval) -> Instant
-    ) -> PartialRangeFrom<Instant> {
-        recovery(after: activation, delta: delta)...
-    }
     /// Indicates the expiration of a grace period.
     /// - Parameters:
     ///   - instant: Instant where the grace period starts.
@@ -77,25 +49,6 @@ public struct Timing<Interval> {
         delta: (Instant, Interval) -> Instant
     ) -> Instant {
         delta(instant, coyote)
-    }
-    /// Indicates the next point of recovery from a given instant.
-    /// - Parameter instant: Instant where it was last consumed.
-    /// - Returns: Instant of the recovery.
-    func recovery<Instant: Strideable>(
-        after activation: Instant
-    ) -> Instant where Instant.Stride == Interval {
-        activation.advanced(by: cooldown)
-    }
-    /// Indicates the next point of recovery from a given instant.
-    /// - Parameters:
-    ///   - activation: Reference instant.
-    ///   - delta: Formula used for offsetting the activation.
-    /// - Returns: Instant of the recovery.
-    func recovery<Instant>(
-        after activation: Instant,
-        delta: (Instant, Interval) -> Instant
-    ) -> Instant {
-        delta(activation, cooldown)
     }
     /// Defines a Quick-Time Event (QTE).
     /// - Parameters:
@@ -146,7 +99,7 @@ extension Timing: Sendable where Interval: Sendable {}
 // MARK: Self.Interval: AdditiveArithmetic
 public extension Timing where Interval: AdditiveArithmetic {
     /// Timing with no recovery or timing windows.
-    static var zero: Self { .init(carry: .zero, coyote: .zero, cooldown: .zero) }
+    static var zero: Self { .init(carry: .zero, coyote: .zero) }
     /// Calculates the timing window for a given gamut.
     /// - Parameter gamut: Gamut used as the base.
     /// - Returns: Range window for a trigger.
