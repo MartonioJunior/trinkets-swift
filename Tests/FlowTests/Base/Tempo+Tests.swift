@@ -179,5 +179,27 @@ struct TempoTests {
         }
     }
 
+    // MARK: Sequence (EX)
+
     // MARK: Strideable (EX)
+    struct StrideableTests {
+        @Test("Advances by amount paced by tempo", arguments: [
+            (4, 3, Tempo<Int>(2), 10),
+            (4, 3, Tempo<Int>(0), 4),
+            (4, 0, Tempo<Int>(2), 4)
+        ])
+        func advanced(_ sut: Int, by n: Int, in tempo: Tempo<Int>, expected: Int) {
+            let result = sut.advanced(by: n, in: tempo)
+            #expect(result == expected)
+        }
+
+        @Test("Offsets value in the reverse pace", arguments: [
+            (4, 3, 1),
+            (4, 0, 4)
+        ])
+        func backtracked(_ sut: Int, by n: UInt, expected: Int) {
+            let result = sut.backtracked(by: n)
+            #expect(result == expected)
+        }
+    }
 }
