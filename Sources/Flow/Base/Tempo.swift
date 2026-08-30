@@ -7,7 +7,7 @@
 
 import Foundation
 import Mathe
-/// Data structure for defining a relative pacing for updates in a game.
+/// Unitless multiplier for defining a relative pacing for updates in a game.
 /// - Value: Type representing the multiplier.
 /// 
 /// Works as an unitless multiplier that can be used to provide control over the pacing,
