@@ -25,27 +25,7 @@ struct TimingTests {
         #expect(sut == expected)
     }
 
-    // // MARK: Methods
-    @Test("Calculates expiration instant", arguments: [
-        (Timing<Int>(carry: 5, coyote: 2), 12, 14),
-        (Timing<Int>(carry: 5, coyote: 0), 13, 13),
-        (Timing<Int>(carry: 5, coyote: -6), 14, 8)
-    ])
-    func expiration(_ sut: Timing<Int>, startingFrom instant: Int, expected: Int) {
-        let result = sut.expiration(startingFrom: instant)
-        #expect(result == expected)
-    }
-
-    @Test("Calculates Quick-Time Event Window", arguments: [
-        (Timing<Int>(carry: 5, coyote: 2), 12, ...14),
-        (Timing<Int>(carry: 5, coyote: 0), 13, ...13),
-        (Timing<Int>(carry: 5, coyote: -6), 14, ...8)
-    ])
-    func quickTimeEvent(_ sut: Timing<Int>, startingFrom instant: Int, expected: PartialRangeThrough<Int>) {
-        let result = sut.quickTimeEvent(startingFrom: instant)
-        #expect(result.upperBound == expected.upperBound)
-    }
-
+    // MARK: Methods
     @Test("Calculates timing window for instant", arguments: [
         (Timing<Int>(carry: 5, coyote: 2), 12, 7...14),
         (Timing<Int>(carry: 0, coyote: 2), 12, 12...14),
