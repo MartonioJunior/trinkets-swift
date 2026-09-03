@@ -7,7 +7,9 @@
 
 /// Interval until attaining recovery from a state.
 /// 
-/// Can be used to define temporary effects of any kind, both positive (e.g. temporary power-up) and negative (e.g. vulnerability window).
+/// Can be used to define temporary effects of any kind:
+/// - Positive Effects (e.g. temporary power-up).
+/// - Negative Effects (e.g. vulnerability after an attack).
 public struct Cooldown<Interval: AdditiveArithmetic> {
     /// Interval until recovery.
     public var value: Interval
@@ -17,36 +19,17 @@ public struct Cooldown<Interval: AdditiveArithmetic> {
     public init(_ value: Interval) {
         self.value = value
     }
-    // MARK: Methods
-    /// Indicates the next point of recovery from a given instant.
-    /// - Parameter instant: Instant where it was last consumed.
-    /// - Returns: Instant of the recovery.
-    func recovery<Instant: Strideable>(
-        after activation: Instant
-    ) -> Instant where Instant.Stride == Interval {
-        activation.advanced(by: value)
-    }
-    /// Cooldown window after an activation.
-    /// Parameter activation: Instant where it was last consumed.
-    /// - Returns: Window of activation after the recovery.
-    /// 
-    /// Activating before this window results in an early miss.
-    func window<Instant: Strideable>(
-        after activation: Instant
-    ) -> PartialRangeFrom<Instant> where Instant.Stride == Interval {
-        recovery(after: activation)...
-    }
 }
 
 // MARK: Operators
 public extension Cooldown {
-    /// Appends a cooldown to a given interval.
+    /// Appends a cooldown to a given interval value.
     /// - Parameters:
     ///   - lhs: An interval.
     ///   - rhs: Cooldown to be applied.
-    /// - Returns: Appended interval.
+    /// - Returns: Appended interval value.
     /// 
-    /// When used on an instant, the result is the recovery based on that instant.
+    /// When used on an instant, the result is the next recovery point.
     static func + (lhs: Interval, rhs: Self) -> Interval {
         lhs + rhs.value
     }
@@ -74,10 +57,10 @@ extension Cooldown: Comparable where Interval: Comparable {
     }
 }
 
-// MARK: Self.Interval: Equatable
+// MARK: Self: Equatable
 extension Cooldown: Equatable where Interval: Equatable {}
 
-// MARK: Self.ExpressibleByFloatLiteral
+// MARK: Self: ExpressibleByFloatLiteral
 extension Cooldown: ExpressibleByFloatLiteral where Interval: ExpressibleByFloatLiteral {
     // swiftlint:disable:next missing_docs
     public init(floatLiteral value: Interval.FloatLiteralType) {
@@ -85,7 +68,7 @@ extension Cooldown: ExpressibleByFloatLiteral where Interval: ExpressibleByFloat
     }
 }
 
-// MARK: Self.ExpressibleByIntegerLiteral
+// MARK: Self: ExpressibleByIntegerLiteral
 extension Cooldown: ExpressibleByIntegerLiteral where Interval: ExpressibleByIntegerLiteral {
     // swiftlint:disable:next missing_docs
     public init(integerLiteral value: Interval.IntegerLiteralType) {
@@ -106,5 +89,15 @@ public extension Cooldown where Interval: Numeric & Comparable {
     /// - Returns: Multiplied value.
     static func * (lhs: Self, rhs: Tempo<Interval>) -> Self {
         .init(lhs.value * rhs)
+    }
+}
+
+// MARK: Strideable (EX)
+public extension Strideable {
+    /// Indicates the next point of recovery after applying a given cooldown.
+    /// - Parameter cooldown: Cooldown to be applied.
+    /// - Returns: Instant of the recovery.
+    func recovery(after cooldown: Cooldown<Stride>) -> Self {
+        advanced(by: cooldown.value)
     }
 }
