@@ -30,26 +30,6 @@ public struct Timing<Interval> {
         self.coyote = coyote
     }
     // MARK: Methods
-    /// Indicates the expiration of a grace period.
-    /// - Parameters:
-    ///   - instant: Instant where the grace period starts.
-    /// - Returns: Instant of the expiration.
-    func expiration<Instant: Strideable>(
-        startingFrom instant: Instant
-    ) -> Instant where Instant.Stride == Interval {
-        instant.advanced(by: coyote)
-    }
-    /// Defines a Quick-Time Event (QTE).
-    /// - Parameters:
-    ///   - instant: Start instant of the quick-time event.
-    /// - Returns: Window of activation for a quick-time event.
-    /// 
-    /// Activating after this window results in a late miss.
-    func quickTimeEvent<Instant: Strideable>(
-        startingFrom instant: Instant
-    ) -> PartialRangeThrough<Instant> where Instant.Stride == Interval {
-        ...expiration(startingFrom: instant)
-    }
     /// Calculates the timing window for a given instant.
     /// - Parameter instant: Reference instant.
     /// - Returns: Timing window for an activation, `nil` when the window is malformed or
