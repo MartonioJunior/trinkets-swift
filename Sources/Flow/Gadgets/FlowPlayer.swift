@@ -13,7 +13,7 @@ public struct FlowPlayer<Instant: Strideable, Value> {
     public typealias Interval = Instant.Stride
     // MARK: Variables
     /// Sampler of state for the player.
-    var sampler: (Instant) -> Value
+    var sampler: @Sendable (Instant) -> Value
     /// Cronograph that powers this component.
     var cronograph: Cronograph<Instant>
     // swiftlint:disable:next missing_docs
@@ -35,7 +35,7 @@ public struct FlowPlayer<Instant: Strideable, Value> {
     public init(
         _ cronograph: Cronograph<Instant>,
         settings playback: Playback = .init(.oneShot, wrap: .none),
-        _ sampler: @escaping (Instant) -> Value,
+        _ sampler: @escaping @Sendable (Instant) -> Value,
     ) {
         self.sampler = sampler
         self.cronograph = cronograph
@@ -73,6 +73,15 @@ public struct FlowPlayer<Instant: Strideable, Value> {
     }
 }
 
+// MARK: Self: Equatable
+extension FlowPlayer: Equatable {
+    // swiftlint:disable:next missing_docs
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.cronograph == rhs.cronograph &&
+        lhs.playback == rhs.playback
+    }
+}
+
 // MARK: Self: Metronome
 extension FlowPlayer: Metronome {
     // swiftlint:disable:next missing_docs
@@ -106,6 +115,9 @@ extension FlowPlayer: Resumable {
         cronograph.resume()
     }
 }
+
+// MARK: Self: Sendable
+extension FlowPlayer: Sendable where Instant: Sendable, Instant.Stride: Sendable, Value: Sendable {}
 
 // MARK: Self: Skippable
 extension FlowPlayer: Skippable {
