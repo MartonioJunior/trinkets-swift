@@ -6,15 +6,15 @@
 //
 
 import MatheRange
-/// Short-hand alias for a track composed of blocks.
-public typealias TrackOf<Instant: Strideable, Value> = Track<Block<Instant, Value>>
-/// Data structures that composes together multiple selectable entities.
-/// - Chunk: Selectable objects that can be registered with this track.
+/// Short-hand alias for a track of type-erased blocks.
+public typealias AnyTrackOf<Mask: Boundary, Element> = Track<AnyBlock<Mask, Mask.Bound, Element>>
+/// Group that composes together multiple blocks of the same type as one.
+/// - Chunk: Block that can be registered within this track to provide a value.
 /// 
 /// Tracks are recommended for defining a dynamic sequence of values of a type that is modifiable.
-public struct Track<Chunk: Selectable> {
+public struct Track<Chunk: Block> {
     /// Infinitesimal interval whose passage is instantaneous.
-    public typealias Instant = Chunk.Selection.Bound
+    public typealias Instant = Chunk.Mask.Bound
     // MARK: Variables
     /// List of chunks registered in this track.
     /// 
@@ -23,32 +23,68 @@ public struct Track<Chunk: Selectable> {
     /// - `fill(_:)` adds the chunk to the end of the order, filling empty gaps with no value set.
     /// - `overwrite(_:)` adds the chunk to the start of the order, appearing above any chunks.
     var chunks: [Chunk]
-    /// List of selections registered in this track, which work as jump-off points to compose a track or obtain info about it's state.
-    /// 
-    /// The goal with this is to provide contextual information about the contents of a track through it's selection.
-    var markers: [String: Chunk.Selection]
-    /// Creates a sub-track based on the given marker.
-    /// - Parameter key: Key representing the selection.
-    /// - Returns: Sub-track with the chunks of the marked selection.
-    subscript(key: String) -> Self? {
-        guard let selection = markers[key] else { return nil }
-
-        return .init(chunks: chunks(in: selection))
-    }
     // MARK: Initializers
     /// Creates a new track.
     /// - Parameters:
     ///   - chunks: List of blocks registered in this track.
-    ///   - markers: List of markers registered in this track.
-    public init(chunks: [Chunk], markers: [String: Chunk.Selection] = [:]) {
+    public init(chunks: [Chunk]) {
         self.chunks = chunks
-        self.markers = markers
     }
     // MARK: Methods
-    /// Removes the marker from the track.
-    /// - Parameter marker: Marker to be removed.
-    public mutating func clearMarker(_ marker: String) {
-        markers.removeValue(forKey: marker)
+    /// Adds a chunk below other chunks.
+    /// - Parameter chunk: Sampler to be added.
+    public mutating func append(with chunk: Chunk) {
+        chunks.append(chunk)
+    }
+    /// Adds a chunk on top of the list, executing before any other elements.
+    /// - Parameter chunk: Block to be added.
+    public mutating func push(with chunk: Chunk) {
+        chunks.insert(chunk, at: 0)
+    }
+}
+
+// MARK: Self.Mask
+public extension Track {
+    /// Group of masks representing this track.
+    struct Mask {
+        /// List of chunk masks.
+        var elements: [Chunk.Mask]
+        /// Creates a new track mask.
+        /// - Parameter elements: Chunk masks.
+        public init(_ elements: [Chunk.Mask]) {
+            self.elements = elements
+        }
+    }
+}
+
+extension Track.Mask: Boundary {
+    // swiftlint:disable:next missing_docs
+    public typealias Bound = Chunk.Mask.Bound
+    // swiftlint:disable:next missing_docs
+    public static func ~= (lhs: Self, rhs: Chunk.Mask.Bound) -> Bool {
+        for element in lhs.elements where element.contains(rhs) {
+            return true
+        }
+
+        return false
+    }
+}
+
+// MARK: Self: Block
+extension Track: Block where Chunk.Mask.Bound == Chunk.Instant {
+    // swiftlint:disable:next missing_docs
+    public var mask: Mask { .init(chunks.map(\.mask)) }
+    // swiftlint:disable:next missing_docs
+    public func element(on instant: Chunk.Instant) -> Chunk.Element? {
+        chunks.first { $0.mask.contains(instant) }?.element(on: instant)
+    }
+}
+
+// MARK: Self: Selectable
+extension Track: Selectable where Chunk: Selectable {
+    // swiftlint:disable:next missing_docs
+    public func canBeSelected(by selection: Chunk.Selection) -> Bool {
+        chunks.canBeSelected(by: selection)
     }
     /// Returns all chunks that are selectable with a given selection.
     /// - Parameter selection: Selection.
@@ -56,36 +92,22 @@ public struct Track<Chunk: Selectable> {
     public func chunks(in selection: Selection) -> [Chunk] {
         chunks.filter { $0.canBeSelected(by: selection) }
     }
-    /// Adds a chunk below other chunks.
-    /// - Parameter chunk: Sampler to be added.
-    public mutating func fill(with chunk: Chunk) {
-        chunks.append(chunk)
-    }
-    /// Marks a selection in the track.
-    /// - Parameters:
-    ///   - selection: Selection defined on the track.
-    ///   - marker: Key used to represent the marker.
-    ///
-    public mutating func mark( _ selection: Chunk.Selection, as marker: String) {
-        markers[marker] = selection
-    }
-    /// Adds a chunk on top of the list, executing before any other elements.
-    /// - Parameter chunk: Block to be added.
-    public mutating func overwrite(with chunk: Chunk) {
-        chunks.insert(chunk, at: 0)
-    }
-    /// Obtains a reference selection from a given marker registered in the track.
-    /// - Parameter marker: Marker used for registration.
-    /// - Returns: Range associated with the marker, `nil` when `marker` is not registered.
-    public func selection(forKey marker: String) -> Chunk.Selection? {
-        markers[marker]
-    }
 }
 
-// MARK: Self: Selectable
-extension Track: Selectable {
-    // swiftlint:disable:next missing_docs
-    public func canBeSelected(by selection: Chunk.Selection) -> Bool {
-        chunks.canBeSelected(by: selection)
+// MARK: Self.Chunk.Mask: Gamut
+public extension Track where Chunk.Mask: Gamut {
+    /// Attempts to append a chunk below other chunks, provided there's space for such.
+    /// - Parameter chunk: Sampler to be added.
+    mutating func fill(with chunk: Chunk) {
+        if chunks.contains(where: { $0.mask.envelops(chunk.mask) }) { return }
+
+        chunks.append(chunk)
+    }
+    /// Adds a chunk on top of the list, replacing any chunks it invalidates.
+    /// - Parameter chunk: Block to be added.
+    mutating func overwrite(with chunk: Chunk) {
+        chunks.removeAll { chunk.mask.envelops($0.mask) }
+
+        chunks.insert(chunk, at: 0)
     }
 }

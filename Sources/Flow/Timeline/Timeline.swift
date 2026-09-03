@@ -6,20 +6,21 @@
 //
 
 import MatheRange
+import Minimal
 import SwiftVariety
 /// Sampler composed of multiple heterogeneous tracks that are selected simultaneously.
-/// - Chunk: Selectable selectors object that can be registered with this track.
+/// - Chunk: Blocks that can be registered with this track.
 ///
 /// Timelines are recommended when you want to create static value sequences that can be queried as a tuple of values.
 @available(macOS 14.0.0, *)
-public struct Timeline<each Chunk: Selectable> {
+public struct Timeline<each Chunk: Block> {
     // MARK: Variables
     /// List of tracks that are part of this timeline.
-    var tracks: Tuple<repeat Track<each Chunk>>
+    var tracks: Tuple<repeat each Chunk>
     // MARK: Initializers
     /// Creates a new timeline.
     /// - Parameter tracks: List of tracks that compose this timeline.
-    public init(_ tracks: Tuple<repeat Track<each Chunk>>) {
+    public init(_ tracks: Tuple<repeat each Chunk>) {
         self.tracks = tracks
     }
     // MARK: Methods
@@ -45,27 +46,46 @@ public struct Timeline<each Chunk: Selectable> {
     }
 }
 
-// MARK: Self.Snapshot
+// MARK: Self: Block
 @available(macOS 14.0.0, *)
-public extension Timeline {
-    /// Evaluation of the timeline's state at a given instant.
-    typealias Snapshot = Tuple<repeat [each Chunk]>
-    /// Creates a snapshot of the timeline based on the 
-    /// - Parameter selection: Selection.
-    /// - Returns: Snapshot of the chunks on each track selectable by this selection.
-    func chunks<Selection: Boundary>(in selection: Selection) -> Snapshot {
+extension Timeline: Block where (repeat (each Chunk).Instant) == (repeat (each Chunk).Mask.Bound) {
+    // swiftlint:disable:next missing_docs
+    public typealias Mask = Tuple<repeat (each Chunk).Mask>
+    // swiftlint:disable:next missing_docs
+    public typealias Element = Tuple<repeat (each Chunk).Element>
+    // swiftlint:disable:next missing_docs
+    public var mask: Tuple<repeat (each Chunk).Mask> {
         var array: [Any] = []
-        var index: Int = 0
 
-        for type in repeat (each Chunk).self {
-            guard type.Selection == Selection.self else { continue }
-
-            _ = try? withTrack(HKey(index, type)) {
-                array.append($0.chunks(in: unsafeBitCast(selection, to: type.Selection)))
-            }
-            index += 1
+        for track in repeat each tracks.values {
+            array.append(track.mask)
         }
 
-        return try! Snapshot(sequence: array)
+        return try! Mask(sequence: array)
+    }
+    // swiftlint:disable:next missing_docs
+    public func element(on instant: Tuple<repeat (each Chunk).Mask.Bound>) -> Tuple<repeat (each Chunk).Element> {
+        var array: [Any] = []
+
+        for (track, t) in repeat (each tracks.values, each instant.values) {
+            array.append(track.element(on: t))
+        }
+
+        return try! Element(sequence: array)
+    }
+}
+
+// MARK: Tuple (EX)
+@available(macOS 14, *)
+extension Tuple: @retroactive Boundary where repeat each Element: Boundary {
+    // swiftlint:disable:next missing_docs
+    public typealias Bound = Tuple<repeat (each Element).Bound>
+    // swiftlint:disable:next missing_docs
+    public static func ~= (lhs: Self, rhs: Bound) -> Bool {
+        for (l, r) in repeat (each lhs.values, each rhs.values) {
+            if l.contains(r) { return true }
+        }
+
+        return false
     }
 }
