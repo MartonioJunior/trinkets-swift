@@ -130,6 +130,18 @@ public extension Stamp where Interval: SignedNumeric & Comparable {
     }
 }
 
+// MARK: Self.Instant: Strideable
+public extension Stamp where Instant: Strideable, Instant.Stride == Interval {
+    /// Range represented by this stamp.
+    var range: ClosedRange<Instant> {
+        if elapsed >= 0 {
+            reference...reference.advanced(by: elapsed)
+        } else {
+            reference.advanced(by: -elapsed)...reference
+        }
+    }
+}
+
 // MARK: AsyncSequence (EX)
 public extension AsyncSequence {
     /// Creates an async sequence that streams generated stamps for the sequence of elements.
