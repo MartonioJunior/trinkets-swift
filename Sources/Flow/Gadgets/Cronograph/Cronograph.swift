@@ -21,9 +21,9 @@ public struct Cronograph<Instant: Strideable> {
     /// Tempo for updates on the stamp.
     var tempo: Tempo<Cadence>
     /// Function sourcing the current state.
-    public var source: () -> Instant
+    public var source: @Sendable () -> Instant
     /// Current state of updates for the component.
-    public private(set) var status: Status
+    public internal(set) var status: Status
     /// Elapsed distance between states.
     public var elapsed: Interval { stamp.elapsed }
     /// Last update for the stamp.
@@ -39,7 +39,7 @@ public struct Cronograph<Instant: Strideable> {
         _ stamp: StampOf<Instant>,
         tempo: Tempo<Cadence> = .forward,
         status: Status = .idle,
-        source: @escaping () -> Instant
+        source: @escaping @Sendable () -> Instant
     ) {
         self.stamp = stamp
         self.tempo = tempo
@@ -57,6 +57,17 @@ public struct Cronograph<Instant: Strideable> {
         stamp.restart(at: start.epoch)
         tempo = .forward
         status = .running
+    }
+}
+
+// MARK: Self: Equatable
+extension Cronograph: Equatable {
+    // swiftlint:disable:next missing_docs
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.start == rhs.start &&
+        lhs.stamp == rhs.stamp &&
+        lhs.tempo == rhs.tempo &&
+        lhs.status == rhs.status
     }
 }
 
@@ -101,6 +112,9 @@ extension Cronograph: Resumable {
         status = .running
     }
 }
+
+// MARK: Self: Sendable
+extension Cronograph: Sendable where Instant: Sendable, Instant.Stride: Sendable {}
 
 // MARK: Self: Stoppable
 extension Cronograph: Stoppable {
