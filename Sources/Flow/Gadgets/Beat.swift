@@ -81,7 +81,7 @@ public extension Beat where Instant: Strideable, Instant.Stride == Interval {
     /// - Parameter cooldown: Interval until recovery.
     /// - Returns: Next beat.
     func nextBeat(after cooldown: Cooldown<Interval>) -> Self {
-        repositioned(at: cooldown.recovery(after: calendar.epoch))
+        repositioned(at: calendar.epoch.recovery(after: cooldown))
     }
 }
 
