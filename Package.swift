@@ -41,6 +41,7 @@ var traits: Set<Trait> = [
 
 // MARK: - Dependencies
 let casePaths = targetDep(name: "CasePaths", package: "swift-case-paths")
+let customDump = targetDep(name: "CustomDump", package: "swift-custom-dump")
 let identifiedCollections = targetDep(name: "IdentifiedCollections", package: "swift-identified-collections")
 let mathe = targetDep(name: "Mathe", package: "Mathe")
 let minimal = targetDep(name: "Minimal", package: "Minimal")
@@ -50,6 +51,7 @@ let variety = targetDep(name: "SwiftVariety", package: "swift-variety")
 
 let dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/pointfreeco/swift-case-paths", .upToNextMajor(from: "1.7.0")),
+    .package(url: "https://github.com/pointfreeco/swift-custom-dump", .upToNextMajor(from: "1.7.3")),
     .package(url: "https://github.com/pointfreeco/swift-identified-collections", .upToNextMajor(from: "1.1.1")),
     .package(url: "https://github.com/pointfreeco/swift-tagged", .upToNextMajor(from: "0.10.0")),
     .package(url: "https://github.com/apple/swift-numerics", .upToNextMajor(from: "1.1.0")),
@@ -112,6 +114,7 @@ var targets: [Target] = [
     .target(
         name: "SI",
         dependencies: ["TrinketsUnits", tagged],
+        resources: [.process("Localization/")],
         swiftSettings: .upcomingFeatures
     ),
     .target(
@@ -120,11 +123,13 @@ var targets: [Target] = [
     ),
     .target(
         name: "Timelines",
+        dependencies: [mathe],
         swiftSettings: .upcomingFeatures
     ),
     .target(
         name: "TrinketsUnits",
         dependencies: ["Notation", numerics, tagged],
+        resources: [.process("Localization/")],
         swiftSettings: .upcomingFeatures
     )
 ]
@@ -138,7 +143,13 @@ targets.append(
 )
 
 let testTargets: [Target] = targets.map {
-    .testTarget(name: "\($0.name)Tests", dependencies: [Target.Dependency(stringLiteral: $0.name)] + $0.dependencies)
+    .testTarget(
+        name: "\($0.name)Tests",
+        dependencies: $0.dependencies + [
+            Target.Dependency(stringLiteral: $0.name),
+            customDump
+        ]
+    )
 }
 
 targets.append(

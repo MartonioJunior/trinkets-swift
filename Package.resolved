@@ -1,5 +1,5 @@
 {
-  "originHash" : "3b9da41caad58c44ae374c3b0d1f9058f9e32b56e0dbb1fa70fc10d0dcc4fcf2",
+  "originHash" : "1dc63120c55d7314e970991b6659f283713f8e4c312134189224252b552d8785",
   "pins" : [
     {
       "identity" : "mathe",
@@ -7,7 +7,7 @@
       "location" : "https://github.com/MartonioJunior/Mathe",
       "state" : {
         "branch" : "main",
-        "revision" : "e05b622975afc59f71ce7db031e8d2247bf600f4"
+        "revision" : "f9305a24d5f316b90e2dd4510eeff560c1eab825"
       }
     },
     {
@@ -16,7 +16,7 @@
       "location" : "https://github.com/MartonioJunior/Minimal",
       "state" : {
         "branch" : "main",
-        "revision" : "ccdceafbabf8753ed6d3eb143ef1fb0bbb0bf270"
+        "revision" : "f6db669283ed18fb3422720438a6892b85f3861e"
       }
     },
     {
@@ -35,6 +35,15 @@
       "state" : {
         "revision" : "6675bc0ff86e61436e615df6fc5174e043e57924",
         "version" : "1.4.1"
+      }
+    },
+    {
+      "identity" : "swift-custom-dump",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-custom-dump",
+      "state" : {
+        "revision" : "4fb9e7cbb4b8f5a7354005db39447f570d6b3e19",
+        "version" : "1.7.3"
       }
     },
     {
@@ -106,7 +115,7 @@
       "location" : "https://github.com/MartonioJunior/swift-variety",
       "state" : {
         "branch" : "main",
-        "revision" : "4729c3bc41a45890ca771f612b58ae7f17266ba2"
+        "revision" : "f6a50b7e1feea9656387ed9eb0b59f02c8098df7"
       }
     },
     {
@@ -114,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
       "state" : {
-        "revision" : "4c27acf5394b645b70d8ba19dc249c0472d5f618",
-        "version" : "1.7.0"
+        "revision" : "d9308ad679143c26a30dec52daefe82f54af2b82",
+        "version" : "1.13.1"
       }
     }
   ],
