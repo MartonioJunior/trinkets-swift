@@ -49,6 +49,14 @@ extension Stamp: Sendable where Instant: Sendable, Interval: Sendable {}
 
 // MARK: Self.Instant: Strideable
 public extension Stamp where Instant: Strideable, Interval == Instant.Stride {
+    /// Range represented by this stamp.
+    var range: ClosedRange<Instant> {
+        if elapsed >= 0 {
+            reference...reference.advanced(by: elapsed)
+        } else {
+            reference.advanced(by: -elapsed)...reference
+        }
+    }
     /// Moves back the stamp by a given interval.
     /// - Parameter interval: Interval to go back.
     mutating func backtrack(by interval: Interval) {
@@ -127,18 +135,6 @@ public extension Stamp where Interval: SignedNumeric & Comparable {
     /// - Returns: Stamp with the same instant, but with the interval resized by the tempo.
     static func * (lhs: Self, rhs: Tempo<Interval>) -> Self {
         .init(lhs.reference, elapsed: lhs.elapsed * rhs)
-    }
-}
-
-// MARK: Self.Instant: Strideable
-public extension Stamp where Instant: Strideable, Instant.Stride == Interval {
-    /// Range represented by this stamp.
-    var range: ClosedRange<Instant> {
-        if elapsed >= 0 {
-            reference...reference.advanced(by: elapsed)
-        } else {
-            reference.advanced(by: -elapsed)...reference
-        }
     }
 }
 
