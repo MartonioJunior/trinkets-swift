@@ -44,6 +44,12 @@ extension SelectionGroup: Boundary {
     }
 }
 
+// MARK: Self: Equatable
+extension SelectionGroup: Equatable where Selections: Equatable {}
+
+// MARK: Self: Sendable
+extension SelectionGroup: Sendable where Selections: Sendable {}
+
 // MARK: Sequence (EX)
 public extension Sequence where Element: Selectable {
     /// Selects elements from this sequence using a selector.
