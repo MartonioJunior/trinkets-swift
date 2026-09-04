@@ -54,7 +54,7 @@ public extension Stamp where Instant: Strideable, Interval == Instant.Stride {
         if elapsed >= 0 {
             reference...reference.advanced(by: elapsed)
         } else {
-            reference.advanced(by: -elapsed)...reference
+            reference.advanced(by: elapsed)...reference
         }
     }
     /// Moves back the stamp by a given interval.
