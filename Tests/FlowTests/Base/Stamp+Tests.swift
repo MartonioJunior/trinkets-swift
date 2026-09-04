@@ -20,6 +20,15 @@ struct StampTests {
 
     // MARK: Self.Instant: Strideable
     struct InstantConformsToStrideable {
+        @Test("Range represented by stamp", arguments: [
+            (StampOf<Int>(12, elapsed: 24), 12...36),
+            (StampOf<Int>(12, elapsed: -6), 6...12),
+            (StampOf<Int>(12, elapsed: 0), 12...12)
+        ])
+        func range(_ sut: Stamp<Int, Int>, expected: ClosedRange<Int>) {
+            #expect(sut.range == expected)
+        }
+
         @Test("Moves back the stamp by interval", arguments: [
             (Stamp(12, elapsed: 24), 5, Stamp(7, elapsed: 19))
         ])

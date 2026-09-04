@@ -63,7 +63,9 @@ struct TempoTests {
         let result = Tempo.fastForward(x: multiplier)
         #expect(result == expected)
     }
+}
 
+extension TempoTests {
     // MARK: Self: AdditiveArithmetic
     struct ConformsToAdditiveArithmetic {
         @Test("Adds two tempos together", arguments: [
@@ -130,8 +132,11 @@ struct TempoTests {
             (Tempo<Double>(13), 4, Tempo<Double>(3.25))
         ])
         func divide(lhs: Tempo<Double>, rhs: Double, expected: Tempo<Double>) {
-            let result = lhs / rhs
-            #expect(result == expected)
+            let resultA = lhs / rhs
+            #expect(resultA == expected)
+
+            let resultB = lhs / Tempo<Double>(rhs)
+            #expect(resultB == expected)
         }
 
         @Test("Creates tempo with slowdown", arguments: [
