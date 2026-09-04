@@ -9,7 +9,7 @@
 import Testing
 
 struct SelectableTests {
-    struct Mock: Selectable, Equatable {
+    struct Mock: Selectable, Equatable, Sendable {
         var id: Int
 
         func canBeSelected(by selection: ClosedRange<Int>) -> Bool {
