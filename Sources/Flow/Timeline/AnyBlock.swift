@@ -13,7 +13,7 @@ public struct AnyBlock<Mask: Boundary, Instant, Element> {
     // swiftlint:disable:next missing_docs
     public var mask: Mask
     /// Closure that retrieves the element for a given instant.
-    var f: (Instant) -> Element
+    nonisolated var f: (Instant) -> Element
     // MARK: Initializers
     /// Creates a new block.
     /// - Parameters:
@@ -58,9 +58,12 @@ extension AnyBlock: Selectable where Mask: Selectable {
     }
 }
 
+// MARK: Self: Sendable
+extension AnyBlock: Sendable where Mask: Sendable, Instant: Sendable, Element: Sendable {}
+
 // MARK: Self.Mask: BoundaryOfOne
 public extension AnyBlock {
-    /// Creates a new instant block with a fixed value.
+    /// Creates a new instant block with a value function.
     /// 
     /// An instant block starts and ends at the same specified value.
     /// - Parameters:
