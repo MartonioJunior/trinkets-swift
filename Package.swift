@@ -122,11 +122,6 @@ var targets: [Target] = [
         swiftSettings: .upcomingFeatures
     ),
     .target(
-        name: "Timelines",
-        dependencies: [mathe],
-        swiftSettings: .upcomingFeatures
-    ),
-    .target(
         name: "TrinketsUnits",
         dependencies: ["Notation", numerics, tagged],
         resources: [.process("Localization/")],
