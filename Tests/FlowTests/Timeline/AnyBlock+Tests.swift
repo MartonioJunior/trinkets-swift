@@ -5,6 +5,7 @@
 //  Created by Martônio Júnior on 03/09/2026.
 //
 
+import MatheRange
 @testable import Flow
 import Testing
 
@@ -48,20 +49,39 @@ extension AnyBlockTests {
         }
     }
 
-    // struct ConformsToSelectable {
-    //     @Test("Validates a selection in relation to the block", arguments: [
-    //         (AnyBlock<SelectionGroupOf<ClosedRange<Int>>, Int, Int>(mask: SelectionGroup([4...8]), f: { _ in 12 }), 1...2, false),
-    //         (AnyBlock<SelectionGroupOf<ClosedRange<Int>>, Int, Int>(mask: SelectionGroup([4...8]), f: { _ in 12 }), 6...9, true)
-    //     ])
-    //     func canBeSelected(
-    //         _ sut: AnyBlock<SelectionGroupOf<ClosedRange<Int>>, Int, Int>,
-    //         by selection: ClosedRange<Int>,
-    //         expected: Bool
-    //     ) {
-    //         let result = sut.canBeSelected(by: selection)
-    //         #expect(result == expected)
-    //     }
-    // }
+    struct ConformsToSelectable {
+        struct SelectableMask: Boundary, Equatable, Selectable {
+            typealias Selection = ClosedRange<Int>
+            typealias Bound = Int
+
+            var range: ClosedRange<Int>
+
+            init(_ range: ClosedRange<Int>) {
+                self.range = range
+            }
+
+            func canBeSelected(by selection: ClosedRange<Int>) -> Bool {
+                range.overlaps(selection)
+            }
+
+            static func ~= (lhs: Self, rhs: Int) -> Bool {
+                lhs.range ~= rhs
+            }
+        }
+
+        @Test("Validates a selection in relation to the block", arguments: [
+            (AnyBlock<SelectableMask, Int, Int>(mask: SelectableMask(4...8), f: { _ in 12 }), 1...2, false),
+            (AnyBlock<SelectableMask, Int, Int>(mask: SelectableMask(4...8), f: { _ in 12 }), 6...9, true)
+        ])
+        func canBeSelected(
+            _ sut: AnyBlock<SelectableMask, Int, Int>,
+            by selection: ClosedRange<Int>,
+            expected: Bool
+        ) {
+            let result = sut.canBeSelected(by: selection)
+            #expect(result == expected)
+        }
+    }
 
     // MARK: Self.Mask: BoundaryOfOne
     struct MaskEqualsBoundaryOfOne {

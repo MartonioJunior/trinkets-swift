@@ -9,6 +9,16 @@
 import Testing
 
 struct BlockTests {
+    struct Mock: Block, Equatable, Sendable {
+        let mask: ClosedRange<Int>
+
+        init(_ mask: ClosedRange<Int>) {
+            self.mask = mask
+        }
+
+        func element(on instant: Int) -> Int { instant }
+    }
+
     // MARK: Instant == Mask.Bound
     struct InstantEqualsMaskBound {
         @Test("Retrieves element based on mask.", arguments: [
