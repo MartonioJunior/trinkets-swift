@@ -62,3 +62,9 @@ extension MaskedBlock: Block {
         block.element(on: instant)
     }
 }
+
+// MARK: Self: Equatable
+extension MaskedBlock: Equatable where Chunk: Equatable, Chunk.Mask: Equatable {}
+
+// MARK: Self: Sendable
+extension MaskedBlock: Sendable where Key: Sendable, Chunk: Sendable, Chunk.Mask: Sendable {}
