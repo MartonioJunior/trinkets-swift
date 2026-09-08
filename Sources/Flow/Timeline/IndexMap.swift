@@ -63,7 +63,7 @@ public struct IndexMap<Element, Instant: Comparable> {
     /// - Parameter instant: Initial instant.
     /// - Returns: Entry associated with the instant, `nil` when the map is empty.
     func entry(for instant: Instant) -> Entry? {
-        map.last { $0.instant < instant }
+        map.last { $0.instant <= instant }
     }
     /// Registers a new element into the index map.
     /// - Parameters:
