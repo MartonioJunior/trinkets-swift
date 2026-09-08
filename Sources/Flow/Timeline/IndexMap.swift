@@ -122,6 +122,7 @@ extension IndexMap.Entry: Comparable {
 }
 
 extension IndexMap.Entry: Equatable {}
+extension IndexMap.Entry: Sendable where Instant: Sendable {}
 
 // MARK: Self: Boundary
 extension IndexMap: Boundary {
@@ -144,6 +145,12 @@ extension IndexMap: Block {
         return element
     }
 }
+
+// MARK: Self: Equatable
+extension IndexMap: Equatable where Element: Equatable {}
+
+// MARK: Self: Sendable
+extension IndexMap: Sendable where Element: Sendable, Instant: Sendable {}
 
 // MARK: Self.Element: Optional
 public extension IndexMap {
