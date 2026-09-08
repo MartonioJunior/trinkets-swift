@@ -142,3 +142,6 @@ switch_case_alignment:
   ignore_one_liners: true
 type_contents_order:
   order: [[type_alias, associated_type], [subtype], [case], [ib_inspectable], [ib_outlet], [type_property], [instance_property], [subscript], [initializer], [deinitializer], [view_life_cycle_method], [ib_action, ib_segue_action], [other_method], [type_method]]
+type_name:
+  min_length:
+    warning: 2
