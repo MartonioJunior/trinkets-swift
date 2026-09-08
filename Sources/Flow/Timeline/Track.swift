@@ -70,6 +70,9 @@ extension Track.Mask: Boundary {
     }
 }
 
+extension Track.Mask: Equatable where Chunk.Mask: Equatable {}
+extension Track.Mask: Sendable where Chunk.Mask: Sendable {}
+
 // MARK: Self: Block
 extension Track: Block where Chunk.Mask.Bound == Chunk.Instant {
     // swiftlint:disable:next missing_docs
@@ -79,6 +82,9 @@ extension Track: Block where Chunk.Mask.Bound == Chunk.Instant {
         chunks.first { $0.mask.contains(instant) }?.element(on: instant)
     }
 }
+
+// MARK: Self: Equatable
+extension Track: Equatable where Chunk: Equatable {}
 
 // MARK: Self: Selectable
 extension Track: Selectable where Chunk: Selectable {
@@ -93,6 +99,9 @@ extension Track: Selectable where Chunk: Selectable {
         chunks.filter { $0.canBeSelected(by: selection) }
     }
 }
+
+// MARK: Self: Sendable
+extension Track: Sendable where Chunk: Sendable {}
 
 // MARK: Self.Chunk.Mask: Gamut
 public extension Track where Chunk.Mask: Gamut {
