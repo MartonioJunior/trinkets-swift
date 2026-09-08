@@ -7,42 +7,40 @@
 
 import MatheRange
 import Minimal
-import SwiftVariety
-/// Sampler composed of multiple heterogeneous tracks that are selected simultaneously.
-/// - Chunk: Blocks that can be registered with this track.
+/// Sampler composed of multiple heterogeneous blocks that are selected simultaneously.
+/// - Chunk: Blocks that can be registered with this timeline.
 ///
 /// Timelines are recommended when you want to create static value sequences that can be queried as a tuple of values.
 @available(macOS 14.0.0, *)
 public struct Timeline<each Chunk: Block> {
     // MARK: Variables
-    /// List of tracks that are part of this timeline.
-    var tracks: Tuple<repeat each Chunk>
+    /// List of blocks that are part of this timeline.
+    var blocks: Tuple<repeat each Chunk>
     // MARK: Initializers
     /// Creates a new timeline.
-    /// - Parameter tracks: List of tracks that compose this timeline.
-    public init(_ tracks: Tuple<repeat each Chunk>) {
-        self.tracks = tracks
+    /// - Parameter blocks: List of blocks that compose this timeline.
+    public init(_ blocks: Tuple<repeat each Chunk>) {
+        self.blocks = blocks
     }
     // MARK: Methods
-    /// Performs an operation with a track from the timeline
-    /// - Parameter key: Key representing the track's value.
-    mutating func mutateTrack<S: Selectable, R>(
-        _ key: HeterogeneousKey<Int, S>,
-        modify: (inout Track<S>) -> R
-    ) throws(HeterogeneousKeyError) -> R {
-        let key = HKey<Int, Track<S>>(key.id)
-        var track = try tracks.fetch(key)
-        let result = modify(&track)
-        tracks.registerOrUpdate(track, for: key)
+    /// Performs an operation with a block from the timeline
+    /// - Parameter keyPath: Key Path representing the block.
+    mutating func mutateBlock<B: Block, R>(
+        _ keyPath: WritableKeyPath<(repeat each Chunk), B>,
+        modify: (inout B) -> R
+    ) -> R {
+        var block = blocks.values[keyPath: keyPath]
+        let result = modify(&block)
+        blocks.values[keyPath: keyPath] = block
         return result
     }
-    /// Performs an operation with a track from the timeline
-    /// - Parameter key: Key representing the track's value.
-    func withTrack<S: Selectable, R>(
-        _ key: HeterogeneousKey<Int, S>,
-        transform: (Track<S>) -> R
-    ) throws(HeterogeneousKeyError) -> R {
-        transform(try tracks.fetch(HKey<_, Track<S>>(key.id)))
+    /// Performs an operation with a block from the timeline
+    /// - Parameter keyPath: Key Path representing the block.
+    func withBlock<B: Block, R>(
+        _ keyPath: KeyPath<(repeat each Chunk), B>,
+        transform: (B) -> R
+    ) -> R {
+        transform(blocks.values[keyPath: keyPath])
     }
 }
 
@@ -57,8 +55,8 @@ extension Timeline: Block where (repeat (each Chunk).Instant) == (repeat (each C
     public var mask: Tuple<repeat (each Chunk).Mask> {
         var array: [Any] = []
 
-        for track in repeat each tracks.values {
-            array.append(track.mask)
+        for block in repeat each blocks.values {
+            array.append(block.mask)
         }
 
         return try! Mask(sequence: array)
@@ -67,13 +65,21 @@ extension Timeline: Block where (repeat (each Chunk).Instant) == (repeat (each C
     public func element(on instant: Tuple<repeat (each Chunk).Mask.Bound>) -> Tuple<repeat (each Chunk).Element> {
         var array: [Any] = []
 
-        for (track, t) in repeat (each tracks.values, each instant.values) {
-            array.append(track.element(on: t))
+        for (block, t) in repeat (each blocks.values, each instant.values) {
+            array.append(block.element(on: t))
         }
 
         return try! Element(sequence: array)
     }
 }
+
+// MARK: Self: Equatable
+@available(macOS 14, *)
+extension Timeline: Equatable where repeat each Chunk: Equatable {}
+
+// MARK: Self: Sendable
+@available(macOS 14, *)
+extension Timeline: Sendable where repeat each Chunk: Sendable {}
 
 // MARK: Tuple (EX)
 @available(macOS 14, *)
