@@ -1,5 +1,5 @@
 {
-  "originHash" : "4f343efb4d85867458878018bc637b7c1e08987b5c70f0c5e832ec58af8d2b40",
+  "originHash" : "7fc2273d91986c2d61aac9b94a1fd73baa9778cbc5c679e56484d8ac312f2c7f",
   "pins" : [
     {
       "identity" : "mathe",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/MartonioJunior/Minimal",
       "state" : {
-        "branch" : "main",
-        "revision" : "f6db669283ed18fb3422720438a6892b85f3861e"
+        "revision" : "147553f7d394d4feb4c9f8190a4d6637c3fc8406",
+        "version" : "0.1.0"
       }
     },
     {
