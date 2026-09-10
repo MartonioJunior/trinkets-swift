@@ -57,7 +57,7 @@ let dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/apple/swift-numerics", .upToNextMajor(from: "1.1.0")),
     .package(url: "https://github.com/MartonioJunior/Mathe", branch: "main", traits: ["Numerics"]),
     .package(url: "https://github.com/MartonioJunior/Minimal", .upToNextMajor(from: "0.1.0")),
-    .package(url: "https://github.com/MartonioJunior/swift-variety", branch: "main"),
+    .package(url: "https://github.com/MartonioJunior/swift-variety", .upToNextMajor(from: "0.1.1")),
     .package(url: "https://github.com/swiftlang/swift-docc-plugin", .upToNextMajor(from: "1.4.5"))
 ]
 
