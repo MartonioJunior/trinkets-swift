@@ -7,18 +7,26 @@ import PackageDescription
 // MARK: - Utilities
 public enum UpcomingFeatures: String, CaseIterable {
     case existentialAny
-    case fullTypedThrows
+    case immutableWeakCaptures
+    case inferIsolatedConformances
     case internalImportsByDefault
     case memberImportVisibility
-    case nonescapableTypes
     case nonisolatedNonsendingByDefault
-    case inferIsolatedConformances
-    case valueGenerics
+    case strictMemorySafety
 
     var asSetting: SwiftSetting { .enableUpcomingFeature(rawValue.capitalized) }
 }
 
+public enum ExperimentalFeatures: String, CaseIterable {
+    case fullTypedThrows
+    case keyPathWithMethodMembers
+
+    var asSetting: SwiftSetting { .enableExperimentalFeature(rawValue.capitalized) }
+}
+
 public extension Array where Element == SwiftSetting {
+    static var allFeatures: Self { .experimentalFeatures + .upcomingFeatures }
+    static var experimentalFeatures: Self { ExperimentalFeatures.allCases.map(\.asSetting) }
     static var upcomingFeatures: Self { UpcomingFeatures.allCases.map(\.asSetting) }
 }
 
@@ -65,67 +73,67 @@ let dependencies: [Package.Dependency] = [
 var targets: [Target] = [
     .target(
         name: "Activities",
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "Collectables",
         dependencies: [identifiedCollections, variety],
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "Custom",
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "Exchanges",
         dependencies: ["Custom", "Inventory"],
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "Flow",
         dependencies: [mathe, minimal],
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "Inventory",
         dependencies: ["TrinketsUnits"],
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "Matches",
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "Meters",
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "Notation",
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "Progression",
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "Quests",
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "SI",
         dependencies: ["TrinketsUnits", tagged],
         resources: [.process("Localization/")],
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "Tabletop",
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     ),
     .target(
         name: "TrinketsUnits",
         dependencies: ["Notation", numerics, tagged],
         resources: [.process("Localization/")],
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     )
 ]
 
@@ -133,7 +141,7 @@ targets.append(
     .target(
         name: "Trinkets",
         dependencies: targets.map { Target.Dependency(stringLiteral: $0.name) },
-        swiftSettings: .upcomingFeatures
+        swiftSettings: .allFeatures
     )
 )
 
