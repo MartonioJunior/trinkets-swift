@@ -104,10 +104,6 @@ var targets: [Target] = [
         swiftSettings: .allFeatures
     ),
     .target(
-        name: "Meters",
-        swiftSettings: .allFeatures
-    ),
-    .target(
         name: "Notation",
         swiftSettings: .allFeatures
     ),
